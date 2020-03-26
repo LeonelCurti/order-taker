@@ -1,0 +1,31 @@
+{
+  "name": "order-taker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "server": "nodemon server/server.js",
+    "client": "npm run start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LeonelCurti/order-taker.git"
+  },
+  "author": "leonel curti",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/LeonelCurti/order-taker/issues"
+  },
+  "homepage": "https://github.com/LeonelCurti/order-taker#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-validator": "^6.4.0"
+  },
+  "devDependencies": {
+    "concurrently": "^5.1.0",
+    "dotenv": "^8.2.0",
+    "nodemon": "^2.0.2"
+  }
+}
