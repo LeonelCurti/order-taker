@@ -26,8 +26,10 @@
     "xlsx": "^0.15.6"
   },
   "devDependencies": {
+    "colors": "^1.4.0",
     "concurrently": "^5.1.0",
     "dotenv": "^8.2.0",
+    "morgan": "^1.10.0",
     "nodemon": "^2.0.2"
   }
 }
