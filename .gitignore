@@ -1,13 +1,13 @@
-node_modules/
+/node_modules
 
-client/build
+/client/node_modules
 
-client/node_modules
+/client/build
 
-server/config/config.env
+.env
 
-server/uploads
+/server/uploads
 
-sampleData/
+/sampleData
 
-.gitignore
+npm-debug.log*

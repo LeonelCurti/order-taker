@@ -1,6 +1,6 @@
 # Order-Taker App
 
-> Small business oriented application that allows the administrator to manage orders placed by their clients. 
+> Small business oriented application that allows to manage orders placed by clients. 
 
 ### Techs:
 - mongodb
@@ -8,5 +8,15 @@
 - react
 - node
 
-### Status: In progress
+### Specs
+- Users should be able to:
+   * Login, logout and register
+   * See price list
+   * Make new order
+   * See orders made
+   * Edit order
+- Admin should be able to:
+   * Upload main price list
+   * Manage clients orders
+
 
