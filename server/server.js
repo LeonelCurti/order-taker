@@ -28,16 +28,10 @@ app.use(fileupload());
 
 //Mount routers
 app.use("/api/v1/pricelist", require("./routes/priceList"));
-app.use("/api/v1/user/register", require("./routes/register"));
-app.use("/api/v1/user/login", require("./routes/login"));
+app.use("/api/v1/auth", require("./routes/auth"))
 
 //Custom express error handler
 app.use(errorHandler);
-
-app.get("/", (req, res) => {
-  //api documentation goes here
-  res.send("Api documentation");
-});
 
 const server = app.listen(process.env.PORT, () =>
   console.log(`Server running`.yellow)
