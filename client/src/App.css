@@ -1,0 +1,44 @@
+body {
+  font-family: "Roboto", sans-serif;
+  box-sizing: border-box;
+}
+a{
+  text-decoration: none;
+}
+/*============================
+      LOGIN AND REGISTER
+==============================*/
+.auth-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: #B0BEC5;
+  height: 100vh;
+}
+
+.logo-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+  align-items: center;  
+}
+.logo-container img {
+  width: 70px;
+  height: 70px;
+}
+.logo-text {
+  padding-left: 1rem;
+  font-weight: 500;
+  font-size: 1.8rem;
+  color: #212B42;
+}
+
+footer {
+  text-align: center;
+  color: white;
+  background-color: #212b42;
+  opacity: 0.5;
+}
+footer p{
+  margin: 5px 0 5px 0; 
+}
