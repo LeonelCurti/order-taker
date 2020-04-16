@@ -1,15 +1,15 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
-import "./App.css";
 
-import Dashboard from "./components/dashboard/Dashboard";
-import MyOrders from "./components/dashboard/MyOrders";
-import NewOrder from "./components/dashboard/NewOrder";
-import PriceList from "./components/dashboard/PriceList";
-import NotFound from "./components/layout/NotFound";
-import Register from "./components/auth/Register";
-import Login from "./components/auth/Login_mui";
+
+import Dashboard from "./dashboard/Dashboard";
+import MyOrders from "./dashboard/MyOrders";
+import NewOrder from "./dashboard/NewOrder";
+import PriceList from "./dashboard/PriceList";
+import NotFound from "./pages/NotFound";
+import Register from "./pages/Register";
+import Login from "./pages/Login";
 
 const App = () => {  
   return (

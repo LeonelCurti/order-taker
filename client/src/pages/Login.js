@@ -1,10 +1,13 @@
 import React, { useState } from "react";
-import Footer from "../layout/Footer";
-import Logo from "../layout/Logo";
+import { Link as RouterLink } from "react-router-dom";
+import checkInputValidity from '../utils/checkInputValidity';
+import Footer from "../components/Footer";
+import Logo from "../components/Logo";
 import Button from "@material-ui/core/Button";
-import { Link as RouterLink } from 'react-router-dom';
 import TextField from "@material-ui/core/TextField";
 import FormHelperText from "@material-ui/core/FormHelperText";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
@@ -38,40 +41,23 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(3),
   },
   submit: {
-    margin: theme.spacing(3, 0, 1),
+    margin: theme.spacing(3, 0, 2),
   },
   input: {
     //remove white background on textField when autofill
-    WebkitBoxShadow: "0 0 0 1000px #B0BEC5 inset"
-  }
+    WebkitBoxShadow: "0 0 0 1000px #B0BEC5 inset",
+  },
 }));
 
-const Register = () => {
+const Login = () => {
   const classes = useStyles();
   const [formState, setFormState] = useState({
     formData: {
-      firstName: {
-        value: "",
-        valid: false,
-        touched: false,
-        validation: {
-          required: true,
-        },
-        validationMsg: "",
-      },
-      lastName: {
-        value: "",
-        valid: false,
-        touched: false,
-        validation: {
-          required: true,
-        },
-        validationMsg: "",
-      },
       email: {
         value: "",
         valid: false,
         touched: false,
+        pristine: true,
         validation: {
           required: true,
           isEmail: true,
@@ -82,6 +68,7 @@ const Register = () => {
         value: "",
         valid: false,
         touched: false,
+        pristine: true,
         validation: {
           required: true,
           minLength: 4,
@@ -97,35 +84,9 @@ const Register = () => {
 
   const {
     formError,
-    formData: { firstName, lastName, email, password },
+    formData: { email, password },
   } = formState;
-
-  const checkValidity = (formElement) => {
-    const { validation, value } = formElement;
-    let error = [true, ""];
-
-    if (validation.isEmail) {
-      const re = /\S+@\S+\.\S+/; //really simple regex validation!
-      const isValid = re.test(value);
-      const msg = `${!isValid ? "Please enter a valid email." : ""}`;
-      error = !isValid ? [isValid, msg] : error;
-    }
-    if (validation.minLength) {
-      const isValid = value.length >= validation.minLength;
-      const msg = `${!isValid ? "Password must be at least 4 characters" : ""}`;
-      error = !isValid ? [isValid, msg] : error;
-    }
-    if (validation.required) {
-      const isValid = value.trim() !== "";
-      const msg = `${!isValid ? "This field is required." : ""}`;
-      error = !isValid ? [isValid, msg] : error;
-    }
-    formElement.touched = true;
-    formElement.valid = error[0];
-    formElement.validationMsg = error[1];
-
-    return formElement;
-  };
+ 
 
   const handleChanges = ({ e, eType }) => {
     //copy old state
@@ -137,9 +98,12 @@ const Register = () => {
 
     switch (eType) {
       case "onBlur":
-        formElement = checkValidity(formElement);
-        break;
+        if (!formElement.pristine){
+          formElement = checkInputValidity(formElement);
+        }         
+        break;        
       case "onChange":
+        formElement.pristine = false; 
         formElement.value = e.target.value;
         break;
       case "onFocus":
@@ -160,18 +124,18 @@ const Register = () => {
     });
   };
 
-  const formIsValid = () => {    
-    const formIsValid = Object.values(formState.formData).every(identifier =>identifier.valid);
+  const formIsValid = () => {
+    const formIsValid = Object.values(formState.formData).every(
+      (identifier) => identifier.valid
+    );
 
     return formIsValid;
-  };  
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (formIsValid()) {
-
-        console.log(formState);      
-     
+      console.log(formState);
     } else {
       setFormState({
         ...formState,
@@ -182,7 +146,6 @@ const Register = () => {
       });
     }
   };
-
   return (
     <div className="auth-container">
       <Logo />
@@ -190,43 +153,10 @@ const Register = () => {
         <div className={classes.paper}>
           <ThemeProvider theme={customTheme}>
             <Typography component="h1" variant="h5">
-              Sign up
+              Log In
             </Typography>
             <form className={classes.form} noValidate onSubmit={handleSubmit}>
               <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    error={!firstName.valid && firstName.touched}
-                    autoComplete="fname"
-                    name="firstName"
-                    variant="outlined"
-                    fullWidth
-                    onChange={(e) => handleChanges({ e, eType: "onChange" })}
-                    onBlur={(e) => handleChanges({ e, eType: "onBlur" })}
-                    onFocus={(e) => handleChanges({ e, eType: "onFocus" })}
-                    id="firstName"
-                    label="First Name"
-                    value={firstName.value}
-                    helperText={firstName.validationMsg}
-                    autoFocus
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    variant="outlined"
-                    fullWidth
-                    error={!lastName.valid && lastName.touched}
-                    onChange={(e) => handleChanges({ e, eType: "onChange" })}
-                    onBlur={(e) => handleChanges({ e, eType: "onBlur" })}
-                    onFocus={(e) => handleChanges({ e, eType: "onFocus" })}
-                    id="lastName"
-                    label="Last Name"
-                    name="lastName"
-                    value={lastName.value}
-                    helperText={lastName.validationMsg}
-                    autoComplete="lname"
-                  />
-                </Grid>
                 <Grid item xs={12}>
                   <TextField
                     variant="outlined"
@@ -242,6 +172,7 @@ const Register = () => {
                     helperText={email.validationMsg}
                     inputProps={{ className: classes.input }}
                     autoComplete="email"
+                    autoFocus
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -261,6 +192,12 @@ const Register = () => {
                     autoComplete="current-password"
                   />
                 </Grid>
+                <Grid item xs={12}>
+                  <FormControlLabel
+                    control={<Checkbox value="remember" color="primary" />}
+                    label="Remember me"
+                  />
+                </Grid>
               </Grid>
               <Button
                 type="submit"
@@ -268,17 +205,21 @@ const Register = () => {
                 variant="contained"
                 color="primary"
                 className={classes.submit}
-                // disabled={!formIsValid()}
               >
-                Sign Up
+                Sign In
               </Button>
               <FormHelperText error={formError.error}>
                 {formError.msg}
               </FormHelperText>
-              <Grid container justify="flex-end">
+              <Grid container>
+                <Grid item xs>
+                  <Link href="#" variant="body2">
+                    Forgot password?
+                  </Link>
+                </Grid>
                 <Grid item>
-                  <Link component={RouterLink} to='/login'  variant="body2">
-                    Already have an account? Sign in
+                  <Link component={RouterLink} to="/register" variant="body2">
+                    Need an account? Register
                   </Link>
                 </Grid>
               </Grid>
@@ -291,4 +232,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default Login;

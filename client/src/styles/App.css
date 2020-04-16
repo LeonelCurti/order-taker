@@ -1,10 +1,14 @@
-body {
-  font-family: "Roboto", sans-serif;
+* {
   box-sizing: border-box;
 }
-a{
-  text-decoration: none;
+
+body {
+  font-family: "Roboto", sans-serif;
+  margin: 0;
 }
+/* a{
+  text-decoration: none;
+} */
 /*============================
       LOGIN AND REGISTER
 ==============================*/
@@ -31,14 +35,4 @@ a{
   font-weight: 500;
   font-size: 1.8rem;
   color: #212B42;
-}
-
-footer {
-  text-align: center;
-  color: white;
-  background-color: #212b42;
-  opacity: 0.5;
-}
-footer p{
-  margin: 5px 0 5px 0; 
 }
