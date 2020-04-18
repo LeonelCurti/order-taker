@@ -1,30 +1,32 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { ThemeProvider } from "@material-ui/styles";
+import theme from './theme';
 
+import Dashboard from "./views/Dashboard";
+import MyOrders from "./views/MyOrders";
+import NewOrder from "./views/NewOrder";
+import ProductList from "./views/ProductList";
+import NotFound from "./views/NotFound";
+import Register from "./views/Register";
+import Login from "./views/Login";
 
-
-import Dashboard from "./dashboard/Dashboard";
-import MyOrders from "./dashboard/MyOrders";
-import NewOrder from "./dashboard/NewOrder";
-import PriceList from "./dashboard/PriceList";
-import NotFound from "./pages/NotFound";
-import Register from "./pages/Register";
-import Login from "./pages/Login";
-
-const App = () => {  
+const App = () => {
   return (
-    <Router>
-      <Switch>
-        <Route path="/dashboard/new_order" exact component={NewOrder} />
-        <Route path="/dashboard/my_orders" exact component={MyOrders} />
-        <Route path="/dashboard/price_list" exact component={PriceList} />
-        <Route path="/dashboard" exact component={Dashboard} />
-        <Route path="/register" exact component={Register} />
-        <Route path="/login" exact component={Login} />
-        <Route path="/" exact component={Login} />
-        <Route component={NotFound} />
-      </Switch>
-    </Router>
+    <ThemeProvider theme={theme}>
+      <Router>
+        <Switch>
+          <Route path="/new_order" exact component={NewOrder} />
+          <Route path="/my_orders" exact component={MyOrders} />
+          <Route path="/product_list" exact component={ProductList} />
+          <Route path="/dashboard" exact component={Dashboard} />
+          <Route path="/register" exact component={Register} />
+          <Route path="/login" exact component={Login} />
+          <Route path="/" exact component={Login} />
+          <Route component={NotFound} />
+        </Switch>
+      </Router>
+   </ThemeProvider>
   );
 };
 

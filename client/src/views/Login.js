@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
-import checkInputValidity from '../utils/checkInputValidity';
+import checkInputValidity from "../utils/checkInputValidity";
 import Footer from "../components/Footer";
 import Logo from "../components/Logo";
 import Button from "@material-ui/core/Button";
@@ -11,23 +11,8 @@ import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import {
-  makeStyles,
-  ThemeProvider,
-  createMuiTheme,
-} from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-
-const customTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: "#212B42",
-    },
-    secondary: {
-      main: "#4DB6AC",
-    },
-  },
-});
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -86,7 +71,6 @@ const Login = () => {
     formError,
     formData: { email, password },
   } = formState;
- 
 
   const handleChanges = ({ e, eType }) => {
     //copy old state
@@ -98,12 +82,12 @@ const Login = () => {
 
     switch (eType) {
       case "onBlur":
-        if (!formElement.pristine){
+        if (!formElement.pristine) {
           formElement = checkInputValidity(formElement);
-        }         
-        break;        
+        }
+        break;
       case "onChange":
-        formElement.pristine = false; 
+        formElement.pristine = false;
         formElement.value = e.target.value;
         break;
       case "onFocus":
@@ -151,80 +135,78 @@ const Login = () => {
       <Logo />
       <Container component="main" maxWidth="xs">
         <div className={classes.paper}>
-          <ThemeProvider theme={customTheme}>
-            <Typography component="h1" variant="h5">
-              Log In
-            </Typography>
-            <form className={classes.form} noValidate onSubmit={handleSubmit}>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <TextField
-                    variant="outlined"
-                    fullWidth
-                    error={!email.valid && email.touched}
-                    onChange={(e) => handleChanges({ e, eType: "onChange" })}
-                    onBlur={(e) => handleChanges({ e, eType: "onBlur" })}
-                    onFocus={(e) => handleChanges({ e, eType: "onFocus" })}
-                    id="email"
-                    label="Email"
-                    value={email.value}
-                    name="email"
-                    helperText={email.validationMsg}
-                    inputProps={{ className: classes.input }}
-                    autoComplete="email"
-                    autoFocus
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    variant="outlined"
-                    fullWidth
-                    error={!password.valid && password.touched}
-                    onChange={(e) => handleChanges({ e, eType: "onChange" })}
-                    onBlur={(e) => handleChanges({ e, eType: "onBlur" })}
-                    onFocus={(e) => handleChanges({ e, eType: "onFocus" })}
-                    name="password"
-                    label="Password"
-                    value={password.value}
-                    type="password"
-                    id="password"
-                    helperText={password.validationMsg}
-                    autoComplete="current-password"
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <FormControlLabel
-                    control={<Checkbox value="remember" color="primary" />}
-                    label="Remember me"
-                  />
-                </Grid>
+          <Typography component="h1" variant="h5">
+            Log In
+          </Typography>
+          <form className={classes.form} noValidate onSubmit={handleSubmit}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  fullWidth
+                  error={!email.valid && email.touched}
+                  onChange={(e) => handleChanges({ e, eType: "onChange" })}
+                  onBlur={(e) => handleChanges({ e, eType: "onBlur" })}
+                  onFocus={(e) => handleChanges({ e, eType: "onFocus" })}
+                  id="email"
+                  label="Email"
+                  value={email.value}
+                  name="email"
+                  helperText={email.validationMsg}
+                  inputProps={{ className: classes.input }}
+                  autoComplete="email"
+                  autoFocus
+                />
               </Grid>
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-                className={classes.submit}
-              >
-                Sign In
-              </Button>
-              <FormHelperText error={formError.error}>
-                {formError.msg}
-              </FormHelperText>
-              <Grid container>
-                <Grid item xs>
-                  <Link href="#" variant="body2">
-                    Forgot password?
-                  </Link>
-                </Grid>
-                <Grid item>
-                  <Link component={RouterLink} to="/register" variant="body2">
-                    Need an account? Register
-                  </Link>
-                </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  fullWidth
+                  error={!password.valid && password.touched}
+                  onChange={(e) => handleChanges({ e, eType: "onChange" })}
+                  onBlur={(e) => handleChanges({ e, eType: "onBlur" })}
+                  onFocus={(e) => handleChanges({ e, eType: "onFocus" })}
+                  name="password"
+                  label="Password"
+                  value={password.value}
+                  type="password"
+                  id="password"
+                  helperText={password.validationMsg}
+                  autoComplete="current-password"
+                />
               </Grid>
-            </form>
-          </ThemeProvider>
+              <Grid item xs={12}>
+                <FormControlLabel
+                  control={<Checkbox value="remember" color="primary" />}
+                  label="Remember me"
+                />
+              </Grid>
+            </Grid>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+            >
+              Sign In
+            </Button>
+            <FormHelperText error={formError.error}>
+              {formError.msg}
+            </FormHelperText>
+            <Grid container>
+              <Grid item xs>
+                <Link href="#" variant="body2">
+                  Forgot password?
+                </Link>
+              </Grid>
+              <Grid item>
+                <Link component={RouterLink} to="/register" variant="body2">
+                  Need an account? Register
+                </Link>
+              </Grid>
+            </Grid>
+          </form>
         </div>
       </Container>
       <Footer />
