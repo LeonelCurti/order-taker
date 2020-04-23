@@ -13,6 +13,8 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import { connect } from "react-redux";
+import { login } from "../actions/auth";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -30,11 +32,11 @@ const useStyles = makeStyles((theme) => ({
   },
   input: {
     //remove white background on textField when autofill
-    WebkitBoxShadow: "0 0 0 1000px #B0BEC5 inset",
+    WebkitBoxShadow: "0 0 0 1000px #f4f6f8 inset",
   },
 }));
 
-const Login = () => {
+const Login = ({login, history}) => {
   const classes = useStyles();
   const [formState, setFormState] = useState({
     formData: {
@@ -116,29 +118,43 @@ const Login = () => {
     return formIsValid;
   };
 
+  const dataToSubmit = () => {
+    return {
+      email: email.value,
+      password: password.value,
+    };
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (formIsValid()) {
-      console.log(formState);
-    } else {
-      setFormState({
-        ...formState,
-        formError: {
-          error: true,
-          msg: "Please check fields and try again.",
-        },
-      });
-    }
+    console.log('submit');
+    //testing
+    login({
+      email: 'luis2@gmail.com',
+      password: '1234',
+    },history);
+
+    // if (formIsValid()) {       
+    //   login(dataToSubmit());
+    // } else {
+    //   setFormState({
+    //     ...formState,
+    //     formError: {
+    //       error: true,
+    //       msg: "Please check empty or invalid fields and try again.",
+    //     },
+    //   });
+    // }
   };
   return (
     <div className="auth-container">
       <Logo />
       <Container component="main" maxWidth="xs">
         <div className={classes.paper}>
-          <Typography component="h1" variant="h5">
+          <Typography component="h1" variant="h4">
             Log In
           </Typography>
-          <form className={classes.form} noValidate onSubmit={handleSubmit}>
+          <form className={classes.form} noValidate >
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
@@ -183,11 +199,12 @@ const Login = () => {
               </Grid>
             </Grid>
             <Button
-              type="submit"
+              // type="submit"
               fullWidth
               variant="contained"
               color="primary"
               className={classes.submit}
+              onClick={handleSubmit}
             >
               Sign In
             </Button>
@@ -214,4 +231,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default connect(null, { login })(Login);

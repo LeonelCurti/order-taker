@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   shiftContent: {
-    paddingLeft: 240,
+    paddingLeft: 200,
   },
   content: {
     height: "100%",
@@ -38,15 +38,11 @@ const Layout = (props) => {
   //only shift main content to left in desktop mode
   const shouldOpenSidebar = isDesktop ? true : openSidebar;
   return (
-    <div
-      className={clsx(
-        classes.root,
-        {[classes.shiftContent]: isDesktop}
-      )}
-      // className={clsx({
-      //   [classes.root]: true,
-      //   [classes.shiftContent]: isDesktop,
-      // })}
+    <div  
+      className={clsx({
+        [classes.root]: true,
+        [classes.shiftContent]: isDesktop,
+      })}
     >
       <Navbar onSidebarOpen={handleSidebarOpen} />
 

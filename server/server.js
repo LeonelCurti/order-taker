@@ -7,6 +7,7 @@ const morgan = require("morgan");
 const connectDB = require("./config/db");
 const errorHandler = require("./middleware/errorHandler");
 const dotenv = require("dotenv");
+const cors = require('cors')
 
 //Environmental variables
 dotenv.config();
@@ -25,6 +26,9 @@ app.use(morgan("dev"));
 
 //File upload middleware
 app.use(fileupload());
+
+//Enable CORS
+app.use(cors())
 
 //Mount routers
 app.use("/api/v1/pricelist", require("./routes/priceList"));

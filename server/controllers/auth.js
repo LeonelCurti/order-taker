@@ -1,16 +1,15 @@
 const User = require("../models/Users");
 const { validationResult } = require("express-validator");
 
-
-exports.login = async (req, res, next) =>{
+exports.login = async (req, res, next) => {
   //check for errors
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    return res.status(422).json({ success: false, error: errors.array() });
+    return res.status(422).json({ success: false, error: "Invalid fields" });
+    //ok but the error message array is not exploited
   }
-
-  try {
+  try {   
     const { email, password } = req.body;
 
     //See if user exist
@@ -38,7 +37,7 @@ exports.login = async (req, res, next) =>{
         Date.now() + process.env.COOKIE_EXPIRE * 24 * 60 * 60 * 1
       ),
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production" ? true : false
+      secure: process.env.NODE_ENV === "production" ? true : false,
     };
 
     return res
@@ -48,14 +47,14 @@ exports.login = async (req, res, next) =>{
   } catch (error) {
     next(error);
   }
-}
+};
 
-exports.register = async (req, res, next) =>{
+exports.register = async (req, res, next) => {
   //check for errors
   const errors = validationResult(req);
-  
+
   if (!errors.isEmpty()) {
-    return res.status(422).json({ success: false, error: errors.array() });
+    return res.status(422).json({ success: false, error: "Invalid fields" });
   }
 
   try {
@@ -74,7 +73,7 @@ exports.register = async (req, res, next) =>{
       name,
       lastName,
       email,
-      password
+      password,
     });
 
     //create token
@@ -86,7 +85,7 @@ exports.register = async (req, res, next) =>{
         Date.now() + process.env.COOKIE_EXPIRE * 24 * 60 * 60 * 1
       ),
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production" ? true : false
+      secure: process.env.NODE_ENV === "production" ? true : false,
     };
 
     return res
@@ -96,8 +95,12 @@ exports.register = async (req, res, next) =>{
   } catch (error) {
     next(error);
   }
-}
+};
 
-exports.logout = (req, res, next) =>{
-  return res.clearCookie('token').json({ success: true });
-}
+exports.logout = (req, res, next) => {
+  return res.clearCookie("token").json({ success: true });
+};
+
+exports.me = (req, res, next) => {
+  return res.status(200).json({ success: true, user: req.user });
+};

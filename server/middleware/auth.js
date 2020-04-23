@@ -5,7 +5,8 @@ const User = require("../models/Users");
 exports.isAuth = async (req, res, next) => {
   //get token from client cookie
   let token = req.cookies.token;  
-
+  console.log('token:', token);
+  
   //check if no token
   if (!token) {
     return res.status(401).json({
@@ -16,8 +17,9 @@ exports.isAuth = async (req, res, next) => {
 
   try {
     //verify token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);  
-
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);      
+    console.log('decoded:',decoded);
+    
     //find decoded id in DB
     req.user = await User.findById(decoded.id);
 

@@ -1,17 +1,13 @@
 import React from "react";
-import { Link as RouterLink } from "react-router-dom";
-import {
-  AppBar,
-  Toolbar,
-  Badge,
-  Hidden,
-  IconButton
-} from "@material-ui/core";
+import { Link as RouterLink, withRouter } from "react-router-dom";
+import { connect } from 'react-redux';
+import { AppBar, Toolbar, Badge, Hidden, IconButton } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Logo1 from "../assets/logo.png";
 import MenuIcon from "@material-ui/icons/Menu";
 import NotificationsIcon from "@material-ui/icons/NotificationsOutlined";
 import InputIcon from "@material-ui/icons/Input";
+import { logout } from "../actions/auth";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,16 +20,21 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(1),
   },
   logoImg: {
-    width: theme.spacing(7),
-    height: theme.spacing(7),
-    paddingBottom: theme.spacing(1),
-    paddingTop: theme.spacing(1),
+    width: theme.spacing(6),
+    height: theme.spacing(6),
+    alignItems: "center",
+    marginBottom: theme.spacing(1),
+    marginTop: theme.spacing(1),
   },
 }));
 
-const Navbar = ({ onSidebarOpen }) => {
-  const classes = useStyles();;
-  const notifications = ['msg1', 'msg2'];
+const Navbar = ({ onSidebarOpen, history, logout }) => {
+  const classes = useStyles();
+  const notifications = ["msg1", "msg2"];
+
+  const handleLogout = () =>{
+    logout(history)
+  }
 
   return (
     <AppBar className={classes.root}>
@@ -53,7 +54,9 @@ const Navbar = ({ onSidebarOpen }) => {
               <NotificationsIcon />
             </Badge>
           </IconButton>
-          <IconButton className={classes.signOutButton} color="inherit">
+          <IconButton
+           onClick={handleLogout}
+          className={classes.signOutButton} color="inherit">
             <InputIcon />
           </IconButton>
         </Hidden>
@@ -63,10 +66,9 @@ const Navbar = ({ onSidebarOpen }) => {
             <MenuIcon />
           </IconButton>
         </Hidden>
-
       </Toolbar>
     </AppBar>
   );
 };
 
-export default Navbar;
+export default connect(null, { logout })(withRouter(Navbar));

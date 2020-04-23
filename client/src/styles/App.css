@@ -29,7 +29,7 @@ a{
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background: #B0BEC5;
+  /* background: rgb(226, 228, 229); */
   height: 100vh;
 }
 

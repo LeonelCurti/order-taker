@@ -1,4 +1,5 @@
 import React from "react";
+// import clsx from "clsx";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/styles";
 import { Divider, Drawer } from "@material-ui/core";
@@ -11,9 +12,11 @@ import QueuqueIcon from "@material-ui/icons/QueueSharp";
 import SidebarNav from "./SidebarNav";
 import Profile from './Profile'
 
+const drawerWidth = 200;
+
 const useStyles = makeStyles((theme) => ({
   drawer: {
-    width: 240,
+    width: drawerWidth,
     [theme.breakpoints.up("lg")]: {
       marginTop: 64,
       height: "calc(100% - 64px)",

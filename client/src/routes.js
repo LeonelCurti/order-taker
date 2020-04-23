@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { ThemeProvider } from "@material-ui/styles";
 import theme from './theme';
@@ -11,7 +11,15 @@ import NotFound from "./views/NotFound";
 import Register from "./views/Register";
 import Login from "./views/Login";
 
+import store from './store'
+import {loadUser} from './actions/auth'
+
+
+
 const App = () => {
+  useEffect(() => {   
+    store.dispatch(loadUser());
+  }, []);
   return (
     <ThemeProvider theme={theme}>
       <Router>

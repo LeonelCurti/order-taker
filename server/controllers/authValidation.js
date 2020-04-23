@@ -18,7 +18,7 @@ exports.validate = method => {
     case 'login':{
       return [
         check("email", "Please include a valid email").isEmail().trim(),
-        check("password", "Password must must be 5 or more characters").isLength({
+        check("password", "Password must must be 4 or more characters").isLength({
           min: 4
         })
       ]
