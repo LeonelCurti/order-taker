@@ -10,8 +10,7 @@ html {
 }
 
 body {
-  font-family: "Roboto", sans-serif;
-  background-color: #f4f6f8;
+  font-family: "Roboto", sans-serif;  
   height: 100%;
 }
 
@@ -28,8 +27,7 @@ a{
 .auth-container {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  /* background: rgb(226, 228, 229); */
+  justify-content: space-between;  
   height: 100vh;
 }
 

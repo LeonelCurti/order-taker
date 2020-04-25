@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, Redirect } from "react-router-dom";
 import checkInputValidity from "../utils/checkInputValidity";
 import Footer from "../components/Footer";
 import Logo from "../components/Logo";
@@ -30,12 +30,12 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(3, 0, 1),
   },
   input: {
-    //remove white background on textField when autofill
-    WebkitBoxShadow: "0 0 0 1000px #f4f6f8 inset",
+    //remove white background on textField when autofill    
+    // WebkitBoxShadow: "0 0 0 1000px #f4f6f8 inset",
   },
 }));
 
-const Register = ({ register, history }) => {
+const Register = ({ register, isAuthenticated, history }) => {
   const classes = useStyles();
   const [formState, setFormState] = useState({
     formData: {
@@ -152,7 +152,7 @@ const Register = ({ register, history }) => {
       {
         name: "pepe",
         lastName: "luis",
-        email: "luis2@gmail.com",
+        email: "luis4@gmail.com",
         password: "1234",
       },
       history
@@ -171,7 +171,9 @@ const Register = ({ register, history }) => {
     //   });
     // }
   };
-
+  if (isAuthenticated) {
+    return <Redirect to="/dashboard" />;
+  }
   return (
     <div className="auth-container">
       <Logo />
@@ -282,4 +284,8 @@ Register.protoTypes = {
   register: PropTypes.func.isRequired,
 };
 
-export default connect(null, { register })(Register);
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated,
+});
+
+export default connect(mapStateToProps, { register })(Register);

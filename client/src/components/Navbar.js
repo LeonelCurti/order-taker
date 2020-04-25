@@ -1,74 +1,92 @@
 import React from "react";
-import { Link as RouterLink, withRouter } from "react-router-dom";
-import { connect } from 'react-redux';
-import { AppBar, Toolbar, Badge, Hidden, IconButton } from "@material-ui/core";
+import { Link as RouterLink } from "react-router-dom";
+import { connect } from "react-redux";
+import {
+  AppBar,
+  Toolbar,
+  Hidden,
+  IconButton,
+  Box,
+  Typography  
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import Logo1 from "../assets/logo.png";
+import Logo2 from "../assets/logo2.png";
 import MenuIcon from "@material-ui/icons/Menu";
-import NotificationsIcon from "@material-ui/icons/NotificationsOutlined";
-import InputIcon from "@material-ui/icons/Input";
+import AccountCircle from "@material-ui/icons/AccountCircle";
 import { logout } from "../actions/auth";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
+  AppBar: {
+    boxShadow: theme.shadows[1],
     // boxShadow: "none",
+    backgroundColor: theme.palette.common.white,
+    // backgroundColor: theme.palette.primary,
   },
-  flexGrow: {
-    flexGrow: 1,
+  appBarToolbar: {
+    display: "flex",
+    justifyContent: "space-between",
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    [theme.breakpoints.up("sm")]: {
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2),
+    },
+    [theme.breakpoints.up("md")]: {
+      paddingLeft: theme.spacing(3),
+      paddingRight: theme.spacing(3),
+    },
+    [theme.breakpoints.up("lg")]: {
+      paddingLeft: theme.spacing(5),
+      paddingRight: theme.spacing(5),
+    },
   },
-  signOutButton: {
-    marginLeft: theme.spacing(1),
+  userNameText:{
+    color: theme.palette.text.primary,
+    // fontWeight: theme.typography.fontWeightBold,
+    textTransform: "uppercase"
   },
+
   logoImg: {
-    width: theme.spacing(6),
-    height: theme.spacing(6),
+    width: theme.spacing(5),
+    height: theme.spacing(5),
     alignItems: "center",
-    marginBottom: theme.spacing(1),
-    marginTop: theme.spacing(1),
   },
 }));
 
-const Navbar = ({ onSidebarOpen, history, logout }) => {
+const Navbar = ({ onSidebarOpen, user}) => {
   const classes = useStyles();
-  const notifications = ["msg1", "msg2"];
-
-  const handleLogout = () =>{
-    logout(history)
-  }
 
   return (
-    <AppBar className={classes.root}>
-      <Toolbar>
+    <AppBar className={classes.AppBar}>
+      <Toolbar className={classes.appBarToolbar}>
         <RouterLink to="/dashboard">
-          <img src={Logo1} alt="logo" className={classes.logoImg} />
+          <img src={Logo2} alt="logo" className={classes.logoImg} />
         </RouterLink>
-        <div className={classes.flexGrow} />
 
-        <Hidden mdDown>
-          <IconButton color="inherit">
-            <Badge
-              badgeContent={notifications.length}
-              color="secondary"
-              variant="dot"
-            >
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
-          <IconButton
-           onClick={handleLogout}
-          className={classes.signOutButton} color="inherit">
-            <InputIcon />
-          </IconButton>
-        </Hidden>
+        <Box
+          display="flex"
+          justifyContent="flex-end"
+          alignItems="center"
+          width="100%"
+        >
+          <Hidden mdDown>
+            <Typography className={classes.userNameText}>{user.name}</Typography>
+            <IconButton color="primary">
+              <AccountCircle />
+            </IconButton>
+          </Hidden>
 
-        <Hidden lgUp>
-          <IconButton color="inherit" onClick={onSidebarOpen}>
-            <MenuIcon />
-          </IconButton>
-        </Hidden>
+          <Hidden lgUp>
+            <IconButton color="primary" onClick={onSidebarOpen}>
+              <MenuIcon />
+            </IconButton>
+          </Hidden>
+        </Box>
       </Toolbar>
     </AppBar>
   );
 };
-
-export default connect(null, { logout })(withRouter(Navbar));
+const mapStateToProps = state => ({
+  user: state.auth.user
+});
+export default connect(mapStateToProps, { logout })(Navbar);

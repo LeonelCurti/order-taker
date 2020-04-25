@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, Redirect } from "react-router-dom";
 import checkInputValidity from "../utils/checkInputValidity";
 import Footer from "../components/Footer";
 import Logo from "../components/Logo";
@@ -32,11 +32,11 @@ const useStyles = makeStyles((theme) => ({
   },
   input: {
     //remove white background on textField when autofill
-    WebkitBoxShadow: "0 0 0 1000px #f4f6f8 inset",
+    // WebkitBoxShadow: "0 0 0 1000px #f4f6f8 inset",
   },
 }));
 
-const Login = ({login, history}) => {
+const Login = ({ login, isAuthenticated, history }) => {
   const classes = useStyles();
   const [formState, setFormState] = useState({
     formData: {
@@ -127,14 +127,17 @@ const Login = ({login, history}) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('submit');
+    console.log("submit");
     //testing
-    login({
-      email: 'luis2@gmail.com',
-      password: '1234',
-    },history);
+    login(
+      {
+        email: "luis2@gmail.com",
+        password: "1234",
+      },
+      history
+    );
 
-    // if (formIsValid()) {       
+    // if (formIsValid()) {
     //   login(dataToSubmit());
     // } else {
     //   setFormState({
@@ -146,6 +149,10 @@ const Login = ({login, history}) => {
     //   });
     // }
   };
+
+  if (isAuthenticated) {
+    return <Redirect to="/dashboard" />;
+  }
   return (
     <div className="auth-container">
       <Logo />
@@ -154,7 +161,7 @@ const Login = ({login, history}) => {
           <Typography component="h1" variant="h4">
             Log In
           </Typography>
-          <form className={classes.form} noValidate >
+          <form className={classes.form} noValidate>
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
@@ -230,5 +237,7 @@ const Login = ({login, history}) => {
     </div>
   );
 };
-
-export default connect(null, { login })(Login);
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated,
+});
+export default connect(mapStateToProps, { login })(Login);

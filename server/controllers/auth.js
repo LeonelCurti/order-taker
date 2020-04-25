@@ -34,7 +34,7 @@ exports.login = async (req, res, next) => {
     //Set cookie options
     const cookieOptions = {
       expires: new Date(
-        Date.now() + process.env.COOKIE_EXPIRE * 24 * 60 * 60 * 1
+        Date.now() + process.env.COOKIE_EXPIRE * 24 * 60 * 60 * 1000
       ),
       httpOnly: true,
       secure: process.env.NODE_ENV === "production" ? true : false,
@@ -77,20 +77,20 @@ exports.register = async (req, res, next) => {
     });
 
     //create token
-    const token = user.getSignedJwtToken();
+    // const token = user.getSignedJwtToken();
 
     //Set cookie options
-    const cookieOptions = {
-      expires: new Date(
-        Date.now() + process.env.COOKIE_EXPIRE * 24 * 60 * 60 * 1
-      ),
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production" ? true : false,
-    };
+    // const cookieOptions = {
+    //   expires: new Date(
+    //     Date.now() + process.env.COOKIE_EXPIRE * 24 * 60 * 60 * 1
+    //   ),
+    //   httpOnly: true,
+    //   secure: process.env.NODE_ENV === "production" ? true : false,
+    // };
 
     return res
       .status(200)
-      .cookie("token", token, cookieOptions)
+      // .cookie("token", token, cookieOptions)
       .json({ success: true });
   } catch (error) {
     next(error);
