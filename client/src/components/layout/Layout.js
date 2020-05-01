@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
   shiftContent: {
     paddingLeft: 180,
   },
-  content: {
+  content: { 
     backgroundColor: '#fafbfc',
     height: "100%",
   },
@@ -52,7 +52,7 @@ const Layout = (props) => {
         open={shouldOpenSidebar}
         variant={isDesktop ? "persistent" : "temporary"}
       />
-      <main className={classes.content}>{props.children}</main>
+      <main className={classes.content}>{props.children}</main>   
     </div>
   );
 };

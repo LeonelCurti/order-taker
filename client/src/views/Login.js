@@ -15,6 +15,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { connect } from "react-redux";
 import { login } from "../actions/auth";
+import LinearLoader from '../components/LinearLoader'
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -36,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Login = ({ login, isAuthenticated, history }) => {
+const Login = ({ login, isAuthenticated, loading }) => {
   const classes = useStyles();
   const [formState, setFormState] = useState({
     formData: {
@@ -74,7 +75,7 @@ const Login = ({ login, isAuthenticated, history }) => {
     formData: { email, password },
   } = formState;
 
-  const handleChanges = ({ e, eType }) => {
+  const handleChanges = ({ e, eventType }) => {
     //copy old state
     const updatedFormData = { ...formState.formData };
     //get copy of selected formElement to be updated
@@ -82,7 +83,7 @@ const Login = ({ login, isAuthenticated, history }) => {
     //reset error for formHelperText in submit button
     const updatedFormError = { error: false, msg: "" };
 
-    switch (eType) {
+    switch (eventType) {
       case "onBlur":
         if (!formElement.pristine) {
           formElement = checkInputValidity(formElement);
@@ -133,8 +134,7 @@ const Login = ({ login, isAuthenticated, history }) => {
       {
         email: "luis2@gmail.com",
         password: "1234",
-      },
-      history
+      }
     );
 
     // if (formIsValid()) {
@@ -155,6 +155,7 @@ const Login = ({ login, isAuthenticated, history }) => {
   }
   return (
     <div className="auth-container">
+      {loading && <LinearLoader />}
       <Logo />
       <Container component="main" maxWidth="xs">
         <div className={classes.paper}>
@@ -168,9 +169,9 @@ const Login = ({ login, isAuthenticated, history }) => {
                   variant="outlined"
                   fullWidth
                   error={!email.valid && email.touched}
-                  onChange={(e) => handleChanges({ e, eType: "onChange" })}
-                  onBlur={(e) => handleChanges({ e, eType: "onBlur" })}
-                  onFocus={(e) => handleChanges({ e, eType: "onFocus" })}
+                  onChange={(e) => handleChanges({ e, eventType: "onChange" })}
+                  onBlur={(e) => handleChanges({ e, eventType: "onBlur" })}
+                  onFocus={(e) => handleChanges({ e, eventType: "onFocus" })}
                   id="email"
                   label="Email"
                   value={email.value}
@@ -186,9 +187,9 @@ const Login = ({ login, isAuthenticated, history }) => {
                   variant="outlined"
                   fullWidth
                   error={!password.valid && password.touched}
-                  onChange={(e) => handleChanges({ e, eType: "onChange" })}
-                  onBlur={(e) => handleChanges({ e, eType: "onBlur" })}
-                  onFocus={(e) => handleChanges({ e, eType: "onFocus" })}
+                  onChange={(e) => handleChanges({ e, eventType: "onChange" })}
+                  onBlur={(e) => handleChanges({ e, eventType: "onBlur" })}
+                  onFocus={(e) => handleChanges({ e, eventType: "onFocus" })}
                   name="password"
                   label="Password"
                   value={password.value}
@@ -239,5 +240,6 @@ const Login = ({ login, isAuthenticated, history }) => {
 };
 const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
+  loading: state.auth.loading,
 });
 export default connect(mapStateToProps, { login })(Login);

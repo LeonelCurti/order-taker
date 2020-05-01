@@ -1,14 +1,12 @@
 import {
-  CLEAR_ERRORS,
   LOAD_USER,
   AUTH_ERROR,
   LOGOUT,
-  // ACCOUNT_DELETED
+  SET_LOADING
 } from "../actions/types";
 
-const initialState = {
-  // token: localStorage.getItem('token'),
-  // loading: true,
+const initialState = {  
+  loading: false,
   isAuthenticated: false,
   user: null,
   error: null,
@@ -17,29 +15,32 @@ const initialState = {
 export default function (state = initialState, action) {
   const { type, payload } = action;
 
-  switch (type) {  
+  switch (type) {
     case LOAD_USER:
       return {
         ...state,
         user: payload.user,
-        isAuthenticated: true
-      }
+        loading:false,
+        isAuthenticated: true,
+      };
     case AUTH_ERROR:
       return {
         ...state,
-        error: payload
+        loading: false,
+        error: payload,
       };
     case LOGOUT:
       return {
         ...state,
+        loading: false,
         isAuthenticated: false,
-        user: null
-      }
-    case CLEAR_ERRORS:
+        user: null,
+      };
+    case SET_LOADING:
       return {
         ...state,
-        error: null,
-      };
+        loading: true
+      } 
     default:
       return state;
   }

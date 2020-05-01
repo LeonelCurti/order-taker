@@ -9,7 +9,7 @@ exports.login = async (req, res, next) => {
     return res.status(422).json({ success: false, error: "Invalid fields" });
     //ok but the error message array is not exploited
   }
-  try {   
+  try {
     const { email, password } = req.body;
 
     //See if user exist
@@ -88,19 +88,25 @@ exports.register = async (req, res, next) => {
     //   secure: process.env.NODE_ENV === "production" ? true : false,
     // };
 
-    return res
-      .status(200)
-      // .cookie("token", token, cookieOptions)
-      .json({ success: true });
+    return (
+      res
+        .status(200)
+        // .cookie("token", token, cookieOptions)
+        .json({ success: true })
+    );
   } catch (error) {
     next(error);
   }
 };
 
 exports.logout = (req, res, next) => {
-  return res.clearCookie("token").json({ success: true });
+  setTimeout(() => {
+    return res.clearCookie("token").json({ success: true });
+  }, 1000);
 };
 
 exports.me = (req, res, next) => {
-  return res.status(200).json({ success: true, user: req.user });
+  setTimeout(() => {
+    return res.status(200).json({ success: true, user: req.user });
+  }, 1000);
 };

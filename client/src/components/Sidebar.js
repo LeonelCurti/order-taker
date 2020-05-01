@@ -57,7 +57,7 @@ const Sidebar = (props) => {
       open={open}
       variant={variant}
     >
-      <SidebarNav className={classes.nav} pages={pages} />
+      <SidebarNav className={classes.nav} pages={pages} onClose={onClose} />
     </Drawer>
   );
 };

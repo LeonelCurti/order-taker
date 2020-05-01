@@ -7,7 +7,7 @@ import {
   Hidden,
   IconButton,
   Box,
-  Typography  
+  Typography,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Logo2 from "../assets/logo2.png";
@@ -17,10 +17,11 @@ import { logout } from "../actions/auth";
 
 const useStyles = makeStyles((theme) => ({
   AppBar: {
-    boxShadow: theme.shadows[1],
+    // boxShadow: theme.shadows[1],
     // boxShadow: "none",
     backgroundColor: theme.palette.common.white,
-    // backgroundColor: theme.palette.primary,
+    // backgroundColor: theme.palette.secondary,
+    borderBottom: `1px solid ${theme.palette.divider}`,
   },
   appBarToolbar: {
     display: "flex",
@@ -40,10 +41,10 @@ const useStyles = makeStyles((theme) => ({
       paddingRight: theme.spacing(5),
     },
   },
-  userNameText:{
+  userNameText: {
     color: theme.palette.text.primary,
     // fontWeight: theme.typography.fontWeightBold,
-    textTransform: "uppercase"
+    textTransform: "uppercase",
   },
 
   logoImg: {
@@ -53,11 +54,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Navbar = ({ onSidebarOpen, user}) => {
+const Navbar = ({ onSidebarOpen, user }) => {
   const classes = useStyles();
 
   return (
-    <AppBar className={classes.AppBar}>
+    <AppBar elevation={0} className={classes.AppBar}>
       <Toolbar className={classes.appBarToolbar}>
         <RouterLink to="/dashboard">
           <img src={Logo2} alt="logo" className={classes.logoImg} />
@@ -70,7 +71,9 @@ const Navbar = ({ onSidebarOpen, user}) => {
           width="100%"
         >
           <Hidden mdDown>
-            <Typography className={classes.userNameText}>{user.name}</Typography>
+            <Typography className={classes.userNameText}>
+              {user.name}
+            </Typography>
             <IconButton color="primary">
               <AccountCircle />
             </IconButton>
@@ -86,7 +89,7 @@ const Navbar = ({ onSidebarOpen, user}) => {
     </AppBar>
   );
 };
-const mapStateToProps = state => ({
-  user: state.auth.user
+const mapStateToProps = (state) => ({
+  user: state.auth.user,
 });
 export default connect(mapStateToProps, { logout })(Navbar);
