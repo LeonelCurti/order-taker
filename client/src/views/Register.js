@@ -35,7 +35,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Register = ({ register, isAuthenticated, history }) => {
+const Register = (props) => {
+  const { register, history } = props;
+  const { isAuthenticated, loading, error } = props.auth;
   const classes = useStyles();
   const [formState, setFormState] = useState({
     formData: {
@@ -148,28 +150,17 @@ const Register = ({ register, isAuthenticated, history }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    register(
-      {
-        name: "pepe",
-        lastName: "luis",
-        email: "luis4@gmail.com",
-        password: "1234",
-      },
-      history
-    );
-    // if (formIsValid()) {
-    //   console.log('data submit');
-
-    //   register(dataToSubmit());
-    // } else {
-    //   setFormState({
-    //     ...formState,
-    //     formError: {
-    //       error: true,
-    //       msg: "Please check empty or invalid fields and try again.",
-    //     },
-    //   });
-    // }
+    if (formIsValid()) {
+      register(dataToSubmit(),history);
+    } else {
+      setFormState({
+        ...formState,
+        formError: {
+          error: true,
+          msg: "Please check empty or invalid fields and try again.",
+        },
+      });
+    }
   };
   if (isAuthenticated) {
     return <Redirect to="/dashboard" />;
@@ -259,12 +250,14 @@ const Register = ({ register, isAuthenticated, history }) => {
               color="primary"
               className={classes.submit}
               onClick={handleSubmit}
+              disabled={loading}
             >
               Sign Up
             </Button>
             <FormHelperText error={formError.error}>
               {formError.msg}
             </FormHelperText>
+            <FormHelperText error={error} className={classes.errorMsg}>{error}</FormHelperText>
             <Grid container justify="flex-end">
               <Grid item>
                 <Link component={RouterLink} to="/login" variant="body2">
@@ -285,7 +278,7 @@ Register.protoTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  isAuthenticated: state.auth.isAuthenticated,
+  auth: state.auth,
 });
 
 export default connect(mapStateToProps, { register })(Register);

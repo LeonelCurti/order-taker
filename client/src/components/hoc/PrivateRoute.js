@@ -2,7 +2,7 @@ import React from "react";
 import { Route, Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import Loader from "./Loader";
+import Loader from "../Loader";
 
 const PrivateRoute = ({
   component: Component,

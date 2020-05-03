@@ -15,7 +15,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { connect } from "react-redux";
 import { login } from "../actions/auth";
-import LinearLoader from '../components/LinearLoader'
+import LinearLoader from "../components/LinearLoader";
+
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -28,6 +29,9 @@ const useStyles = makeStyles((theme) => ({
     width: "100%", // Fix IE 11 issue.
     marginTop: theme.spacing(3),
   },
+  errorMsg:{
+    marginBottom: theme.spacing(1),    
+  },
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
@@ -37,8 +41,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Login = ({ login, isAuthenticated, loading }) => {
+const Login = (props) => {
   const classes = useStyles();
+  const { login } = props;
+  const { isAuthenticated, loading, error } = props.auth;
   const [formState, setFormState] = useState({
     formData: {
       email: {
@@ -58,8 +64,7 @@ const Login = ({ login, isAuthenticated, loading }) => {
         touched: false,
         pristine: true,
         validation: {
-          required: true,
-          minLength: 4,
+          required: true,     
         },
         validationMsg: "",
       },
@@ -80,7 +85,8 @@ const Login = ({ login, isAuthenticated, loading }) => {
     const updatedFormData = { ...formState.formData };
     //get copy of selected formElement to be updated
     let formElement = { ...updatedFormData[e.target.name] };
-    //reset error for formHelperText in submit button
+    //clear error msg for formHelperText below submit button
+    //executing any event
     const updatedFormError = { error: false, msg: "" };
 
     switch (eventType) {
@@ -127,27 +133,18 @@ const Login = ({ login, isAuthenticated, loading }) => {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("submit");
-    //testing
-    login(
-      {
-        email: "luis2@gmail.com",
-        password: "1234",
-      }
-    );
-
-    // if (formIsValid()) {
-    //   login(dataToSubmit());
-    // } else {
-    //   setFormState({
-    //     ...formState,
-    //     formError: {
-    //       error: true,
-    //       msg: "Please check empty or invalid fields and try again.",
-    //     },
-    //   });
-    // }
+    e.preventDefault(); 
+    if (formIsValid()) {
+      login(dataToSubmit());
+    } else {
+      setFormState({
+        ...formState,
+        formError: {
+          error: true,
+          msg: "Please check empty or invalid fields and try again.",
+        },
+      });
+    }
   };
 
   if (isAuthenticated) {
@@ -213,12 +210,14 @@ const Login = ({ login, isAuthenticated, loading }) => {
               color="primary"
               className={classes.submit}
               onClick={handleSubmit}
+              disabled={loading}
             >
               Sign In
             </Button>
-            <FormHelperText error={formError.error}>
+            <FormHelperText className={classes.errorMsg} error={formError.error}>
               {formError.msg}
             </FormHelperText>
+            <FormHelperText error={error} className={classes.errorMsg}>{error}</FormHelperText>      
             <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2">
@@ -239,7 +238,7 @@ const Login = ({ login, isAuthenticated, loading }) => {
   );
 };
 const mapStateToProps = (state) => ({
-  isAuthenticated: state.auth.isAuthenticated,
-  loading: state.auth.loading,
+  auth: state.auth,
 });
+
 export default connect(mapStateToProps, { login })(Login);

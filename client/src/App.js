@@ -1,10 +1,9 @@
 import React, { useEffect } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { ThemeProvider } from "@material-ui/styles";
-// import theme from './theme';
 import theme from "./theme";
-import PrivateRoute from "./components/PrivateRoute";
-//Views
+import PrivateRoute from "./components/hoc/PrivateRoute";
+
 import Dashboard from "./views/Dashboard";
 import MyOrders from "./views/MyOrders";
 import NewOrder from "./views/NewOrder";
@@ -13,13 +12,15 @@ import NotFound from "./views/NotFound";
 import Register from "./views/Register";
 import Login from "./views/Login";
 import Loader from "./components/Loader";
-//Redux for initial user load
+
 import store from "./store";
-import { loadUser } from "./actions/auth";
+import { loadUser, clearErrors } from "./actions/auth";
 
 const App = () => {
   useEffect(() => {
-    store.dispatch(loadUser());
+    const isFirstLoad = true;
+    store.dispatch(loadUser(isFirstLoad));
+    // store.dispatch(clearErrors());
   }, []);
   return (
     <Router>
