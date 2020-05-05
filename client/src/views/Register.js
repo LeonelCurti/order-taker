@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { Link as RouterLink, Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import checkInputValidity from "../utils/checkInputValidity";
 import Footer from "../components/Footer";
 import Logo from "../components/Logo";
@@ -13,8 +13,8 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { connect } from "react-redux";
-import { register } from "../actions/auth";
-
+import { register, clearErrors } from "../actions/auth";
+import LinearLoader from "../components/LinearLoader";
 const useStyles = makeStyles((theme) => ({
   paper: {
     // marginTop: theme.spacing(8),
@@ -26,147 +26,125 @@ const useStyles = makeStyles((theme) => ({
     width: "100%", // Fix IE 11 issue.
     marginTop: theme.spacing(3),
   },
+  errorMsg: {
+    marginBottom: theme.spacing(1),
+  },
   submit: {
     margin: theme.spacing(3, 0, 1),
   },
   input: {
-    //remove white background on textField when autofill    
+    //remove white background on textField when autofill
     // WebkitBoxShadow: "0 0 0 1000px #f4f6f8 inset",
   },
 }));
 
 const Register = (props) => {
-  const { register, history } = props;
+  const { register, clearErrors, history } = props;
   const { isAuthenticated, loading, error } = props.auth;
   const classes = useStyles();
-  const [formState, setFormState] = useState({
-    formData: {
-      firstName: {
-        value: "",
-        valid: false,
-        touched: false,
-        pristine: true,
-        validation: {
-          required: true,
-        },
-        validationMsg: "",
+  const [formData, setFormData] = useState({
+    firstName: {
+      value: "",
+      valid: false,
+      touched: false,
+      focused: false,
+      validation: {
+        required: true,
       },
-      lastName: {
-        value: "",
-        valid: false,
-        touched: false,
-        pristine: true,
-        validation: {
-          required: true,
-        },
-        validationMsg: "",
-      },
-      email: {
-        value: "",
-        valid: false,
-        touched: false,
-        pristine: true,
-        validation: {
-          required: true,
-          isEmail: true,
-        },
-        validationMsg: "",
-      },
-      password: {
-        value: "",
-        valid: false,
-        touched: false,
-        pristine: true,
-        validation: {
-          required: true,
-          minLength: 4,
-        },
-        validationMsg: "",
-      },
+      validationMsg: "",
     },
-    formError: {
-      error: false,
-      msg: "",
+    lastName: {
+      value: "",
+      valid: false,
+      touched: false,
+      focused: false,
+      validation: {
+        required: true,
+      },
+      validationMsg: "",
+    },
+    email: {
+      value: "",
+      valid: false,
+      touched: false,
+      focused: false,
+      validation: {
+        required: true,
+        isEmail: true,
+      },
+      validationMsg: "",
+    },
+    password: {
+      value: "",
+      valid: false,
+      touched: false,
+      focused: false,
+      validation: {
+        required: true,
+        minLength: 4,
+      },
+      validationMsg: "",
     },
   });
 
-  const {
-    formError,
-    formData: { firstName, lastName, email, password },
-  } = formState;
+  const { firstName, lastName, email, password } = formData;
 
-  const handleChanges = ({ e, eType }) => {
-    //copy old state
-    const updatedFormData = { ...formState.formData };
-    //get copy of selected formElement to be updated
+  const handleChanges = (e) => {
+    const updatedFormData = { ...formData };
     let formElement = { ...updatedFormData[e.target.name] };
-    //reset error for formHelperText in submit button
-    const updatedFormError = { error: false, msg: "" };
 
-    switch (eType) {
-      case "onBlur":
-        if (!formElement.pristine) {
-          formElement = checkInputValidity(formElement);
-        }
-        break;
-      case "onChange":
-        formElement.pristine = false;
-        formElement.value = e.target.value;
-        break;
-      case "onFocus":
-        if (formElement.touched && !formElement.valid) {
-          formElement.touched = false;
-        }
-        break;
-      default:
-        return;
-    }
-    //replace selected old formElement with new data obtained
+    formElement.value = e.target.value;
+    formElement.touched = true;
+    formElement = checkInputValidity(formElement);
     updatedFormData[e.target.name] = formElement;
-    //update state
-    setFormState({
-      ...formState,
-      formData: updatedFormData,
-      formError: updatedFormError,
-    });
+
+    setFormData(updatedFormData);
+  };
+
+  const toggleFocused = (e) => {
+    const updatedFormData = { ...formData };
+    let formElement = { ...updatedFormData[e.target.name] };
+    formElement.focused = !formElement.focused;
+    updatedFormData[e.target.name] = formElement;
+    setFormData(updatedFormData);
   };
 
   const formIsValid = () => {
-    const formIsValid = Object.values(formState.formData).every(
+    const formIsValid = Object.values(formData).every(
       (identifier) => identifier.valid
     );
-
     return formIsValid;
   };
 
   const dataToSubmit = () => {
-    return {
-      name: firstName.value,
-      lastName: lastName.value,
-      email: email.value,
-      password: password.value,
-    };
+    const newFormData = {};
+    for (let formIdentifier in formData) {
+      newFormData[formIdentifier] = formData[formIdentifier].value;
+    }
+    return newFormData;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (formIsValid()) {
-      register(dataToSubmit(),history);
-    } else {
-      setFormState({
-        ...formState,
-        formError: {
-          error: true,
-          msg: "Please check empty or invalid fields and try again.",
-        },
-      });
+      register(dataToSubmit(), history);
     }
   };
+
+  const handleRedirection = (e) => {
+    e.preventDefault();
+    if (error) {
+      clearErrors();
+    }
+    history.push("/login");
+  };
+
   if (isAuthenticated) {
     return <Redirect to="/dashboard" />;
   }
   return (
     <div className="auth-container">
+      {loading && <LinearLoader />}
       <Logo />
       <Container component="main" maxWidth="xs">
         <div className={classes.paper}>
@@ -177,14 +155,16 @@ const Register = (props) => {
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  error={!firstName.valid && firstName.touched}
                   autoComplete="fname"
                   name="firstName"
                   variant="outlined"
+                  error={
+                    !firstName.valid && firstName.touched && !firstName.focused
+                  }
                   fullWidth
-                  onChange={(e) => handleChanges({ e, eType: "onChange" })}
-                  onBlur={(e) => handleChanges({ e, eType: "onBlur" })}
-                  onFocus={(e) => handleChanges({ e, eType: "onFocus" })}
+                  onChange={handleChanges}
+                  onFocus={toggleFocused}
+                  onBlur={toggleFocused}
                   id="firstName"
                   label="First Name"
                   value={firstName.value}
@@ -196,10 +176,12 @@ const Register = (props) => {
                 <TextField
                   variant="outlined"
                   fullWidth
-                  error={!lastName.valid && lastName.touched}
-                  onChange={(e) => handleChanges({ e, eType: "onChange" })}
-                  onBlur={(e) => handleChanges({ e, eType: "onBlur" })}
-                  onFocus={(e) => handleChanges({ e, eType: "onFocus" })}
+                  error={
+                    !lastName.valid && lastName.touched && !lastName.focused
+                  }
+                  onChange={handleChanges}
+                  onFocus={toggleFocused}
+                  onBlur={toggleFocused}
                   id="lastName"
                   label="Last Name"
                   name="lastName"
@@ -212,10 +194,10 @@ const Register = (props) => {
                 <TextField
                   variant="outlined"
                   fullWidth
-                  error={!email.valid && email.touched}
-                  onChange={(e) => handleChanges({ e, eType: "onChange" })}
-                  onBlur={(e) => handleChanges({ e, eType: "onBlur" })}
-                  onFocus={(e) => handleChanges({ e, eType: "onFocus" })}
+                  error={!email.valid && email.touched && !email.focused}
+                  onChange={handleChanges}
+                  onFocus={toggleFocused}
+                  onBlur={toggleFocused}
                   id="email"
                   label="Email"
                   value={email.value}
@@ -229,10 +211,12 @@ const Register = (props) => {
                 <TextField
                   variant="outlined"
                   fullWidth
-                  error={!password.valid && password.touched}
-                  onChange={(e) => handleChanges({ e, eType: "onChange" })}
-                  onBlur={(e) => handleChanges({ e, eType: "onBlur" })}
-                  onFocus={(e) => handleChanges({ e, eType: "onFocus" })}
+                  error={
+                    !password.valid && password.touched && !password.focused
+                  }
+                  onChange={handleChanges}
+                  onFocus={toggleFocused}
+                  onBlur={toggleFocused}
                   name="password"
                   label="Password"
                   value={password.value}
@@ -244,25 +228,31 @@ const Register = (props) => {
               </Grid>
             </Grid>
             <Button
-              // type="submit"
+              type="submit"
               fullWidth
               variant="contained"
               color="primary"
               className={classes.submit}
               onClick={handleSubmit}
-              disabled={loading}
+              disabled={!formIsValid()}
             >
               Sign Up
             </Button>
-            <FormHelperText error={formError.error}>
-              {formError.msg}
+            <FormHelperText error={true} className={classes.errorMsg}>
+              {error}
             </FormHelperText>
-            <FormHelperText error={error} className={classes.errorMsg}>{error}</FormHelperText>
             <Grid container justify="flex-end">
               <Grid item>
-                <Link component={RouterLink} to="/login" variant="body2">
+                <Link
+                  component="button"
+                  variant="body2"
+                  onClick={handleRedirection}
+                >
                   Already have an account? Log in
                 </Link>
+                {/* <Link component={RouterLink} to="/login" variant="body2">
+                  Already have an account? Log in
+                </Link> */}
               </Grid>
             </Grid>
           </form>
@@ -281,4 +271,4 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
 });
 
-export default connect(mapStateToProps, { register })(Register);
+export default connect(mapStateToProps, { register, clearErrors })(Register);

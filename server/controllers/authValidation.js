@@ -4,7 +4,7 @@ exports.validate = method => {
   switch (method) {
     case "register": {
       return [
-        check("name", "Name is required").trim().notEmpty(),
+        check("firstName", "First Name is required").trim().notEmpty(),
         check("lastName", "Last name is required").trim().notEmpty(),
         check("email", "Please include a valid email").isEmail().normalizeEmail().trim(),
         check(

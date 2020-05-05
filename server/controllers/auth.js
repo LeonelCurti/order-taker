@@ -50,6 +50,7 @@ exports.login = async (req, res, next) => {
 };
 
 exports.register = async (req, res, next) => {
+  console.log(req.body);
   //check for errors
   const errors = validationResult(req);
 
@@ -58,7 +59,8 @@ exports.register = async (req, res, next) => {
   }
 
   try {
-    const { name, lastName, email, password } = req.body;
+    const { firstName, lastName, email, password } = req.body;
+    
 
     //See if user already exist
     const check_user = await User.findOne({ email });
@@ -70,7 +72,7 @@ exports.register = async (req, res, next) => {
 
     //Create new user and save in db
     const user = await User.create({
-      name,
+      firstName,
       lastName,
       email,
       password,

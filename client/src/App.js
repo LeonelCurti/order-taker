@@ -19,7 +19,7 @@ import { loadUser, clearErrors } from "./actions/auth";
 const App = () => {
   useEffect(() => {
     const isFirstLoad = true;
-    store.dispatch(loadUser(isFirstLoad));
+    store.dispatch(loadUser(isFirstLoad));  
     // store.dispatch(clearErrors());
   }, []);
   return (

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Link as RouterLink, Redirect } from "react-router-dom";
-import checkInputValidity from "../utils/checkInputValidity";
+import { Redirect } from "react-router-dom";
+import checkInputValidity from "../utils/checkInputValidity2";
 import Footer from "../components/Footer";
 import Logo from "../components/Logo";
 import Button from "@material-ui/core/Button";
@@ -14,9 +14,8 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { connect } from "react-redux";
-import { login } from "../actions/auth";
+import { login,clearErrors } from "../actions/auth";
 import LinearLoader from "../components/LinearLoader";
-
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -29,8 +28,8 @@ const useStyles = makeStyles((theme) => ({
     width: "100%", // Fix IE 11 issue.
     marginTop: theme.spacing(3),
   },
-  errorMsg:{
-    marginBottom: theme.spacing(1),    
+  errorMsg: {
+    marginBottom: theme.spacing(1),
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
@@ -43,108 +42,82 @@ const useStyles = makeStyles((theme) => ({
 
 const Login = (props) => {
   const classes = useStyles();
-  const { login } = props;
+  const { login,clearErrors,history } = props;
   const { isAuthenticated, loading, error } = props.auth;
-  const [formState, setFormState] = useState({
-    formData: {
-      email: {
-        value: "",
-        valid: false,
-        touched: false,
-        pristine: true,
-        validation: {
-          required: true,
-          isEmail: true,
-        },
-        validationMsg: "",
+  const [formData, setFormData] = useState({
+    email: {
+      value: "",
+      valid: false,
+      touched: false,
+      focused: false,
+      validation: {
+        required: true,
+        isEmail: true,
       },
-      password: {
-        value: "",
-        valid: false,
-        touched: false,
-        pristine: true,
-        validation: {
-          required: true,     
-        },
-        validationMsg: "",
-      },
+      validationMsg: "",
     },
-    formError: {
-      error: false,
-      msg: "",
+    password: {
+      value: "",
+      valid: false,
+      touched: false,
+      focused: false,
+      validation: {
+        required: true,
+      },
+      validationMsg: "",
     },
   });
 
-  const {
-    formError,
-    formData: { email, password },
-  } = formState;
+  const { email, password } = formData;
 
-  const handleChanges = ({ e, eventType }) => {
-    //copy old state
-    const updatedFormData = { ...formState.formData };
-    //get copy of selected formElement to be updated
+  const handleChanges = (e) => {
+    const updatedFormData = { ...formData };
     let formElement = { ...updatedFormData[e.target.name] };
-    //clear error msg for formHelperText below submit button
-    //executing any event
-    const updatedFormError = { error: false, msg: "" };
 
-    switch (eventType) {
-      case "onBlur":
-        if (!formElement.pristine) {
-          formElement = checkInputValidity(formElement);
-        }
-        break;
-      case "onChange":
-        formElement.pristine = false;
-        formElement.value = e.target.value;
-        break;
-      case "onFocus":
-        if (formElement.touched && !formElement.valid) {
-          formElement.touched = false;
-        }
-        break;
-      default:
-        return;
-    }
-    //replace selected old formElement with new data obtained
+    formElement.value = e.target.value;
+    formElement.touched = true;
+    formElement = checkInputValidity(formElement);
     updatedFormData[e.target.name] = formElement;
-    //update state
-    setFormState({
-      ...formState,
-      formData: updatedFormData,
-      formError: updatedFormError,
-    });
+
+    setFormData(updatedFormData);
+  };
+
+  const toggleFocused = (e) => {
+    const updatedFormData = { ...formData };
+    let formElement = { ...updatedFormData[e.target.name] };
+    formElement.focused = !formElement.focused;
+    updatedFormData[e.target.name] = formElement;
+    setFormData(updatedFormData);
   };
 
   const formIsValid = () => {
-    const formIsValid = Object.values(formState.formData).every(
+    const formIsValid = Object.values(formData).every(
       (identifier) => identifier.valid
     );
-
     return formIsValid;
   };
 
   const dataToSubmit = () => {
-    return {
-      email: email.value,
-      password: password.value,
-    };
+    const newFormData = {};
+    for (let formIdentifier in formData) {
+      newFormData[formIdentifier] = formData[formIdentifier].value;
+    }
+    return newFormData;
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
     if (formIsValid()) {
       login(dataToSubmit());
-    } else {
-      setFormState({
-        ...formState,
-        formError: {
-          error: true,
-          msg: "Please check empty or invalid fields and try again.",
-        },
-      });
     }
+  };
+
+  const handleRedirection = (e) => {
+    e.preventDefault();
+    if (error) {
+      clearErrors();
+    }
+    history.push("/register");
   };
 
   if (isAuthenticated) {
@@ -159,16 +132,17 @@ const Login = (props) => {
           <Typography component="h1" variant="h4">
             Log In
           </Typography>
-          <form className={classes.form} noValidate>
+          <form className={classes.form} onSubmit={handleSubmit} noValidate>
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
                   variant="outlined"
-                  fullWidth
-                  error={!email.valid && email.touched}
-                  onChange={(e) => handleChanges({ e, eventType: "onChange" })}
-                  onBlur={(e) => handleChanges({ e, eventType: "onBlur" })}
-                  onFocus={(e) => handleChanges({ e, eventType: "onFocus" })}
+                  fullWidth             
+                  error={!email.valid && email.touched && !email.focused}
+                  // FormHelperTextProps={{error:true}}
+                  onChange={handleChanges}
+                  onFocus={toggleFocused}
+                  onBlur={toggleFocused}
                   id="email"
                   label="Email"
                   value={email.value}
@@ -183,10 +157,10 @@ const Login = (props) => {
                 <TextField
                   variant="outlined"
                   fullWidth
-                  error={!password.valid && password.touched}
-                  onChange={(e) => handleChanges({ e, eventType: "onChange" })}
-                  onBlur={(e) => handleChanges({ e, eventType: "onBlur" })}
-                  onFocus={(e) => handleChanges({ e, eventType: "onFocus" })}
+                  error={!password.valid && password.touched && !password.focused}
+                  onChange={handleChanges}
+                  onFocus={toggleFocused}
+                  onBlur={toggleFocused}
                   name="password"
                   label="Password"
                   value={password.value}
@@ -204,20 +178,19 @@ const Login = (props) => {
               </Grid>
             </Grid>
             <Button
-              // type="submit"
+              type="submit"
               fullWidth
               variant="contained"
               color="primary"
               className={classes.submit}
-              onClick={handleSubmit}
-              disabled={loading}
+              // onClick={handleSubmit}
+              disabled={!formIsValid()}
             >
               Sign In
             </Button>
-            <FormHelperText className={classes.errorMsg} error={formError.error}>
-              {formError.msg}
+            <FormHelperText error={true} className={classes.errorMsg}>
+              {error}
             </FormHelperText>
-            <FormHelperText error={error} className={classes.errorMsg}>{error}</FormHelperText>      
             <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2">
@@ -225,7 +198,9 @@ const Login = (props) => {
                 </Link>
               </Grid>
               <Grid item>
-                <Link component={RouterLink} to="/register" variant="body2">
+                <Link component="button"
+                  variant="body2"
+                  onClick={handleRedirection}>
                   Need an account? Register
                 </Link>
               </Grid>
@@ -241,4 +216,4 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
 });
 
-export default connect(mapStateToProps, { login })(Login);
+export default connect(mapStateToProps, { login, clearErrors })(Login);

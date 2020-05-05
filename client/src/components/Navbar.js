@@ -72,7 +72,7 @@ const Navbar = ({ onSidebarOpen, user }) => {
         >
           <Hidden mdDown>
             <Typography className={classes.userNameText}>
-              {user.name}
+              {user.firstName}
             </Typography>
             <IconButton color="primary">
               <AccountCircle />
