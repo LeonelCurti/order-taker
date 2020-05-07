@@ -30,6 +30,7 @@ export default function (state = initialState, action) {
         ...state,
         loading: false,
         error: payload,
+        user: null,
       };
     case LOGOUT:
       return {

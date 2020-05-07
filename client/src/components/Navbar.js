@@ -13,7 +13,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Logo2 from "../assets/logo2.png";
 import MenuIcon from "@material-ui/icons/Menu";
 import AccountCircle from "@material-ui/icons/AccountCircle";
-import { logout } from "../actions/auth";
+import { logout } from "../store/actions/auth";
 
 const useStyles = makeStyles((theme) => ({
   AppBar: {

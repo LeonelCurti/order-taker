@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { connect } from "react-redux";
 import { ThemeProvider } from "@material-ui/styles";
 import theme from "./theme";
 import PrivateRoute from "./components/hoc/PrivateRoute";
@@ -11,17 +12,18 @@ import ProductList from "./views/ProductList";
 import NotFound from "./views/NotFound";
 import Register from "./views/Register";
 import Login from "./views/Login";
-import Loader from "./components/Loader";
 
-import store from "./store";
-import { loadUser, clearErrors } from "./actions/auth";
+import { loadUser, clearErrors } from "./store/actions/auth";
 
-const App = () => {
+const App = (props) => {
+  const { loadUser } = props;
+
   useEffect(() => {
     const isFirstLoad = true;
-    store.dispatch(loadUser(isFirstLoad));  
+    loadUser(isFirstLoad);
     // store.dispatch(clearErrors());
-  }, []);
+  }, [loadUser]);
+
   return (
     <Router>
       <ThemeProvider theme={theme}>
@@ -30,7 +32,6 @@ const App = () => {
           <PrivateRoute path="/my_orders" exact component={MyOrders} />
           <PrivateRoute path="/product_list" exact component={ProductList} />
           <PrivateRoute path="/dashboard" exact component={Dashboard} />
-          <Route path="/loader" exact component={Loader} />
           <Route path="/register" exact component={Register} />
           <Route path="/login" exact component={Login} />
           <Route path="/" exact component={Login} />
@@ -41,4 +42,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default connect(null, { loadUser })(App);

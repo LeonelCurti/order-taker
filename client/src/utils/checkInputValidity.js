@@ -17,8 +17,7 @@ export default function checkInputValidity(formElement) {
     const isValid = value.trim() !== "";
     const msg = `${!isValid ? "This field is required." : ""}`;
     error = !isValid ? [isValid, msg] : error;
-  }
-  formElement.touched = true;
+  }  
   formElement.valid = error[0];
   formElement.validationMsg = error[1];
 

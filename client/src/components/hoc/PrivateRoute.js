@@ -2,7 +2,7 @@ import React from "react";
 import { Route, Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import Loader from "../Loader";
+import CircularLoader from "../CircularLoader";
 
 const PrivateRoute = ({
   component: Component,
@@ -14,28 +14,12 @@ const PrivateRoute = ({
     render={
       (props) =>
         loading ? (
-          <Loader />
+          <CircularLoader />
         ) : isAuthenticated ? (
           <Component {...props} />
         ) : (
           <Redirect to="/login" />
         )
-
-        // isAuthenticated ? (
-        //   user ? (
-        //     <Component {...props} />
-        //   ) : (
-        //     <Loader />
-        //   )
-        // ) : (
-        //   <Redirect to="/login" />
-        // )
-
-      // isAuthenticated ? (
-      //     <Component {...props} />
-      //   ) : (
-      //     <Redirect to="/login" />
-      //   )
     }
   />
 );

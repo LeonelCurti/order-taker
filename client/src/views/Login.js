@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
-import checkInputValidity from "../utils/checkInputValidity2";
+import checkInputValidity from "../utils/checkInputValidity";
 import Footer from "../components/Footer";
 import Logo from "../components/Logo";
 import Button from "@material-ui/core/Button";
@@ -14,7 +14,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { connect } from "react-redux";
-import { login,clearErrors } from "../actions/auth";
+import { login, clearErrors } from "../store/actions/auth";
 import LinearLoader from "../components/LinearLoader";
 
 const useStyles = makeStyles((theme) => ({
@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Login = (props) => {
   const classes = useStyles();
-  const { login,clearErrors,history } = props;
+  const { login, clearErrors, history } = props;
   const { isAuthenticated, loading, error } = props.auth;
   const [formData, setFormData] = useState({
     email: {
@@ -137,7 +137,7 @@ const Login = (props) => {
               <Grid item xs={12}>
                 <TextField
                   variant="outlined"
-                  fullWidth             
+                  fullWidth
                   error={!email.valid && email.touched && !email.focused}
                   // FormHelperTextProps={{error:true}}
                   onChange={handleChanges}
@@ -157,7 +157,9 @@ const Login = (props) => {
                 <TextField
                   variant="outlined"
                   fullWidth
-                  error={!password.valid && password.touched && !password.focused}
+                  error={
+                    !password.valid && password.touched && !password.focused
+                  }
                   onChange={handleChanges}
                   onFocus={toggleFocused}
                   onBlur={toggleFocused}
@@ -198,9 +200,11 @@ const Login = (props) => {
                 </Link>
               </Grid>
               <Grid item>
-                <Link component="button"
+                <Link
+                  component="button"
                   variant="body2"
-                  onClick={handleRedirection}>
+                  onClick={handleRedirection}
+                >
                   Need an account? Register
                 </Link>
               </Grid>

@@ -11,7 +11,8 @@ import {
 export const register = (dataToSubmit, history) => {
   return async (dispatch) => {
     try {
-      setLoading();
+      //dispatch(setLoading());
+      //problem here!!!!
       await axios.post("/api/v1/auth/register", dataToSubmit);
 
       history.push("/login");
@@ -41,6 +42,8 @@ export const loadUser = (isFirstLoad) => async (dispatch) => {
       payload: res.data,
     });
   } catch (err) {
+    console.log(err.response.data);
+    
     if (isFirstLoad) {
       err.response.data.error = "";
       dispatch(authFailed(err));

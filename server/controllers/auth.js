@@ -110,5 +110,5 @@ exports.logout = (req, res, next) => {
 exports.me = (req, res, next) => {
   setTimeout(() => {
     return res.status(200).json({ success: true, user: req.user });
-  }, 1000);
+  }, 1000); 
 };

@@ -14,7 +14,7 @@ const useStyles = makeStyles({
   },
 });
 
-function Loader() {
+function CircularLoader() {
   const classes = useStyles();
 
   return (
@@ -24,4 +24,4 @@ function Loader() {
   );
 }
 
-export default Loader;
+export default CircularLoader;
