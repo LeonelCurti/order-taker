@@ -1,12 +1,13 @@
 import {
-  LOAD_USER,
-  AUTH_ERROR,
-  LOGOUT,
-  SET_LOADING,
-  CLEAR_ERRORS
+  AUTH_LOGOUT,
+  AUTH_CLEAR_ERRORS,
+  AUTH_REQUEST,
+  AUTH_REGISTER_SUCCESS,
+  AUTH_FAIL,
+  AUTH_LOAD_USER_SUCCESS,
 } from "../actions/types";
 
-const initialState = {  
+const initialState = {
   loading: false,
   isAuthenticated: false,
   user: null,
@@ -17,38 +18,44 @@ export default function (state = initialState, action) {
   const { type, payload } = action;
 
   switch (type) {
-    case LOAD_USER:
+    case AUTH_REQUEST:
       return {
         ...state,
-        user: payload.user,
-        loading:false,
-        isAuthenticated: true,
-        error:''
+        loading: true,
+        error: null,
       };
-    case AUTH_ERROR:
+    case AUTH_REGISTER_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: null,
+      };
+    case AUTH_FAIL:
       return {
         ...state,
         loading: false,
         error: payload,
-        user: null,
       };
-    case LOGOUT:
+    case AUTH_LOAD_USER_SUCCESS:
       return {
         ...state,
+        isAuthenticated: true,
+        user: payload.user,
         loading: false,
+        error: null,
+      };
+    case AUTH_CLEAR_ERRORS:
+      return {
+        ...state,
+        error: null,
+      };
+    case AUTH_LOGOUT:
+      return {
+        ...state,
         isAuthenticated: false,
+        loading: false,
         user: null,
       };
-    case SET_LOADING:
-      return {
-        ...state,
-        loading: true
-      } 
-    case CLEAR_ERRORS:
-      return {
-        ...state,
-        error: null
-      } 
     default:
       return state;
   }

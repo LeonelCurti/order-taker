@@ -13,7 +13,7 @@ import NotFound from "./views/NotFound";
 import Register from "./views/Register";
 import Login from "./views/Login";
 
-import { loadUser, clearErrors } from "./store/actions/auth";
+import { loadUser } from "./store/actions/auth";
 
 const App = (props) => {
   const { loadUser } = props;
@@ -21,7 +21,6 @@ const App = (props) => {
   useEffect(() => {
     const isFirstLoad = true;
     loadUser(isFirstLoad);
-    // store.dispatch(clearErrors());
   }, [loadUser]);
 
   return (
