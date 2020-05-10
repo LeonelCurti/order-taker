@@ -7,7 +7,7 @@ const path = require("path");
 //@access  Public
 
 exports.getPriceList = (req, res, next) => {
-  try {
+  try {    
     const workbook = XLSX.readFile("server/uploads/priceList.xlsx");
 
     //Get array of sheet names
@@ -19,9 +19,8 @@ exports.getPriceList = (req, res, next) => {
       { defval: "" }
     );
 
-    res
-      .status(200)
-      .json({ success: true, data: { products: pricingListJson } });
+    res.status(200).json({ success: true, products: pricingListJson });
+    
   } catch (error) {
     next(new ErrorResponse(error.message, "Cannot get price list"));
   }
@@ -54,14 +53,14 @@ exports.uploadPriceList = (req, res, next) => {
   if (fileExtension === ".xls" || fileExtension === ".xlsx") {
     file.name = `priceList${fileExtension}`;
     // Save file in storage
-    file.mv(`./server/uploads/${file.name}`, async err => {
-      if (err) {        
-        next(new ErrorResponse(err.message, "Cannot upload price list"));        
+    file.mv(`./server/uploads/${file.name}`, async (err) => {
+      if (err) {
+        next(new ErrorResponse(err.message, "Cannot upload price list"));
       } else {
         return res.status(200).json({ success: true, data: file.name });
       }
     });
-  } else {    
+  } else {
     return res
       .status(400)
       .json({ success: false, error: "Invalid excel file" });
