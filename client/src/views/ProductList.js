@@ -1,95 +1,104 @@
-import React from "react";
+import React, { useState } from "react";
+import { connect } from "react-redux";
 import Layout from "../components/layout/Layout";
+import SearchInput from "../components/SearchInput";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
+import IconButton from "@material-ui/core/IconButton";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
+import PhotoCameraOutlinedIcon from "@material-ui/icons/PhotoCameraOutlined";
 
-const useStyles = makeStyles((theme)=>({
-  tableWrapper: {
+const useStyles = makeStyles((theme) => ({
+  content: {
+    display: "flex",
+    flexDirection: "column",
     paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(2),
+    marginLeft: "auto",
+    marginRight: "auto",
+    // alignItems: "center",
     width: "auto",
     [theme.breakpoints.up("xs")]: {
       width: "95%",
-      marginLeft: "auto",     
-      marginRight: "auto",
     },
     [theme.breakpoints.up("sm")]: {
       width: "90%",
-      marginLeft: "auto",
-      marginRight: "auto"
     },
     [theme.breakpoints.up("md")]: {
       width: "82.5%",
-      marginLeft: "auto",
-      marginRight: "auto"
     },
     [theme.breakpoints.up("lg")]: {
       width: "70%",
-      marginLeft: "auto",
-      marginRight: "auto"
-    }
+    },
+    height: "100%",
   },
-  table: {
-    minWidth: 650,
+  tableContainer: {
+    height: "95%",
+    marginTop: theme.spacing(2),
+  },
+  search: {
+    height: "42px",
+  },
+  cell: {
+    // paddingRight:'5px',
+    // paddingLeft:theme.spacing(1),
   },
 }));
 
-const rows = [
-  createData("Frozen yoghurt", 159, 6.0),
-  createData("Ice cream sandwich", 237, 9.0),
-  createData("Eclair", 262, 16.0),
-  createData("Cupcake", 305, 3.7),
-  createData("Gingerbread", 356, 16.0),
-  createData("Frozen yoghurt", 159, 6.0),
-  createData("Ice cream sandwich", 237, 9.0),
-  createData("Eclair", 262, 16.0),
-  createData("Cupcake", 305, 3.7),
-  createData("Gingerbread", 356, 16.0),
-  createData("Frozen yoghurt", 159, 6.0),
-  createData("Ice cream sandwich", 237, 9.0),
-  createData("Eclair", 262, 16.0),
-  createData("Cupcake", 305, 3.7),
-  createData("Gingerbread", 356, 16.0),
-  createData("Frozen yoghurt", 159, 6.0),
-  createData("Ice cream sandwich", 237, 9.0),
-  createData("Eclair", 262, 16.0),
-  createData("Cupcake", 305, 3.7),
-  createData("Gingerbread", 356, 16.0),
-];
-
-function createData(description, code, price) {
-  return { code, description, price };
-}
-
-const ProductList = () => {
+const ProductList = (props) => {
+  const [searchText, setSearchText] = useState("");
+  const { products } = props.orders;
   const classes = useStyles();
+
+  const onSearchText = (e) => {
+    setSearchText(e.target.value);
+  };
+
+  const filteredProducts = () => {
+    if (searchText !== "") {
+      const listFiltered = products.filter((product) => {
+        const regex = new RegExp(`${searchText}`, "gi");
+        return product.cod.match(regex) || product.descrip.match(regex);
+      });
+      return listFiltered;
+    } else {
+      return products;
+    }
+  };
 
   return (
     <Layout>
-      <div className={classes.tableWrapper}>
-        <TableContainer component={Paper}>
-          <Table 
-          // className={classes.table}
-          >
+      <div className={classes.content}>
+        <div className={classes.search}>
+          <SearchInput placeholder="Search" onChange={onSearchText} />
+        </div>
+
+        <TableContainer className={classes.tableContainer} component={Paper}>
+          <Table size="small">
             <TableHead>
               <TableRow>
                 <TableCell>Code</TableCell>
                 <TableCell>Description</TableCell>
                 <TableCell>Price</TableCell>
+                <TableCell></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row) => (
-                <TableRow hover key={row.code}>
-                  <TableCell>{row.code}</TableCell>
-                  <TableCell>{row.description}</TableCell>
-                  <TableCell>{row.price}</TableCell>
+              {filteredProducts().map((product) => (
+                <TableRow hover key={product.cod}>
+                  <TableCell>{product.cod}</TableCell>
+                  <TableCell>{product.descrip}</TableCell>
+                  <TableCell>{product.price}</TableCell>
+                  <TableCell>
+                    <IconButton color="default" size="small">
+                      <PhotoCameraOutlinedIcon />
+                    </IconButton>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -100,4 +109,8 @@ const ProductList = () => {
   );
 };
 
-export default ProductList;
+const mapStateToProps = (state) => ({
+  orders: state.orders,
+});
+
+export default connect(mapStateToProps)(ProductList);

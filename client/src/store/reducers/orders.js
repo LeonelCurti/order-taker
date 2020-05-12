@@ -1,10 +1,10 @@
 import {
   GET_PRICE_LIST,
-  PRICE_LIST_ERROR
+  PRICE_LIST_ERROR,
 } from "../actions/types";
 
 const initialState = {
-  loading: true, 
+  loading: true,
   products: [],
   error: null,
 };
@@ -25,7 +25,7 @@ export default function (state = initialState, action) {
         ...state,
         loading: false,
         error: payload,
-      };
+      };    
     default:
       return state;
   }
