@@ -8,7 +8,7 @@ import PrivateRoute from "./components/hoc/PrivateRoute";
 import Dashboard from "./views/Dashboard";
 import MyOrders from "./views/MyOrders";
 import NewOrder from "./views/NewOrder";
-import ProductList from "./views/ProductList";
+import ProductsList from "./views/ProductsList";
 import NotFound from "./views/NotFound";
 import Register from "./views/Register";
 import Login from "./views/Login";
@@ -29,7 +29,7 @@ const App = (props) => {
         <Switch>
           <PrivateRoute path="/new_order" exact component={NewOrder} />
           <PrivateRoute path="/my_orders" exact component={MyOrders} />
-          <PrivateRoute path="/product_list" exact component={ProductList} />
+          <PrivateRoute path="/product_list" exact component={ProductsList} />
           <PrivateRoute path="/dashboard" exact component={Dashboard} />
           <Route path="/register" exact component={Register} />
           <Route path="/login" exact component={Login} />

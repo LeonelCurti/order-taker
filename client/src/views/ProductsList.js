@@ -5,23 +5,26 @@ import SearchInput from "../components/SearchInput";
 import { makeStyles } from "@material-ui/core/styles";
 import ProductsTable from "../components/ProductsTable";
 
-
 const useStyles = makeStyles((theme) => ({
-  myOrders: {
-    display: "flex",
-    padding: theme.spacing(2),
-    height: "100%",
-  },
   productList: {
     display: "flex",
     flexDirection: "column",
-    flexGrow: 1,
-    margin: "0 5px",
-  },
-  orderTable: {
-    flexGrow: 1,
-    margin: "0 5px",
-    // marginTop: theme.spacing(3),
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
+    margin: '0 auto',  
+    [theme.breakpoints.up("xs")]: {
+      width: "95%",
+    },
+    [theme.breakpoints.up("sm")]: {
+      width: "90%",
+    },
+    [theme.breakpoints.up("md")]: {
+      width: "82.5%",
+    },
+    [theme.breakpoints.up("lg")]: {
+      width: "70%",
+    },
+    height: "100%",
   },
   searchInput: {
     height: "42px",
@@ -29,16 +32,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const NewOrder = (props) => {
+const ProductList = (props) => {
   const { products, filterStr } = props.orders;
   const classes = useStyles();
 
-  const productsToShow = () => {
-    if (filterStr !== "") {
+ const productsToShow = () => {
+    if (filterStr !=='') {
       return products.filter((product) => {
         const regex = new RegExp(`${filterStr}`, "gi");
         return product.cod.match(regex) || product.descrip.match(regex);
-      });
+      })      
     } else {
       return products;
     }
@@ -46,16 +49,13 @@ const NewOrder = (props) => {
 
   return (
     <Layout>
-      <div className={classes.myOrders}>
-        <div className={classes.orderTable}>
-          <ProductsTable products={productsToShow()} />
+      <div className={classes.productList}>
+        <div className={classes.searchInput}>
+          <SearchInput 
+          placeholder="Search code or description"                     
+          />
         </div>
-        <div className={classes.productList}>
-          <div className={classes.searchInput}>
-            <SearchInput placeholder="Search code or description" />
-          </div>
-          <ProductsTable products={productsToShow()} />
-        </div>
+        <ProductsTable products={productsToShow()} />
       </div>
     </Layout>
   );
@@ -65,4 +65,4 @@ const mapStateToProps = (state) => ({
   orders: state.orders,
 });
 
-export default connect(mapStateToProps)(NewOrder);
+export default connect(mapStateToProps)(ProductList);

@@ -2,6 +2,7 @@ import axios from "axios";
 import {
   GET_PRICE_LIST,
   PRICE_LIST_ERROR,
+  CHANGE_FILTER_STR
 } from "./types";
 
 export const getPriceList = () => async (dispatch) => {
@@ -19,3 +20,10 @@ export const getPriceList = () => async (dispatch) => {
     });
   }
 };
+
+export const changeFilterStr = (text) => dispatch =>{
+  dispatch({
+    type: CHANGE_FILTER_STR,
+    payload: text
+  });
+}
