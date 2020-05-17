@@ -1,9 +1,7 @@
-import React, { useEffect } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/styles";
-import { connect } from "react-redux";
-import { changeFilterStr } from "../store/actions/orders";
 import { Paper, Input } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 
@@ -29,21 +27,12 @@ const useStyles = makeStyles((theme) => ({
 
 const SearchInput = (props) => {
   const classes = useStyles();
-  const { changeFilterStr, className, style } = props;
-
-  useEffect(() => {
-    //componentWillUnmount
-    return () => changeFilterStr("");
-  });
-
-  const onChange = (e) => {
-    changeFilterStr(e.target.value.trim());
-  };
-
+  const { className, style, onChange } = props;
+  
   return (
     <Paper className={clsx(classes.root, className)} style={style}>
       <SearchIcon className={classes.icon} />
-      <Input className={classes.input} disableUnderline onChange={onChange} />
+      <Input className={classes.input} disableUnderline onChange={e=>onChange(e)} />
     </Paper>
   );
 };
@@ -53,5 +42,5 @@ SearchInput.propTypes = {
   clearFilteredProducs: PropTypes.func,
 };
 
-export default connect(null, { changeFilterStr })(SearchInput);
+export default SearchInput;
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
 import Layout from "../components/layout/Layout";
 import SearchInput from "../components/SearchInput";
@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(2),
-    margin: '0 auto',  
+    margin: "0 auto",
     [theme.breakpoints.up("xs")]: {
       width: "95%",
     },
@@ -33,15 +33,20 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ProductList = (props) => {
-  const { products, filterStr } = props.orders;
+  const { products } = props.orders;
+  const [filterStr, setFilterStr] = useState("");
   const classes = useStyles();
 
- const productsToShow = () => {
-    if (filterStr !=='') {
+  const onChange = (e) => {
+    setFilterStr(e.target.value.trim());
+  };
+
+  const productsToShow = () => {
+    if (filterStr !== "") {
       return products.filter((product) => {
         const regex = new RegExp(`${filterStr}`, "gi");
         return product.cod.match(regex) || product.descrip.match(regex);
-      })      
+      });
     } else {
       return products;
     }
@@ -51,8 +56,9 @@ const ProductList = (props) => {
     <Layout>
       <div className={classes.productList}>
         <div className={classes.searchInput}>
-          <SearchInput 
-          placeholder="Search code or description"                     
+          <SearchInput
+            placeholder="Search code or description"
+            onChange={onChange}
           />
         </div>
         <ProductsTable products={productsToShow()} />

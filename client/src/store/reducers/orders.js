@@ -7,7 +7,6 @@ import {
 const initialState = {
   loading: true,
   products: [],
-  filterStr:'',
   error: null,
 };
 
@@ -27,11 +26,6 @@ export default function (state = initialState, action) {
         ...state,
         loading: false,
         error: payload,
-      };
-    case CHANGE_FILTER_STR:
-      return {
-        ...state,
-        filterStr: payload,
       };
     default:
       return state;
