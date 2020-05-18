@@ -56,10 +56,7 @@ const ProductList = (props) => {
     <Layout>
       <div className={classes.productList}>
         <div className={classes.searchInput}>
-          <SearchInput
-            placeholder="Search code or description"
-            onChange={onChange}
-          />
+          <SearchInput onChange={onChange} placeholder='Search products'/>
         </div>
         <ProductsTable products={productsToShow()} />
       </div>

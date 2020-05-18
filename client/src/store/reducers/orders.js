@@ -1,7 +1,6 @@
 import {
   GET_PRICE_LIST,
   PRICE_LIST_ERROR,
-  CHANGE_FILTER_STR,
 } from "../actions/types";
 
 const initialState = {

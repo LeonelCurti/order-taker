@@ -27,12 +27,17 @@ const useStyles = makeStyles((theme) => ({
 
 const SearchInput = (props) => {
   const classes = useStyles();
-  const { className, style, onChange } = props;
-  
+  const { className, style, onChange, placeholder } = props;
+
   return (
     <Paper className={clsx(classes.root, className)} style={style}>
       <SearchIcon className={classes.icon} />
-      <Input className={classes.input} disableUnderline onChange={e=>onChange(e)} />
+      <Input
+        className={classes.input}
+        disableUnderline
+        onChange={(e) => onChange(e)}
+        placeholder={placeholder ? placeholder : "Search"}
+      />
     </Paper>
   );
 };
@@ -43,4 +48,3 @@ SearchInput.propTypes = {
 };
 
 export default SearchInput;
-

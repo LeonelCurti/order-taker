@@ -10,7 +10,11 @@ const Dashboard = (props) => {
     getPriceList();
   }, [getPriceList]);
 
-  return <Layout>dashboard</Layout>;
+  return (
+    <Layout>
+      dashboard
+    </Layout>
+  );
 };
 
 Dashboard.prototype = {

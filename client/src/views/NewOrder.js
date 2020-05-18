@@ -4,6 +4,7 @@ import Layout from "../components/layout/Layout";
 import SearchInput from "../components/SearchInput";
 import { makeStyles } from "@material-ui/core/styles";
 import ProductsTable from "../components/ProductsTable";
+import Typography from "@material-ui/core/Typography";
 
 const useStyles = makeStyles((theme) => ({
   myOrders: {
@@ -11,18 +12,18 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2),
     height: "100%",
   },
-  productList: {
+  container: {
     display: "flex",
     flexDirection: "column",
     flexGrow: 1,
-    margin: "0 5px",
-  },
-  orderTable: {
-    flexGrow: 1,
-    margin: "0 5px",
-    // marginTop: theme.spacing(3),
+    margin: "0 5px", 
   },
   searchInput: {
+    height: "42px",
+    marginBottom: theme.spacing(2),
+  },
+  title: {
+    padding:theme.spacing(1),
     height: "42px",
     marginBottom: theme.spacing(2),
   },
@@ -36,7 +37,7 @@ const NewOrder = (props) => {
   const onChange = (e) => {
     setFilterStr(e.target.value.trim());
   };
-  
+
   const productsToShow = () => {
     if (filterStr !== "") {
       return products.filter((product) => {
@@ -51,15 +52,17 @@ const NewOrder = (props) => {
   return (
     <Layout>
       <div className={classes.myOrders}>
-        <div className={classes.orderTable}>
+        <div className={classes.container}>
+          <div className={classes.title}>
+            <Typography variant="h5" gutterBottom>
+              New Order
+            </Typography>
+          </div>
           <ProductsTable products={productsToShow()} />
         </div>
-        <div className={classes.productList}>
+        <div className={classes.container}>
           <div className={classes.searchInput}>
-            <SearchInput
-              placeholder="Search code or description"
-              onChange={onChange}
-            />
+            <SearchInput onChange={onChange} placeholder="Search products" />
           </div>
           <ProductsTable products={productsToShow()} />
         </div>
