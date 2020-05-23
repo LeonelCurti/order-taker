@@ -33,6 +33,7 @@ app.use(cors())
 //Mount routers
 app.use("/api/v1/pricelist", require("./routes/priceList"));
 app.use("/api/v1/auth", require("./routes/auth"))
+app.use("/api/v1/order", require("./routes/order"))
 
 //Custom express error handler
 app.use(errorHandler);

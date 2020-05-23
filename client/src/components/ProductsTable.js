@@ -32,6 +32,8 @@ const ProductsTable = (props) => {
   const handleModalClose = () => {
     setOpen(false);
   };
+  
+  
 
   return (
     <Fragment>
