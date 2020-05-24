@@ -8,10 +8,10 @@ const {
 } = require("../controllers/order");
 const { isAuth } = require("../middleware/auth");
 
-router.get("/", getOrders);
-router.get("/:id", getOrders);
-router.post("/", createOrder);
-router.put("/:id", updateOrder);//falta
-router.delete("/:id", deleteOrder);//falta
+router.get("/", isAuth, getOrders);
+router.get("/:id", isAuth, getOrders);
+router.post("/", isAuth, createOrder);
+router.put("/:id", updateOrder); //falta
+router.delete("/:id", deleteOrder); //falta
 
 module.exports = router;

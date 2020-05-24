@@ -50,7 +50,6 @@ exports.login = async (req, res, next) => {
 };
 
 exports.register = async (req, res, next) => {
-  console.log(req.body);
   //check for errors
   const errors = validationResult(req);
 
@@ -77,19 +76,6 @@ exports.register = async (req, res, next) => {
       email,
       password,
     });
-
-    //create token
-    // const token = user.getSignedJwtToken();
-
-    //Set cookie options
-    // const cookieOptions = {
-    //   expires: new Date(
-    //     Date.now() + process.env.COOKIE_EXPIRE * 24 * 60 * 60 * 1
-    //   ),
-    //   httpOnly: true,
-    //   secure: process.env.NODE_ENV === "production" ? true : false,
-    // };
-
     return (
       res
         .status(200)
