@@ -9,6 +9,7 @@ const OrderSchema = new mongoose.Schema(
     },
     number: {
       type: Number,
+      unique:true
     },
     items: {
       type: Array,
@@ -16,6 +17,7 @@ const OrderSchema = new mongoose.Schema(
     },
     total: {
       type: Number,
+      default:0
     },
     notes: {
       type: String,
