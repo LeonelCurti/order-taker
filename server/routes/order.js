@@ -12,6 +12,6 @@ router.get("/", isAuth, getOrders);
 router.get("/:id", isAuth, getOrders);
 router.post("/", isAuth, createOrder);
 router.put("/:id", updateOrder); //falta
-router.delete("/:id", deleteOrder); //falta
+router.delete("/:id", deleteOrder); 
 
 module.exports = router;

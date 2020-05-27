@@ -4,8 +4,8 @@ import {
 } from "../actions/types";
 
 const initialState = {
-  loading: true,
-  products: [],
+  loading: true,//not used 
+  products: null,
   error: null,
 };
 

@@ -7,7 +7,7 @@ const path = require("path");
 //@access  Public
 
 exports.getPriceList = (req, res, next) => {
-  try {    
+  try {
     const workbook = XLSX.readFile("server/uploads/priceList.xlsx");
 
     //Get array of sheet names
@@ -18,9 +18,9 @@ exports.getPriceList = (req, res, next) => {
       workbook.Sheets[sheet_name_list[0]],
       { defval: "" }
     );
-
-    res.status(200).json({ success: true, products: pricingListJson });
-    
+    setTimeout(() => {
+      res.status(200).json({ success: true, products: pricingListJson });
+    }, 500);
   } catch (error) {
     next(new ErrorResponse(error.message, "Cannot get price list"));
   }

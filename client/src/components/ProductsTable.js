@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -7,9 +7,10 @@ import IconButton from "@material-ui/core/IconButton";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
+import Tooltip from "@material-ui/core/Tooltip";
 import Paper from "@material-ui/core/Paper";
 import PhotoCameraOutlinedIcon from "@material-ui/icons/PhotoCameraOutlined";
-import ImageModal from './ImageModal'
+import AddCircleOutlineOutlinedIcon from "@material-ui/icons/AddCircleOutlineOutlined";
 
 const useStyles = makeStyles((theme) => ({
   tableContainer: {
@@ -18,44 +19,38 @@ const useStyles = makeStyles((theme) => ({
     // height: "80%",
     // overflowY: "auto",
   },
+  tableCellIcon:{
+    paddingLeft:'10px',
+    paddingRight:'10px'
+  }
 }));
 
 const ProductsTable = (props) => {
   const classes = useStyles();
-  const { products } = props;
-  const [open, setOpen] = React.useState(false);
+  const { products, handleModalOpen, handleAddProduct } = props;
 
-  const handleModalOpen = () => {
-    setOpen(true);
-  };
-
-  const handleModalClose = () => {
-    setOpen(false);
-  };
-  
-  
-
+  const tableHeader = () => (
+    <TableRow>
+      <TableCell>Code</TableCell>
+      <TableCell>Description</TableCell>
+      <TableCell>Price</TableCell>
+      <TableCell className={classes.tableCellIcon}></TableCell>
+      {handleAddProduct && <TableCell className={classes.tableCellIcon}></TableCell>}
+    </TableRow>
+  );
   return (
-    <Fragment>
-      <ImageModal open={open} onClose={handleModalClose} />      
-      <TableContainer className={classes.tableContainer} component={Paper}>
-        <Table size="small" stickyHeader>
-          <TableHead>
-            <TableRow>
-              <TableCell>Code</TableCell>
-              <TableCell>Description</TableCell>
-              <TableCell>Price</TableCell>
-              <TableCell></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {products.length > 0 ? (
-              products.map((product) => (
-                <TableRow hover key={product.cod}>
-                  <TableCell>{product.cod}</TableCell>
-                  <TableCell>{product.descrip}</TableCell>
-                  <TableCell>{product.price}</TableCell>
-                  <TableCell>
+    <TableContainer className={classes.tableContainer} component={Paper}>
+      <Table size="small" stickyHeader>
+        <TableHead>{tableHeader()}</TableHead>
+        <TableBody>
+          {products.length > 0 ? (
+            products.map((product) => (
+              <TableRow hover key={product.cod}>
+                <TableCell>{product.cod}</TableCell>
+                <TableCell>{product.descrip}</TableCell>
+                <TableCell>{product.price}</TableCell>
+                <TableCell className={classes.tableCellIcon}>
+                  <Tooltip title="Photo">
                     <IconButton
                       color="default"
                       size="small"
@@ -63,25 +58,38 @@ const ProductsTable = (props) => {
                     >
                       <PhotoCameraOutlinedIcon />
                     </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))
-            ) : (
-              <TableRow style={{ height: 49 }}>
-                <TableCell
-                  style={{
-                    textAlign: "center",
-                  }}
-                  colSpan={4}
-                >
-                  No matching products found
+                  </Tooltip>
                 </TableCell>
+                {handleAddProduct && (
+                  <TableCell className={classes.tableCellIcon}>
+                    <Tooltip title="Add item">
+                      <IconButton
+                        color="default"
+                        size="small"
+                        onClick={handleAddProduct}
+                      >
+                        <AddCircleOutlineOutlinedIcon />
+                      </IconButton>
+                    </Tooltip>
+                  </TableCell>
+                )}
               </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Fragment>
+            ))
+          ) : (
+            <TableRow style={{ height: 49 }}>
+              <TableCell
+                style={{
+                  textAlign: "center",
+                }}
+                colSpan={4}
+              >
+                No matching products found
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 };
 

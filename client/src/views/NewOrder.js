@@ -5,7 +5,7 @@ import SearchInput from "../components/SearchInput";
 import { makeStyles } from "@material-ui/core/styles";
 import ProductsTable from "../components/ProductsTable";
 import Typography from "@material-ui/core/Typography";
-
+import ImageModal from "../components/ImageModal";
 const useStyles = makeStyles((theme) => ({
   myOrders: {
     display: "flex",
@@ -32,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
 const NewOrder = (props) => {
   const { products } = props.orders;
   const [filterStr, setFilterStr] = useState("");
+  const [showPhoto, setShowPhoto] = useState(false);
   const classes = useStyles();
 
   const onChange = (e) => {
@@ -49,8 +50,21 @@ const NewOrder = (props) => {
     }
   };
 
+  const handleAddProduct = ()=>{
+    console.log('add product');
+    
+  }
+  const handleModalOpen = () => {
+    setShowPhoto(true);
+  };
+
+  const handleModalClose = () => {
+    setShowPhoto(false);
+  };
+
   return (
     <Layout>
+      <ImageModal open={showPhoto} onClose={handleModalClose} />
       <div className={classes.myOrders}>
         <div className={classes.container}>
           <div className={classes.title}>
@@ -58,13 +72,15 @@ const NewOrder = (props) => {
               New Order
             </Typography>
           </div>
-          <ProductsTable products={productsToShow()} />
+          <ProductsTable products={productsToShow()}  />
         </div>
         <div className={classes.container}>
           <div className={classes.searchInput}>
             <SearchInput onChange={onChange} placeholder="Search products" />
           </div>
-          <ProductsTable products={productsToShow()} />
+          <ProductsTable products={productsToShow()} handleAddProduct={handleAddProduct}
+          handleModalOpen={handleModalOpen}
+          />
         </div>
       </div>
     </Layout>

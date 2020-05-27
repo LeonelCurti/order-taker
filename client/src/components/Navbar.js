@@ -21,6 +21,8 @@ const useStyles = makeStyles((theme) => ({
     // boxShadow: "none",
     backgroundColor: theme.palette.common.white,
     // backgroundColor: theme.palette.secondary,
+    // backgroundColor: '#E8EAF6',
+
     borderBottom: `1px solid ${theme.palette.divider}`,
   },
   appBarToolbar: {

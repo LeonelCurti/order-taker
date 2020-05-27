@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import Layout from "../components/layout/Layout";
+import { CircularProgress } from "@material-ui/core";
 import SearchInput from "../components/SearchInput";
 import { makeStyles } from "@material-ui/core/styles";
 import ProductsTable from "../components/ProductsTable";
-
+import { getPriceList } from "../store/actions/orders";
+import ImageModal from "../components/ImageModal";
 const useStyles = makeStyles((theme) => ({
   productList: {
     display: "flex",
@@ -30,15 +32,39 @@ const useStyles = makeStyles((theme) => ({
     height: "42px",
     marginBottom: theme.spacing(2),
   },
+  centerMe: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "100%",
+  },
 }));
 
 const ProductList = (props) => {
-  const { products } = props.orders;
-  const [filterStr, setFilterStr] = useState("");
   const classes = useStyles();
+  const {
+    getPriceList,
+    orders: { products },
+  } = props;
+  const [filterStr, setFilterStr] = useState("");
+  const [showPhoto, setShowPhoto] = useState(false);
+
+  useEffect(() => {
+    if (!products) {
+      getPriceList();
+    }
+  }, [getPriceList, products]);
 
   const onChange = (e) => {
     setFilterStr(e.target.value.trim());
+  };
+
+  const handleModalOpen = () => {
+    setShowPhoto(true);
+  };
+
+  const handleModalClose = () => {
+    setShowPhoto(false);
   };
 
   const productsToShow = () => {
@@ -54,12 +80,22 @@ const ProductList = (props) => {
 
   return (
     <Layout>
-      <div className={classes.productList}>
-        <div className={classes.searchInput}>
-          <SearchInput onChange={onChange} placeholder='Search products'/>
+      <ImageModal open={showPhoto} onClose={handleModalClose} />
+      {products ? (
+        <div className={classes.productList}>
+          <div className={classes.searchInput}>
+            <SearchInput onChange={onChange} placeholder="Search products" />
+          </div>
+          <ProductsTable
+            products={productsToShow()}
+            handleModalOpen={handleModalOpen}
+          />
         </div>
-        <ProductsTable products={productsToShow()} />
-      </div>
+      ) : (
+        <div className={classes.centerMe}>
+          <CircularProgress />
+        </div>
+      )}
     </Layout>
   );
 };
@@ -68,4 +104,4 @@ const mapStateToProps = (state) => ({
   orders: state.orders,
 });
 
-export default connect(mapStateToProps)(ProductList);
+export default connect(mapStateToProps, { getPriceList })(ProductList);

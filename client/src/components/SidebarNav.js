@@ -12,7 +12,7 @@ import { Fragment } from "react";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    // backgroundColor: "#fafbfc",
+    backgroundColor: "#E8EAF6",//CAMBIAR COLOR SIDEBAR
     display: "flex",
     flexDirection: "column",
     height: "100%",
