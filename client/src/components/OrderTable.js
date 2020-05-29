@@ -9,8 +9,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Tooltip from "@material-ui/core/Tooltip";
 import Paper from "@material-ui/core/Paper";
-import PhotoCameraOutlinedIcon from "@material-ui/icons/PhotoCameraOutlined";
-import AddCircleOutlineOutlinedIcon from "@material-ui/icons/AddCircleOutlineOutlined";
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
 const useStyles = makeStyles((theme) => ({
   tableContainer: {
@@ -19,61 +18,70 @@ const useStyles = makeStyles((theme) => ({
     // height: "80%",
     // overflowY: "auto",
   },
-  tableCellIcon:{
-    paddingLeft:'10px',
-    paddingRight:'10px'
-  }
+  tableCellIcon: {
+    paddingLeft: "10px",
+    paddingRight: "10px",
+  },
 }));
 
-const ProductsTable = (props) => {
-  const classes = useStyles();
-  const { products, handleModalOpen, handleAddProduct } = props;
+const sampleOrder = 
+  {
+    id: 5607498,
+    createdAt: "2020-05-19T00:14:07+0000",
+    updatedAt: "2020-05-19T00:14:12+0000",
+    items: [
+      {
+        id: 1469335,
+        cod: "002003",
+        descrip: "ABRAZADERA CREMALLERA",
+        price: 34.26,
+        quantity: 1,  
+      },
+    ],
+    notes: "",
+    state: "open",
+    number: 133679,
+  }
 
-   
-  const tableHeader = () => (    
+
+const OrderTable = (props) => {
+  const classes = useStyles();
+  const { handleRemoveItem } = props;
+
+  const tableHeader = () => (
     <TableRow>
       <TableCell>Code</TableCell>
       <TableCell>Description</TableCell>
+      <TableCell>Qty</TableCell>
       <TableCell>Price</TableCell>
+      <TableCell>Subtotal</TableCell>
       <TableCell className={classes.tableCellIcon}></TableCell>
-      {handleAddProduct && <TableCell className={classes.tableCellIcon}></TableCell>}
     </TableRow>
   );
-  return (    
+  return (
     <TableContainer className={classes.tableContainer} component={Paper}>
       <Table size="small" stickyHeader>
         <TableHead>{tableHeader()}</TableHead>
         <TableBody>
-          {products.length > 0 ? (
-            products.map((product) => (
+          {sampleOrder.items.length > 0 ? (
+            sampleOrder.items.map((product,i) => (
               <TableRow hover key={product.cod}>
                 <TableCell>{product.cod}</TableCell>
                 <TableCell>{product.descrip}</TableCell>
+                <TableCell>{product.quantity}</TableCell>
                 <TableCell>{product.price}</TableCell>
+                <TableCell>{product.quantity * product.price}</TableCell>
                 <TableCell className={classes.tableCellIcon}>
-                  <Tooltip title="Photo">
+                  <Tooltip title="Remove">
                     <IconButton
                       color="default"
                       size="small"
-                      onClick={handleModalOpen}
+                      onClick={handleRemoveItem}
                     >
-                      <PhotoCameraOutlinedIcon />
+                      <DeleteForeverIcon />
                     </IconButton>
                   </Tooltip>
-                </TableCell>
-                {handleAddProduct && (
-                  <TableCell className={classes.tableCellIcon}>
-                    <Tooltip title="Add item">
-                      <IconButton
-                        color="default"
-                        size="small"
-                        onClick={handleAddProduct}
-                      >
-                        <AddCircleOutlineOutlinedIcon />
-                      </IconButton>
-                    </Tooltip>
-                  </TableCell>
-                )}
+                </TableCell>                
               </TableRow>
             ))
           ) : (
@@ -84,7 +92,7 @@ const ProductsTable = (props) => {
                 }}
                 colSpan={4}
               >
-                No matching products found
+                Please add products
               </TableCell>
             </TableRow>
           )}
@@ -94,4 +102,4 @@ const ProductsTable = (props) => {
   );
 };
 
-export default ProductsTable;
+export default OrderTable;

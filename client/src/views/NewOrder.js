@@ -1,11 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { connect } from "react-redux";
 import Layout from "../components/layout/Layout";
 import SearchInput from "../components/SearchInput";
 import { makeStyles } from "@material-ui/core/styles";
 import ProductsTable from "../components/ProductsTable";
+import OrderTable from "../components/OrderTable";
 import Typography from "@material-ui/core/Typography";
 import ImageModal from "../components/ImageModal";
+import { getPriceList } from "../store/actions/orders";
+import { CircularProgress } from "@material-ui/core";
+
 const useStyles = makeStyles((theme) => ({
   myOrders: {
     display: "flex",
@@ -16,24 +20,39 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     flexGrow: 1,
-    margin: "0 5px", 
+    margin: "0 5px",
   },
   searchInput: {
     height: "42px",
     marginBottom: theme.spacing(2),
   },
   title: {
-    padding:theme.spacing(1),
+    padding: theme.spacing(1),
     height: "42px",
     marginBottom: theme.spacing(2),
+  },
+  centerMe: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "100%", 
   },
 }));
 
 const NewOrder = (props) => {
-  const { products } = props.orders;
+  const {
+    getPriceList,
+    orders: { products },
+  } = props;
   const [filterStr, setFilterStr] = useState("");
   const [showPhoto, setShowPhoto] = useState(false);
   const classes = useStyles();
+
+  useEffect(() => {
+    if (!products) {
+      getPriceList();
+    }
+  }, [getPriceList, products]);
 
   const onChange = (e) => {
     setFilterStr(e.target.value.trim());
@@ -50,10 +69,13 @@ const NewOrder = (props) => {
     }
   };
 
-  const handleAddProduct = ()=>{
-    console.log('add product');
-    
-  }
+  const handleAddProduct = () => {
+    console.log("add product");
+  };
+  const handleRemoveProduct = () => {
+    console.log("add product");
+  };
+
   const handleModalOpen = () => {
     setShowPhoto(true);
   };
@@ -72,15 +94,28 @@ const NewOrder = (props) => {
               New Order
             </Typography>
           </div>
-          <ProductsTable products={productsToShow()}  />
+          <OrderTable handleRemoveProduct={handleRemoveProduct} />
         </div>
         <div className={classes.container}>
-          <div className={classes.searchInput}>
-            <SearchInput onChange={onChange} placeholder="Search products" />
-          </div>
-          <ProductsTable products={productsToShow()} handleAddProduct={handleAddProduct}
-          handleModalOpen={handleModalOpen}
-          />
+          {products ? (
+            <Fragment>
+              <div className={classes.searchInput}>
+                <SearchInput
+                  onChange={onChange}
+                  placeholder="Search products"
+                />
+              </div>
+              <ProductsTable
+                products={productsToShow()}
+                handleAddProduct={handleAddProduct}
+                handleModalOpen={handleModalOpen}
+              />
+            </Fragment>
+          ) : (
+            <div className={classes.centerMe}>
+              <CircularProgress />
+            </div>
+          )}
         </div>
       </div>
     </Layout>
@@ -91,4 +126,4 @@ const mapStateToProps = (state) => ({
   orders: state.orders,
 });
 
-export default connect(mapStateToProps)(NewOrder);
+export default connect(mapStateToProps, { getPriceList })(NewOrder);

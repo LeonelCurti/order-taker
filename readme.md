@@ -10,13 +10,16 @@
 
 ### Specs
 - Users should be able to:
-   * Login, logout and register
+   * Register, login and logout 
    * See price list
    * Make new order
    * See orders made
    * Edit order
 - Admin should be able to:
-   * Upload main price list
+   * Upload main price list from xlsx
    * Manage clients orders
 
-
+### Installation
+* NODEJS: https://nodejs.org/
+* MONGODB SERVER: https://www.mongodb.com/download-center
+* node-gyp: https://github.com/nodejs/node-gyp
