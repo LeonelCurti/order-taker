@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import Layout from "../components/layout/Layout";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -14,6 +14,10 @@ import PrintOutlinedIcon from "@material-ui/icons/PrintOutlined";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
+import { getMyOrders } from "../store/actions/orders";
+import { connect } from "react-redux";
+import { CircularProgress } from "@material-ui/core";
+import { deleteOrder } from "../store/actions/orders";
 
 const useStyles = makeStyles((theme) => ({
   productList: {
@@ -54,8 +58,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const MyOrders = () => {
+const MyOrders = (props) => {
   const classes = useStyles();
+  const {
+    getMyOrders,
+    deleteOrder,
+    orders: { myOrders },
+  } = props;
+
+  useEffect(() => {
+    getMyOrders();
+  }, [getMyOrders]);
 
   const tableHeader = () => (
     <TableRow>
@@ -69,102 +82,96 @@ const MyOrders = () => {
     </TableRow>
   );
 
-  const sampleOrders = [
-    {
-      createdAt: "2020-05-19T00:14:07+0000",
-      updatedAt: "2020-05-19T00:14:12+0000",
-      items: [],
-      total: 1256,
-      notes: "",
-      state: "open",
-      number: 456953,
-    },
-    {
-      createdAt: "2019-08-19T00:36:07+0000",
-      updatedAt: "2019-08-19T00:36:12+0000",
-      items: [],
-      total: 1256,
-      notes: "",
-      state: "closed",
-      number: 133679,
-    },
-  ];
+  const handleDeleteOrder = (order_id)=>{
+    deleteOrder(order_id);
+    getMyOrders();
+  }
 
   return (
     <Layout>
-      <div className={classes.productList}>
-        <TableContainer className={classes.tableContainer} component={Paper}>
-          <Table size="small" stickyHeader>
-            <TableHead>{tableHeader()}</TableHead>
-            <TableBody>
-              {sampleOrders.length > 0 ? (
-                sampleOrders.map((order) => (
-                  <TableRow hover key={order.number}>
-                    <TableCell>{order.number}</TableCell>
-                    <TableCell>{order.updatedAt}</TableCell>
-                    <TableCell>{order.total}</TableCell>
-                    <TableCell>{order.state}</TableCell>
-                    <TableCell className={classes.tableCellIcon}>
-                      <Tooltip title="Print">
-                        <IconButton
-                          disabled={order.state !== "closed"}
-                          color="default"
-                          size="small"
-                        >
-                          <PrintOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </TableCell>
+      {myOrders ? (
+        <div className={classes.productList}>
+          <TableContainer className={classes.tableContainer} component={Paper}>
+            <Table size="small" stickyHeader>
+              <TableHead>{tableHeader()}</TableHead>
+              <TableBody>
+                {myOrders.length > 0 ? (
+                  myOrders.map((order) => (
+                    <TableRow hover key={order.number}>
+                      <TableCell>{order.number}</TableCell>
+                      <TableCell>{order.updatedAt}</TableCell>
+                      <TableCell>{order.total}</TableCell>
+                      <TableCell>{order.state}</TableCell>
+                      <TableCell className={classes.tableCellIcon}>
+                        <Tooltip title="Print">
+                          <IconButton
+                            disabled={order.state !== "closed"}
+                            color="default"
+                            size="small"
+                          >
+                            <PrintOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </TableCell>
 
-                    {order.state === "open" ? (
-                      <Fragment>
-                        <TableCell className={classes.tableCellIcon}>
-                          <Tooltip title="Edit">
-                            <IconButton color="default" size="small">
-                              <EditOutlinedIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </TableCell>
-                        <TableCell className={classes.tableCellIcon}>
-                          <Tooltip title="Delete">
-                            <IconButton color="default" size="small">
-                              <DeleteForeverIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </TableCell>
-                      </Fragment>
-                    ) : (
-                      <Fragment>
-                        <TableCell className={classes.tableCellIcon}>
-                          <Tooltip title="View">
-                            <IconButton color="default" size="small">
-                              <VisibilityOutlinedIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </TableCell>
-                        <TableCell></TableCell>
-                      </Fragment>
-                    )}
+                      {order.state === "open" ? (
+                        <Fragment>
+                          <TableCell className={classes.tableCellIcon}>
+                            <Tooltip title="Edit">
+                              <IconButton color="default" size="small">
+                                <EditOutlinedIcon />
+                              </IconButton>
+                            </Tooltip>
+                          </TableCell>
+                          <TableCell className={classes.tableCellIcon}>
+                            <Tooltip title="Delete">
+                              <IconButton color="default" size="small" onClick={()=>handleDeleteOrder(order._id)}>
+                                <DeleteForeverIcon />
+                              </IconButton>
+                            </Tooltip>
+                          </TableCell>
+                        </Fragment>
+                      ) : (
+                        <Fragment>
+                          <TableCell className={classes.tableCellIcon}>
+                            <Tooltip title="View">
+                              <IconButton color="default" size="small">
+                                <VisibilityOutlinedIcon />
+                              </IconButton>
+                            </Tooltip>
+                          </TableCell>
+                          <TableCell></TableCell>
+                        </Fragment>
+                      )}
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow style={{ height: 49 }}>
+                    <TableCell
+                      style={{
+                        textAlign: "center",
+                      }}
+                      colSpan={7}
+                    >
+                      No orders found
+                    </TableCell>
                   </TableRow>
-                ))
-              ) : (
-                <TableRow style={{ height: 49 }}>
-                  <TableCell
-                    style={{
-                      textAlign: "center",
-                    }}
-                    colSpan={4}
-                  >
-                    No orders found
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </div>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </div>
+      ) : (
+        <div className={classes.centerMe}>
+          <CircularProgress />
+        </div>
+      )}
     </Layout>
   );
 };
 
-export default MyOrders;
+const mapStateToProps = (state) => ({
+  orders: state.orders,
+});
+
+export default connect(mapStateToProps, { getMyOrders, deleteOrder })(MyOrders);

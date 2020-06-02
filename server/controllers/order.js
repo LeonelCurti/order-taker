@@ -20,17 +20,21 @@ exports.createOrder = async (req, res, next) => {
   }
 };
 exports.getOrders = async (req, res, next) => {
-  const orderId = req.params.id;
+  const orderId = req.params.order_id;
   const userId = req.user._id;
   try {
     if (orderId) {
       //send particular user order
       const order = await Order.findById(orderId);
-      return res.status(200).json({ success: true, orders: order });
+      setTimeout(() => {
+        return res.status(200).json({ success: true, orders: order });
+      }, 500);
     } else {
       //send all user orders
-      const allOrders = await Order.find({ user: userId }).sort({ date: -1 }); //most recent first
-      return res.status(200).json({ success: true, orders: allOrders });
+      const allOrders = await Order.find({ user: userId }).sort({ updatedAt: -1 }); //most recent first
+      setTimeout(() => {
+        return res.status(200).json({ success: true, orders: allOrders });
+      }, 500);
     }
   } catch (error) {
     next(error);
@@ -43,7 +47,7 @@ exports.updateOrder = async (req, res, next) => {
   }
 };
 exports.deleteOrder = async (req, res, next) => {
-  const orderId = req.params.id;
+  const orderId = req.params.order_id;
   try {
     const deletedOrder = await Order.findByIdAndDelete(orderId);
     if (!deletedOrder) {

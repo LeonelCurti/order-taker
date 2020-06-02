@@ -9,9 +9,9 @@ const {
 const { isAuth } = require("../middleware/auth");
 
 router.get("/", isAuth, getOrders);
-router.get("/:id", isAuth, getOrders);
+router.get("/:order_id", isAuth, getOrders);
 router.post("/", isAuth, createOrder);
-router.put("/:id", updateOrder); //falta
-router.delete("/:id", deleteOrder); 
+router.put("/:order_id", updateOrder); //falta
+router.delete("/:order_id", deleteOrder); 
 
 module.exports = router;

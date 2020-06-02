@@ -6,8 +6,8 @@ export const AUTH_CLEAR_ERRORS = 'AUTH_CLEAR_ERRORS';
 export const AUTH_LOAD_USER_SUCCESS = 'AUTH_LOAD_USER_SUCCESS';
 
 export const GET_PRICE_LIST = 'GET_PRICE_LIST';
-export const PRICE_LIST_ERROR = 'PRICE_LIST_ERROR';
-
+export const GET_MY_ORDERS = 'GET_MY_ORDERS';
+export const ORDERS_ERROR = 'ORDERS_ERROR';
 
 
 
