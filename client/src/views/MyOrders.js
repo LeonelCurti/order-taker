@@ -17,7 +17,7 @@ import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import { getMyOrders } from "../store/actions/orders";
 import { connect } from "react-redux";
 import { CircularProgress } from "@material-ui/core";
-import { deleteOrder } from "../store/actions/orders";
+import { deleteOrder ,setCurrentOrder } from "../store/actions/orders";
 
 const useStyles = makeStyles((theme) => ({
   productList: {
@@ -63,6 +63,7 @@ const MyOrders = (props) => {
   const {
     getMyOrders,
     deleteOrder,
+    setCurrentOrder,
     orders: { myOrders },
   } = props;
 
@@ -77,11 +78,20 @@ const MyOrders = (props) => {
       <TableCell>Total</TableCell>
       <TableCell>State</TableCell>
       <TableCell></TableCell> {/*print icon */}
-      <TableCell></TableCell> {/*view or edit order */}
-      <TableCell></TableCell> {/*delete order */}
+      <TableCell></TableCell> {/*view or edit icon */}
+      <TableCell></TableCell> {/*delete icon */}
     </TableRow>
   );
 
+  const handleEditOrder = (order) => {
+    setCurrentOrder(order);
+    props.history.push("/new_order");
+  }
+  const handleViewOrder = (order) => {
+    //open a view where i can only see the order without
+    //posibility to edit
+    setCurrentOrder(order)
+  }
   const handleDeleteOrder = (order_id)=>{
     deleteOrder(order_id);
     getMyOrders();
@@ -118,7 +128,7 @@ const MyOrders = (props) => {
                         <Fragment>
                           <TableCell className={classes.tableCellIcon}>
                             <Tooltip title="Edit">
-                              <IconButton color="default" size="small">
+                              <IconButton color="default" size="small" onClick={()=>handleEditOrder(order)}>
                                 <EditOutlinedIcon />
                               </IconButton>
                             </Tooltip>
@@ -135,7 +145,7 @@ const MyOrders = (props) => {
                         <Fragment>
                           <TableCell className={classes.tableCellIcon}>
                             <Tooltip title="View">
-                              <IconButton color="default" size="small">
+                              <IconButton color="default" size="small" onClick={()=>handleViewOrder(order)}>
                                 <VisibilityOutlinedIcon />
                               </IconButton>
                             </Tooltip>
@@ -174,4 +184,4 @@ const mapStateToProps = (state) => ({
   orders: state.orders,
 });
 
-export default connect(mapStateToProps, { getMyOrders, deleteOrder })(MyOrders);
+export default connect(mapStateToProps, { getMyOrders, deleteOrder,setCurrentOrder })(MyOrders);

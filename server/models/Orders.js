@@ -13,7 +13,29 @@ const OrderSchema = new mongoose.Schema(
     },
     items: {
       type: Array,
-      default: [],
+      default: [
+        {
+          id: 1469335,
+          cod: "456963",
+          descrip: "ABRAZADERA CREMALLERA",
+          price: 34.26,
+          quantity: 1,  
+        },
+        {
+          id: 1469335,
+          cod: "951535",
+          descrip: "CONTROL REMOTO",
+          price: 60,
+          quantity: 2,  
+        },
+        {
+          id: 1469335,
+          cod: "753003",
+          descrip: "MOCHILA CAMUFLADA",
+          price: 100,
+          quantity: 3,  
+        },
+      ],
     },
     total: {
       type: Number,

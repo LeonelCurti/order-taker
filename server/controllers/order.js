@@ -1,6 +1,10 @@
 const Order = require("../models/Orders");
 const Counter = require("../models/Counters");
 
+//@desc   Create Order
+//@route  POST /api/v1/order
+//@acces  Private
+
 exports.createOrder = async (req, res, next) => {
   try {
     //get the next order number from counter
@@ -14,34 +18,41 @@ exports.createOrder = async (req, res, next) => {
       user: req.user._id,
       number: doc.count,
     });
-    return res.status(200).json({ success: true, orderCreated });
+    return res.status(200).json({ success: true, order:orderCreated });
   } catch (error) {
     next(error);
   }
 };
-exports.getOrders = async (req, res, next) => {
-  const orderId = req.params.order_id;
+exports.getUserOrders = async (req, res, next) => {  
   const userId = req.user._id;
   try {
-    if (orderId) {
-      //send particular user order
-      const order = await Order.findById(orderId);
-      setTimeout(() => {
-        return res.status(200).json({ success: true, orders: order });
-      }, 500);
-    } else {
-      //send all user orders
-      const allOrders = await Order.find({ user: userId }).sort({ updatedAt: -1 }); //most recent first
-      setTimeout(() => {
-        return res.status(200).json({ success: true, orders: allOrders });
-      }, 500);
-    }
+    //send all user orders
+    const allOrders = await Order.find({ user: userId }).sort({
+      updatedAt: -1,
+    }); //most recent first
+    setTimeout(() => {
+      return res.status(200).json({ success: true, orders: allOrders });
+    }, 500);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getOrderById = async (req, res, next) => {
+  const orderId = req.params.order_id;
+  try {
+    const order = await Order.findById(orderId);
+    setTimeout(() => {
+      return res.status(200).json({ success: true, orders: order });
+    }, 500);
   } catch (error) {
     next(error);
   }
 };
 exports.updateOrder = async (req, res, next) => {
   try {
+    console.log('update order');
+    
   } catch (error) {
     next(error);
   }

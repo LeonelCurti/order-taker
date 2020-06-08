@@ -24,29 +24,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const sampleOrder = 
-  {
-    id: 5607498,
-    createdAt: "2020-05-19T00:14:07+0000",
-    updatedAt: "2020-05-19T00:14:12+0000",
-    items: [
-      {
-        id: 1469335,
-        cod: "002003",
-        descrip: "ABRAZADERA CREMALLERA",
-        price: 34.26,
-        quantity: 1,  
-      },
-    ],
-    notes: "",
-    state: "open",
-    number: 133679,
-  }
-
 
 const OrderTable = (props) => {
   const classes = useStyles();
-  const { handleRemoveItem } = props;
+  const { order, handleRemoveItem } = props;
 
   const tableHeader = () => (
     <TableRow>
@@ -63,8 +44,8 @@ const OrderTable = (props) => {
       <Table size="small" stickyHeader>
         <TableHead>{tableHeader()}</TableHead>
         <TableBody>
-          {sampleOrder.items.length > 0 ? (
-            sampleOrder.items.map((product,i) => (
+          {order.items.length > 0 ? (
+            order.items.map((product,i) => (
               <TableRow hover key={product.cod}>
                 <TableCell>{product.cod}</TableCell>
                 <TableCell>{product.descrip}</TableCell>
@@ -76,7 +57,7 @@ const OrderTable = (props) => {
                     <IconButton
                       color="default"
                       size="small"
-                      onClick={handleRemoveItem}
+                      onClick={()=>handleRemoveItem(product.cod)}
                     >
                       <DeleteForeverIcon />
                     </IconButton>
@@ -90,7 +71,7 @@ const OrderTable = (props) => {
                 style={{
                   textAlign: "center",
                 }}
-                colSpan={4}
+                colSpan={6}
               >
                 Please add products
               </TableCell>

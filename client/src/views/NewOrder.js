@@ -7,7 +7,13 @@ import ProductsTable from "../components/ProductsTable";
 import OrderTable from "../components/OrderTable";
 import Typography from "@material-ui/core/Typography";
 import ImageModal from "../components/ImageModal";
-import { getPriceList } from "../store/actions/orders";
+import {
+  getPriceList,
+  createNewOrder,
+  clearCurrentOrder,
+  setCurrentOrder,
+  updateOrder,
+} from "../store/actions/orders";
 import { CircularProgress } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
@@ -35,14 +41,18 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    height: "100%", 
+    height: "100%",
   },
 }));
 
 const NewOrder = (props) => {
   const {
     getPriceList,
-    orders: { products },
+    createNewOrder,
+    clearCurrentOrder,
+    setCurrentOrder,
+    updateOrder,
+    orders: { products, currentOrder },
   } = props;
   const [filterStr, setFilterStr] = useState("");
   const [showPhoto, setShowPhoto] = useState(false);
@@ -53,6 +63,21 @@ const NewOrder = (props) => {
       getPriceList();
     }
   }, [getPriceList, products]);
+
+  useEffect(() => {
+    //if currentOrder is null, create new order
+    //if current comes with a value, continue editing order
+    if (!currentOrder) {
+      createNewOrder();
+    }
+  }, [createNewOrder, currentOrder]);
+
+  //willUnmount
+  useEffect(() => {
+    return () => {
+      clearCurrentOrder();
+    };
+  }, [clearCurrentOrder]);
 
   const onChange = (e) => {
     setFilterStr(e.target.value.trim());
@@ -69,11 +94,17 @@ const NewOrder = (props) => {
     }
   };
 
-  const handleAddProduct = () => {
-    console.log("add product");
+  const handleAddItem = () => {
+    console.log("add item");
   };
-  const handleRemoveProduct = () => {
-    console.log("add product");
+  const handleRemoveItem = (itemCode) => {    
+    const updatedOrder = {
+      ...currentOrder,
+      items: currentOrder.items.filter((item) => item.cod !== itemCode),
+    };
+    updateOrder(updatedOrder);
+    // setCurrentOrder(updatedOrder);
+    //update order in DB
   };
 
   const handleModalOpen = () => {
@@ -89,12 +120,23 @@ const NewOrder = (props) => {
       <ImageModal open={showPhoto} onClose={handleModalClose} />
       <div className={classes.myOrders}>
         <div className={classes.container}>
-          <div className={classes.title}>
-            <Typography variant="h5" gutterBottom>
-              New Order
-            </Typography>
-          </div>
-          <OrderTable handleRemoveProduct={handleRemoveProduct} />
+          {currentOrder ? (
+            <Fragment>
+              <div className={classes.title}>
+                <Typography variant="h5" gutterBottom>
+                  Order n° {currentOrder.number}
+                </Typography>
+              </div>
+              <OrderTable
+                order={currentOrder}
+                handleRemoveItem={handleRemoveItem}
+              />
+            </Fragment>
+          ) : (
+            <div className={classes.centerMe}>
+              <CircularProgress />
+            </div>
+          )}
         </div>
         <div className={classes.container}>
           {products ? (
@@ -107,7 +149,7 @@ const NewOrder = (props) => {
               </div>
               <ProductsTable
                 products={productsToShow()}
-                handleAddProduct={handleAddProduct}
+                handleAddProduct={handleAddItem}
                 handleModalOpen={handleModalOpen}
               />
             </Fragment>
@@ -126,4 +168,10 @@ const mapStateToProps = (state) => ({
   orders: state.orders,
 });
 
-export default connect(mapStateToProps, { getPriceList })(NewOrder);
+export default connect(mapStateToProps, {
+  getPriceList,
+  createNewOrder,
+  clearCurrentOrder,
+  setCurrentOrder,
+  updateOrder
+})(NewOrder);
