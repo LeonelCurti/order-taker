@@ -6,6 +6,7 @@ const OrderSchema = new mongoose.Schema(
       required: true,
       type: mongoose.Schema.ObjectId,
       ref: "User",
+      select: false //need true in select to show
     },
     number: {
       type: Number,

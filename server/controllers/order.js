@@ -18,12 +18,12 @@ exports.createOrder = async (req, res, next) => {
       user: req.user._id,
       number: doc.count,
     });
-    return res.status(200).json({ success: true, order:orderCreated });
+    return res.status(200).json({ success: true, order: orderCreated });
   } catch (error) {
     next(error);
   }
 };
-exports.getUserOrders = async (req, res, next) => {  
+exports.getUserOrders = async (req, res, next) => {
   const userId = req.user._id;
   try {
     //send all user orders
@@ -51,8 +51,17 @@ exports.getOrderById = async (req, res, next) => {
 };
 exports.updateOrder = async (req, res, next) => {
   try {
-    console.log('update order');
-    
+    const updatedOrder = await Order.findByIdAndUpdate(
+      req.body.updatedOrder._id,
+      req.body.updatedOrder,
+      { new: true, runValidators: true }
+    );
+    if (!updatedOrder) {
+      return res
+        .status(400)
+        .json({ success: false, error: "Order could not be updated" });
+    }    
+    return res.status(200).json({ success: true, order: updatedOrder });
   } catch (error) {
     next(error);
   }

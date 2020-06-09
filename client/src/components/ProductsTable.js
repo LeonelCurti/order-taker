@@ -19,27 +19,28 @@ const useStyles = makeStyles((theme) => ({
     // height: "80%",
     // overflowY: "auto",
   },
-  tableCellIcon:{
-    paddingLeft:'10px',
-    paddingRight:'10px'
-  }
+  tableCellIcon: {
+    paddingLeft: "10px",
+    paddingRight: "10px",
+  },
 }));
 
 const ProductsTable = (props) => {
   const classes = useStyles();
   const { products, handleModalOpen, handleAddProduct } = props;
 
-   
-  const tableHeader = () => (    
+  const tableHeader = () => (
     <TableRow>
       <TableCell>Code</TableCell>
       <TableCell>Description</TableCell>
       <TableCell>Price</TableCell>
       <TableCell className={classes.tableCellIcon}></TableCell>
-      {handleAddProduct && <TableCell className={classes.tableCellIcon}></TableCell>}
+      {handleAddProduct && (
+        <TableCell className={classes.tableCellIcon}></TableCell>
+      )}
     </TableRow>
   );
-  return (    
+  return (
     <TableContainer className={classes.tableContainer} component={Paper}>
       <Table size="small" stickyHeader>
         <TableHead>{tableHeader()}</TableHead>
@@ -67,7 +68,7 @@ const ProductsTable = (props) => {
                       <IconButton
                         color="default"
                         size="small"
-                        onClick={handleAddProduct}
+                        onClick={() => handleAddProduct(product)}
                       >
                         <AddCircleOutlineOutlinedIcon />
                       </IconButton>

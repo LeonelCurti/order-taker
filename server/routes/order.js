@@ -13,8 +13,8 @@ const { isAuth } = require("../middleware/auth");
 //@route   /api/v1/order
 router.get("/", isAuth, getUserOrders);
 router.get("/:order_id", isAuth, getOrderById);
-router.post("/", isAuth, createOrder);
-router.put("/:order_id", updateOrder); //falta
+router.post("/createOrder", isAuth, createOrder);
+router.put("/update", updateOrder); 
 router.delete("/:order_id", deleteOrder); 
 
 module.exports = router;

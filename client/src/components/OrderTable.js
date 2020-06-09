@@ -51,7 +51,7 @@ const OrderTable = (props) => {
                 <TableCell>{product.descrip}</TableCell>
                 <TableCell>{product.quantity}</TableCell>
                 <TableCell>{product.price}</TableCell>
-                <TableCell>{product.quantity * product.price}</TableCell>
+                <TableCell>{(product.quantity * product.price).toFixed(2)}</TableCell>
                 <TableCell className={classes.tableCellIcon}>
                   <Tooltip title="Remove">
                     <IconButton

@@ -50,7 +50,7 @@ const NewOrder = (props) => {
     getPriceList,
     createNewOrder,
     clearCurrentOrder,
-    setCurrentOrder,
+    // setCurrentOrder,
     updateOrder,
     orders: { products, currentOrder },
   } = props;
@@ -94,17 +94,27 @@ const NewOrder = (props) => {
     }
   };
 
-  const handleAddItem = () => {
-    console.log("add item");
+  const handleAddItem = (item) => {
+    item.quantity = Math.floor(Math.random() * 10) + 1;
+    item.id = 1469335; //default item category for now
+
+    //check if already exist
+
+    //update order
+    const updatedOrder = {
+      ...currentOrder,
+      items: [item, ...currentOrder.items],
+    };
+    updateOrder(updatedOrder);
+
+    //focus quantity selection
   };
-  const handleRemoveItem = (itemCode) => {    
+  const handleRemoveItem = (itemCode) => {
     const updatedOrder = {
       ...currentOrder,
       items: currentOrder.items.filter((item) => item.cod !== itemCode),
     };
     updateOrder(updatedOrder);
-    // setCurrentOrder(updatedOrder);
-    //update order in DB
   };
 
   const handleModalOpen = () => {
@@ -117,11 +127,11 @@ const NewOrder = (props) => {
 
   return (
     <Layout>
-      <ImageModal open={showPhoto} onClose={handleModalClose} />
-      <div className={classes.myOrders}>
-        <div className={classes.container}>
-          {currentOrder ? (
-            <Fragment>
+      {currentOrder && products ? (
+        <Fragment>
+          <ImageModal open={showPhoto} onClose={handleModalClose} />
+          <div className={classes.myOrders}>
+            <div className={classes.container}>
               <div className={classes.title}>
                 <Typography variant="h5" gutterBottom>
                   Order n° {currentOrder.number}
@@ -131,16 +141,8 @@ const NewOrder = (props) => {
                 order={currentOrder}
                 handleRemoveItem={handleRemoveItem}
               />
-            </Fragment>
-          ) : (
-            <div className={classes.centerMe}>
-              <CircularProgress />
             </div>
-          )}
-        </div>
-        <div className={classes.container}>
-          {products ? (
-            <Fragment>
+            <div className={classes.container}>
               <div className={classes.searchInput}>
                 <SearchInput
                   onChange={onChange}
@@ -152,15 +154,15 @@ const NewOrder = (props) => {
                 handleAddProduct={handleAddItem}
                 handleModalOpen={handleModalOpen}
               />
-            </Fragment>
-          ) : (
-            <div className={classes.centerMe}>
-              <CircularProgress />
             </div>
-          )}
+          </div>
+        </Fragment>
+      ) : (
+        <div className={classes.centerMe}>
+          <CircularProgress />
         </div>
-      </div>
-    </Layout>
+      )}
+    </Layout>    
   );
 };
 
@@ -173,5 +175,5 @@ export default connect(mapStateToProps, {
   createNewOrder,
   clearCurrentOrder,
   setCurrentOrder,
-  updateOrder
+  updateOrder,
 })(NewOrder);

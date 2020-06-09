@@ -5,7 +5,7 @@ import {
   GET_MY_ORDERS,
   SET_CURRENT_ORDER,
   CLEAR_CURRENT_ORDER,
-  DELETE_ORDER_ITEM
+  // DELETE_ORDER_ITEM,
 } from "./types";
 
 export const getPriceList = () => async (dispatch) => {
@@ -41,8 +41,8 @@ export const getMyOrders = () => async (dispatch) => {
 
 export const createNewOrder = () => async (dispatch) => {
   try {
-    const res = await axios.post("/api/v1/order"); 
-    
+    const res = await axios.post("/api/v1/order/createOrder");
+
     dispatch(setCurrentOrder(res.data.order));
   } catch (err) {
     dispatch({
@@ -55,15 +55,16 @@ export const createNewOrder = () => async (dispatch) => {
 export const updateOrder = (updatedOrder) => async (dispatch) => {
   //add or remove order items
   try {
-    // await axios.post(`/api/v1/order/${order._id}`,updatedOrder);
-    dispatch(setCurrentOrder(updatedOrder))     
+    const res = await axios.put(`/api/v1/order/update`, { updatedOrder });
+
+    dispatch(setCurrentOrder(res.data.order));
   } catch (err) {
     dispatch({
       type: ORDERS_ERROR,
       payload: err.response.data.error,
     });
   }
-}
+};
 
 export const setCurrentOrder = (order) => {
   return {
