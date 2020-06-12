@@ -98,7 +98,7 @@ const NewOrder = (props) => {
     item.quantity = Math.floor(Math.random() * 10) + 1;
     item.id = 1469335; //default item category for now
 
-    //check if already exist
+    //check if already exist!!!!!!
 
     //update order
     const updatedOrder = {
@@ -113,6 +113,22 @@ const NewOrder = (props) => {
     const updatedOrder = {
       ...currentOrder,
       items: currentOrder.items.filter((item) => item.cod !== itemCode),
+    };
+    updateOrder(updatedOrder);
+  };
+
+  const changeItemQuantity = (e,product) => {
+    //if new val <1 dont update
+    console.log("new value: " + e.target.value);
+    const newItemsArray = currentOrder.items.map((item)=>{
+      if (item.cod === product.cod) {
+        item.quantity = e.target.value
+      }
+      return item;
+    })
+    const updatedOrder = {
+      ...currentOrder,
+      items: newItemsArray,
     };
     updateOrder(updatedOrder);
   };
@@ -140,6 +156,7 @@ const NewOrder = (props) => {
               <OrderTable
                 order={currentOrder}
                 handleRemoveItem={handleRemoveItem}
+                changeItemQuantity={changeItemQuantity}
               />
             </div>
             <div className={classes.container}>

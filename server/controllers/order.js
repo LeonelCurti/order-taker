@@ -32,7 +32,7 @@ exports.getUserOrders = async (req, res, next) => {
     }); //most recent first
     setTimeout(() => {
       return res.status(200).json({ success: true, orders: allOrders });
-    }, 500);
+    }, 300);
   } catch (error) {
     next(error);
   }
@@ -44,7 +44,7 @@ exports.getOrderById = async (req, res, next) => {
     const order = await Order.findById(orderId);
     setTimeout(() => {
       return res.status(200).json({ success: true, orders: order });
-    }, 500);
+    }, 300);
   } catch (error) {
     next(error);
   }

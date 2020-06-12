@@ -20,7 +20,7 @@ exports.getPriceList = (req, res, next) => {
     );
     setTimeout(() => {
       res.status(200).json({ success: true, products: pricingListJson });
-    }, 500);
+    }, 300);
   } catch (error) {
     next(new ErrorResponse(error.message, "Cannot get price list"));
   }

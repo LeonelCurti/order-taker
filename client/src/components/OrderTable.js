@@ -8,8 +8,9 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Tooltip from "@material-ui/core/Tooltip";
+import TextField from "@material-ui/core/TextField";
 import Paper from "@material-ui/core/Paper";
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 
 const useStyles = makeStyles((theme) => ({
   tableContainer: {
@@ -17,6 +18,10 @@ const useStyles = makeStyles((theme) => ({
     // display:'block',
     // height: "80%",
     // overflowY: "auto",
+    "& .MuiTextField-root": {
+      // margin: theme.spacing(1),
+      width: "8ch",
+    },
   },
   tableCellIcon: {
     paddingLeft: "10px",
@@ -24,10 +29,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
 const OrderTable = (props) => {
   const classes = useStyles();
-  const { order, handleRemoveItem } = props;
+  const { order, handleRemoveItem,changeItemQuantity } = props;
 
   const tableHeader = () => (
     <TableRow>
@@ -39,30 +43,47 @@ const OrderTable = (props) => {
       <TableCell className={classes.tableCellIcon}></TableCell>
     </TableRow>
   );
+
+  const handleOnBlur = () => {
+    console.log("onblur: save order");
+  };
+  
+
   return (
     <TableContainer className={classes.tableContainer} component={Paper}>
       <Table size="small" stickyHeader>
         <TableHead>{tableHeader()}</TableHead>
         <TableBody>
           {order.items.length > 0 ? (
-            order.items.map((product,i) => (
+            order.items.map((product, i) => (
               <TableRow hover key={product.cod}>
                 <TableCell>{product.cod}</TableCell>
                 <TableCell>{product.descrip}</TableCell>
-                <TableCell>{product.quantity}</TableCell>
+                <TableCell>
+                  <TextField
+                    type="number"
+                    variant="outlined"
+                    size="small"
+                    value={product.quantity}
+                    onBlur={handleOnBlur}
+                    onChange={(e)=>changeItemQuantity(e,product)}
+                  />
+                </TableCell>
                 <TableCell>{product.price}</TableCell>
-                <TableCell>{(product.quantity * product.price).toFixed(2)}</TableCell>
+                <TableCell>
+                  {(product.quantity * product.price).toFixed(2)}
+                </TableCell>
                 <TableCell className={classes.tableCellIcon}>
                   <Tooltip title="Remove">
                     <IconButton
                       color="default"
                       size="small"
-                      onClick={()=>handleRemoveItem(product.cod)}
+                      onClick={() => handleRemoveItem(product.cod)}
                     >
                       <DeleteForeverIcon />
                     </IconButton>
                   </Tooltip>
-                </TableCell>                
+                </TableCell>
               </TableRow>
             ))
           ) : (

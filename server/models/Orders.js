@@ -20,7 +20,7 @@ const OrderSchema = new mongoose.Schema(
           cod: "456963",
           descrip: "ABRAZADERA CREMALLERA",
           price: 34.26,
-          quantity: 1,  
+          quantity: 4,  
         },
         {
           id: 1469335,
