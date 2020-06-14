@@ -55,7 +55,7 @@ const NewOrder = (props) => {
     orders: { products, currentOrder },
   } = props;
   const [filterStr, setFilterStr] = useState("");
-  const [showPhoto, setShowPhoto] = useState(false);
+  const [showPhoto, setShowPhoto] = useState(false); 
   const classes = useStyles();
 
   useEffect(() => {
@@ -79,7 +79,7 @@ const NewOrder = (props) => {
     };
   }, [clearCurrentOrder]);
 
-  const onChange = (e) => {
+  const handleSearchInputChange = (e) => {
     setFilterStr(e.target.value.trim());
   };
 
@@ -99,7 +99,11 @@ const NewOrder = (props) => {
     item.id = 1469335; //default item category for now
 
     //check if already exist!!!!!!
-
+    const alreadyInList = currentOrder.items.filter(orderItem =>orderItem.cod === item.cod).length > 0;
+    if(alreadyInList){
+      alert('Item is already in the list');
+      return;
+    }
     //update order
     const updatedOrder = {
       ...currentOrder,
@@ -118,9 +122,9 @@ const NewOrder = (props) => {
   };
 
   const changeItemQuantity = (e,product) => {
-    //if new val <1 dont update
-    console.log("new value: " + e.target.value);
-    const newItemsArray = currentOrder.items.map((item)=>{
+    //if new val <1 dont update!!!
+   
+    const newOrderItems = currentOrder.items.map((item)=>{
       if (item.cod === product.cod) {
         item.quantity = e.target.value
       }
@@ -128,7 +132,7 @@ const NewOrder = (props) => {
     })
     const updatedOrder = {
       ...currentOrder,
-      items: newItemsArray,
+      items: newOrderItems,
     };
     updateOrder(updatedOrder);
   };
@@ -162,7 +166,7 @@ const NewOrder = (props) => {
             <div className={classes.container}>
               <div className={classes.searchInput}>
                 <SearchInput
-                  onChange={onChange}
+                  onChange={handleSearchInputChange}
                   placeholder="Search products"
                 />
               </div>

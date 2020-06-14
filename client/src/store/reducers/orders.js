@@ -3,15 +3,16 @@ import {
   ORDERS_ERROR,
   GET_MY_ORDERS,
   SET_CURRENT_ORDER,
-  CLEAR_CURRENT_ORDER
+  CLEAR_CURRENT_ORDER,
+  DELETE_ORDER,
 } from "../actions/types";
 
 const initialState = {
-  loading: true,//not used 
+  myOrders: null,
+  currentOrder: null,
   products: null,
-  currentOrder:null,
+  loading: true, //not used yet
   error: null,
-  myOrders:null
 };
 
 export default function (state = initialState, action) {
@@ -32,21 +33,26 @@ export default function (state = initialState, action) {
         loading: false,
         error: null,
       };
-      case SET_CURRENT_ORDER:
-        return {
-          ...state,
-          currentOrder: payload,  
-        }
-      case CLEAR_CURRENT_ORDER:
-        return {
-          ...state,
-          currentOrder: null, 
-        }
+    case SET_CURRENT_ORDER:
+      return {
+        ...state,
+        currentOrder: payload,
+      };
+    case CLEAR_CURRENT_ORDER:
+      return {
+        ...state,
+        currentOrder: null,
+      };
     case ORDERS_ERROR:
       return {
         ...state,
         loading: false,
         error: payload,
+      };
+    case DELETE_ORDER:
+      return {
+        ...state,
+        myOrders: state.myOrders.filter((order) => order._id !== payload),
       };
     default:
       return state;

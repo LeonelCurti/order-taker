@@ -17,7 +17,7 @@ import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import { getMyOrders } from "../store/actions/orders";
 import { connect } from "react-redux";
 import { CircularProgress } from "@material-ui/core";
-import { deleteOrder ,setCurrentOrder } from "../store/actions/orders";
+import { deleteOrder, setCurrentOrder } from "../store/actions/orders";
 
 const useStyles = makeStyles((theme) => ({
   productList: {
@@ -69,33 +69,21 @@ const MyOrders = (props) => {
 
   useEffect(() => {
     getMyOrders();
-  }, [getMyOrders]);
-
-  const tableHeader = () => (
-    <TableRow>
-      <TableCell>Number</TableCell>
-      <TableCell>Last update</TableCell>
-      <TableCell>Total</TableCell>
-      <TableCell>State</TableCell>
-      <TableCell></TableCell> {/*print icon */}
-      <TableCell></TableCell> {/*view or edit icon */}
-      <TableCell></TableCell> {/*delete icon */}
-    </TableRow>
-  );
+  }, [getMyOrders]);  
 
   const handleEditOrder = (order) => {
     setCurrentOrder(order);
     props.history.push("/new_order");
-  }
+  };
   const handleViewOrder = (order) => {
+    //in progress
     //open a view where i can only see the order without
     //posibility to edit
-    setCurrentOrder(order)
-  }
-  const handleDeleteOrder = (order_id)=>{
-    deleteOrder(order_id);
-    getMyOrders();
-  }
+    setCurrentOrder(order);
+  };
+  const handleDeleteOrder = (order_id) => {
+    deleteOrder(order_id);    
+  };
 
   return (
     <Layout>
@@ -103,7 +91,17 @@ const MyOrders = (props) => {
         <div className={classes.productList}>
           <TableContainer className={classes.tableContainer} component={Paper}>
             <Table size="small" stickyHeader>
-              <TableHead>{tableHeader()}</TableHead>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Number</TableCell>
+                  <TableCell>Last update</TableCell>
+                  <TableCell>Total</TableCell>
+                  <TableCell>State</TableCell>
+                  <TableCell></TableCell> {/*print icon */}
+                  <TableCell></TableCell> {/*view or edit icon */}
+                  <TableCell></TableCell> {/*delete icon */}
+                </TableRow>
+              </TableHead>
               <TableBody>
                 {myOrders.length > 0 ? (
                   myOrders.map((order) => (
@@ -128,14 +126,22 @@ const MyOrders = (props) => {
                         <Fragment>
                           <TableCell className={classes.tableCellIcon}>
                             <Tooltip title="Edit">
-                              <IconButton color="default" size="small" onClick={()=>handleEditOrder(order)}>
+                              <IconButton
+                                color="default"
+                                size="small"
+                                onClick={() => handleEditOrder(order)}
+                              >
                                 <EditOutlinedIcon />
                               </IconButton>
                             </Tooltip>
                           </TableCell>
                           <TableCell className={classes.tableCellIcon}>
                             <Tooltip title="Delete">
-                              <IconButton color="default" size="small" onClick={()=>handleDeleteOrder(order._id)}>
+                              <IconButton
+                                color="default"
+                                size="small"
+                                onClick={() => handleDeleteOrder(order._id)}
+                              >
                                 <DeleteForeverIcon />
                               </IconButton>
                             </Tooltip>
@@ -145,7 +151,11 @@ const MyOrders = (props) => {
                         <Fragment>
                           <TableCell className={classes.tableCellIcon}>
                             <Tooltip title="View">
-                              <IconButton color="default" size="small" onClick={()=>handleViewOrder(order)}>
+                              <IconButton
+                                color="default"
+                                size="small"
+                                onClick={() => handleViewOrder(order)}
+                              >
                                 <VisibilityOutlinedIcon />
                               </IconButton>
                             </Tooltip>
@@ -184,4 +194,8 @@ const mapStateToProps = (state) => ({
   orders: state.orders,
 });
 
-export default connect(mapStateToProps, { getMyOrders, deleteOrder,setCurrentOrder })(MyOrders);
+export default connect(mapStateToProps, {
+  getMyOrders,
+  deleteOrder,
+  setCurrentOrder,
+})(MyOrders);
