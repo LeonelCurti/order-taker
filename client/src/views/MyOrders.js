@@ -1,4 +1,5 @@
 import React, { Fragment, useEffect } from "react";
+import moment from "moment";
 import Layout from "../components/layout/Layout";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -14,10 +15,15 @@ import PrintOutlinedIcon from "@material-ui/icons/PrintOutlined";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
+import StatusBullet from "../components/StatusBullet";
 import { getMyOrders } from "../store/actions/orders";
 import { connect } from "react-redux";
 import { CircularProgress } from "@material-ui/core";
-import { deleteOrder, setCurrentOrder } from "../store/actions/orders";
+import {
+  deleteOrder,
+  setCurrentOrder,
+  clearMyOrders,
+} from "../store/actions/orders";
 
 const useStyles = makeStyles((theme) => ({
   productList: {
@@ -56,7 +62,15 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     height: "100%",
   },
+  status: {
+    marginRight: theme.spacing(1),
+  },
 }));
+const statusColors = {
+  received: "success",
+  open: "info",
+  submitted: "warning",
+};
 
 const MyOrders = (props) => {
   const classes = useStyles();
@@ -64,12 +78,20 @@ const MyOrders = (props) => {
     getMyOrders,
     deleteOrder,
     setCurrentOrder,
+    clearMyOrders,
     orders: { myOrders },
   } = props;
 
   useEffect(() => {
     getMyOrders();
-  }, [getMyOrders]);  
+  }, [getMyOrders]);
+
+  //willUnmount
+  useEffect(() => {
+    return () => {
+      clearMyOrders();
+    };
+  }, [clearMyOrders]);
 
   const handleEditOrder = (order) => {
     setCurrentOrder(order);
@@ -82,7 +104,7 @@ const MyOrders = (props) => {
     setCurrentOrder(order);
   };
   const handleDeleteOrder = (order_id) => {
-    deleteOrder(order_id);    
+    deleteOrder(order_id);
   };
 
   return (
@@ -93,32 +115,43 @@ const MyOrders = (props) => {
             <Table size="small" stickyHeader>
               <TableHead>
                 <TableRow>
-                  <TableCell>Number</TableCell>
+                  <TableCell align="right">Number</TableCell>
                   <TableCell>Last update</TableCell>
-                  <TableCell>Total</TableCell>
+                  <TableCell align="right">Total</TableCell>
                   <TableCell>State</TableCell>
-                  <TableCell></TableCell> {/*print icon */}
-                  <TableCell></TableCell> {/*view or edit icon */}
-                  <TableCell></TableCell> {/*delete icon */}
+                  <TableCell></TableCell>{/*print icon */}
+                  <TableCell></TableCell>{/*view or edit icon */}
+                  <TableCell></TableCell>{/*delete icon */}
                 </TableRow>
               </TableHead>
               <TableBody>
                 {myOrders.length > 0 ? (
                   myOrders.map((order) => (
                     <TableRow hover key={order.number}>
-                      <TableCell>{order.number}</TableCell>
-                      <TableCell>{order.updatedAt}</TableCell>
-                      <TableCell>{order.total}</TableCell>
-                      <TableCell>{order.state}</TableCell>
+                      <TableCell align="right">{order.number}</TableCell>
+                      <TableCell>
+                        {moment(order.updatedAt).format("DD/MM/YYYY  h:mm a")}
+                      </TableCell>
+                      <TableCell align="right">{order.total}</TableCell>
+                      <TableCell>
+                        <StatusBullet
+                          className={classes.status}
+                          color={statusColors[order.state]}
+                          size="sm"
+                        />
+                        {order.state}
+                      </TableCell>
                       <TableCell className={classes.tableCellIcon}>
                         <Tooltip title="Print">
-                          <IconButton
-                            disabled={order.state !== "closed"}
-                            color="default"
-                            size="small"
-                          >
-                            <PrintOutlinedIcon />
-                          </IconButton>
+                          <div>
+                            <IconButton
+                              disabled={order.state === "open"}
+                              color="default"
+                              size="small"
+                            >
+                              <PrintOutlinedIcon />
+                            </IconButton>
+                          </div>
                         </Tooltip>
                       </TableCell>
 
@@ -198,4 +231,5 @@ export default connect(mapStateToProps, {
   getMyOrders,
   deleteOrder,
   setCurrentOrder,
+  clearMyOrders,
 })(MyOrders);

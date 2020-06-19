@@ -15,9 +15,6 @@ import AddCircleOutlineOutlinedIcon from "@material-ui/icons/AddCircleOutlineOut
 const useStyles = makeStyles((theme) => ({
   tableContainer: {
     height: "100%",
-    // display:'block',
-    // height: "80%",
-    // overflowY: "auto",
   },
   tableCellIcon: {
     paddingLeft: "10px",
@@ -33,14 +30,14 @@ const ProductsTable = (props) => {
     <TableRow>
       <TableCell>Code</TableCell>
       <TableCell>Description</TableCell>
-      <TableCell>Price</TableCell>
+      <TableCell align='right'>Price</TableCell>
       <TableCell className={classes.tableCellIcon}></TableCell>
       {handleAddProduct && (
         <TableCell className={classes.tableCellIcon}></TableCell>
       )}
     </TableRow>
   );
-  return (
+  return (    
     <TableContainer className={classes.tableContainer} component={Paper}>
       <Table size="small" stickyHeader>
         <TableHead>{tableHeader()}</TableHead>
@@ -50,7 +47,7 @@ const ProductsTable = (props) => {
               <TableRow hover key={product.cod}>
                 <TableCell>{product.cod}</TableCell>
                 <TableCell>{product.descrip}</TableCell>
-                <TableCell>{product.price}</TableCell>
+                <TableCell align='right'>{product.price}</TableCell>
                 <TableCell className={classes.tableCellIcon}>
                   <Tooltip title="Photo">
                     <IconButton

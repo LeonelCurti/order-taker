@@ -17,56 +17,41 @@ import {
   CircularProgress,
   Typography,
   Card,
-  CardActions,
-  CardHeader,
-  CardContent,
+  Box,
   Button,
+  Grid,
   Divider,
+  Container,
+  Paper,
 } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
-  flexContainer: {
-    display: "flex",
-    padding: theme.spacing(2),
-    height: "100%",  
-  },
-  flexCard: {
-    flexGrow: '1',
-    margin: "0 5px",
+  container: {
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
     height: "100%",
-    maxWidth: "100%", 
+  },
+  fixedHeight: {
+    height: "100%",
   },
   searchInput: {
-    height: "42px",
-    margin: theme.spacing(1),
+    height: "47px",
   },
-  title: {
+  actions: {
+    display: "flex",
+    justifyContent: "flex-end",
+    alignItems: "center",
     padding: theme.spacing(1),
-    height: "42px",
-    marginBottom: theme.spacing(2),
   },
-  centerMe: {
+  paperTitle: {
+    padding: theme.spacing(1),
+  },
+  spinnerContainer: {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     height: "100%",
   },
-  cardContent: {
-    padding: 0,
-    height: "77%", //stop table just before card actions
-  },
-  actions: {
-    justifyContent: "flex-end",
-    "& > :not(:first-child)": {
-      //every element which is not the first-child
-      marginLeft: theme.spacing(3),
-    },
-  },
-  //test
-  container: {
-    paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(4),
-  }
 }));
 
 const NewOrder = (props) => {
@@ -198,52 +183,70 @@ const NewOrder = (props) => {
         <Fragment>
           <ImageModal open={showPhoto} onClose={handleModalClose} />
 
-          <div className={classes.flexContainer}>
-            <div>
-              <Card className={classes.flexCard}>
-                <CardHeader title={`Order Number: ${currentOrder.number}`} />
-                <Divider />
-                <CardContent className={classes.cardContent}>
-                  <OrderTable
-                    order={currentOrder}
-                    handleRemoveItem={handleRemoveItem}
-                    changeItemQuantity={changeItemQuantity}
-                  />
-                </CardContent>
-                <Divider />
-                <CardActions className={classes.actions}>
-                  <Typography variant="subtitle1">
-                    {`Total:  ${currentOrder.total}`}
-                  </Typography>
-                  <Button
-                    color="primary"
-                    variant="contained"
-                    onClick={handleSubmitOrder}
+          <Container maxWidth="lg" className={classes.container}>
+            <Grid container spacing={2} className={classes.fixedHeight}>
+              <Grid item xs={12} sm={6}>
+                <Paper>
+                  <Typography
+                    variant="h5"
+                    component="h5"
+                    className={classes.paperTitle}
                   >
-                    Submit
-                  </Button>
-                </CardActions>
-              </Card>
-            </div>
-            <Card className={classes.flexCard}>
-              <div className={classes.searchInput}>
-                <SearchInput
-                  onChange={handleSearchInputChange}
-                  placeholder="Search products"
-                />
-              </div>
-              <ProductsTable
-                products={productsToShow()}
-                handleAddProduct={handleAddItem}
-                handleModalOpen={handleModalOpen}
-              />
-            </Card>
-          </div>
+                    {`Order Number: ${currentOrder.number}`}
+                  </Typography>
+                  <Box height="400px">     
+                    <Divider />
+                    <OrderTable
+                      order={currentOrder}
+                      handleRemoveItem={handleRemoveItem}
+                      changeItemQuantity={changeItemQuantity}
+                    />
+                  </Box>
+                  <Divider />
+                  <div className={classes.actions}>
+                    <Box mr={1}>
+                      <Typography variant="body1">
+                        {`Total:  ${currentOrder.total}`}
+                      </Typography>
+                    </Box>
+                    <Button
+                      color="primary"
+                      variant="contained"
+                      onClick={handleSubmitOrder}
+                    >
+                      Submit
+                    </Button>
+                  </div>
+                </Paper>
+              </Grid>         
+         
 
 
+            
+              <Grid item xs={12} sm={6} className={classes.fixedHeight}>
+                <Card className={classes.fixedHeight}>
+                  <div className={classes.searchInput}>
+                    <SearchInput
+                      onChange={handleSearchInputChange}
+                      placeholder="Search products"
+                    />
+                  </div>
+                  <Divider />
+                  <ProductsTable
+                    products={productsToShow()}
+                    handleAddProduct={handleAddItem}
+                    handleModalOpen={handleModalOpen}
+                  />
+                </Card>
+              </Grid>
+
+
+
+            </Grid>
+          </Container>
         </Fragment>
       ) : (
-        <div className={classes.centerMe}>
+        <div className={classes.spinnerContainer}>
           <CircularProgress />
         </div>
       )}

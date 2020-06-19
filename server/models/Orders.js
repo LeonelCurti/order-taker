@@ -40,7 +40,7 @@ const OrderSchema = new mongoose.Schema(
     },
     total: {
       type: Number,
-      default:0
+      default: 557.04//change to 0 
     },
     notes: {
       type: String,
@@ -48,7 +48,7 @@ const OrderSchema = new mongoose.Schema(
     },
     state: {
       type: String,
-      enum: ["open", "closed", "received"],
+      enum: ["open", "submitted", "received"],
       default: "open",
     },
   },

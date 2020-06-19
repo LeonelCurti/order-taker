@@ -4,6 +4,7 @@ import {
   GET_MY_ORDERS,
   SET_CURRENT_ORDER,
   CLEAR_CURRENT_ORDER,
+  CLEAR_MY_ORDERS,
   DELETE_ORDER,
 } from "../actions/types";
 
@@ -42,6 +43,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         currentOrder: null,
+      };
+    case CLEAR_MY_ORDERS:
+      return {
+        ...state,
+        myOrders: null,
       };
     case ORDERS_ERROR:
       return {

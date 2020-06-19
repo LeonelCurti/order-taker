@@ -6,6 +6,7 @@ import {
   SET_CURRENT_ORDER,
   CLEAR_CURRENT_ORDER,
   DELETE_ORDER,
+  CLEAR_MY_ORDERS,
   // DELETE_ORDER_ITEM,
 } from "./types";
 
@@ -76,6 +77,11 @@ export const clearCurrentOrder = () => {
     type: CLEAR_CURRENT_ORDER,
   };
 };
+export const clearMyOrders = () => {
+  return {
+    type: CLEAR_MY_ORDERS,
+  };
+};
 export const deleteOrder = (order_id) => async (dispatch) => {
   try {    
     await axios.delete(`/api/v1/order/${order_id}`);
@@ -90,3 +96,15 @@ export const deleteOrder = (order_id) => async (dispatch) => {
     });
   }
 };
+export const submitOrder = (updatedOrder, history) => async (dispatch) => {
+  try {    
+    await axios.put(`/api/v1/order/update`, { updatedOrder });
+    history.push('/my_orders')
+  } catch (err) {
+    dispatch({
+      type: ORDERS_ERROR,
+      payload: err.response.data.error,
+    });
+  }
+};
+

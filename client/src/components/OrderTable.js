@@ -1,79 +1,71 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import IconButton from "@material-ui/core/IconButton";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import Tooltip from "@material-ui/core/Tooltip";
-import TextField from "@material-ui/core/TextField";
-import Paper from "@material-ui/core/Paper";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  IconButton,
+  TableHead,
+  TableRow,
+  Tooltip,
+  TextField,
+} from "@material-ui/core";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 
 const useStyles = makeStyles((theme) => ({
-  tableContainer: {
+  root: {
     height: "100%",
-    // display:'block',
-    // height: "80%",
-    // overflowY: "auto",
+    overflowX: "auto",
+    width: "100%",
     "& .MuiTextField-root": {
-      // margin: theme.spacing(1),
       width: "8ch",
     },
-  },
-  tableCellIcon: {
-    paddingLeft: "10px",
-    paddingRight: "10px",
   },
 }));
 
 const OrderTable = (props) => {
   const classes = useStyles();
-  const { order, handleRemoveItem,changeItemQuantity } = props;
-
-  const tableHeader = () => (
-    <TableRow>
-      <TableCell>Code</TableCell>
-      <TableCell>Description</TableCell>
-      <TableCell>Qty</TableCell>
-      <TableCell>Price</TableCell>
-      <TableCell>Subtotal</TableCell>
-      <TableCell className={classes.tableCellIcon}></TableCell>
-    </TableRow>
-  );
-
-  const handleOnBlur = () => {
-    console.log("onblur: save order");
-  };
-  
+  const { order, handleRemoveItem, changeItemQuantity } = props;
 
   return (
-    <TableContainer className={classes.tableContainer} component={Paper}>
+    <div className={classes.root}>
       <Table size="small" stickyHeader>
-        <TableHead>{tableHeader()}</TableHead>
+        <TableHead>
+          <TableRow>
+            <TableCell align="center">Code</TableCell>
+            <TableCell align="center">Description</TableCell>
+            <TableCell align="center">Qty</TableCell>
+            <TableCell align="right">Price</TableCell>
+            <TableCell align="right">Subtotal</TableCell>
+            <TableCell></TableCell>
+          </TableRow>
+        </TableHead>
         <TableBody>
           {order.items.length > 0 ? (
             order.items.map((product, i) => (
               <TableRow hover key={product.cod}>
                 <TableCell>{product.cod}</TableCell>
-                <TableCell>{product.descrip}</TableCell>
-                <TableCell>
+                <TableCell padding="none">{product.descrip}</TableCell>
+                <TableCell align="right">
                   <TextField
                     type="number"
                     variant="outlined"
                     size="small"
                     value={product.quantity}
-                    onBlur={handleOnBlur}
-                    onChange={(e)=>changeItemQuantity(e,product)}
+                    onChange={(e) => changeItemQuantity(e, product)}
                   />
                 </TableCell>
-                <TableCell>{product.price}</TableCell>
-                <TableCell>
+                <TableCell align="right" padding="none">
+                  {product.price}
+                </TableCell>
+                <TableCell align="right">
                   {(product.quantity * product.price).toFixed(2)}
                 </TableCell>
-                <TableCell className={classes.tableCellIcon}>
+                <TableCell
+                  className={classes.tableCellIcon}
+                  align="center"
+                  padding="none"
+                >
                   <Tooltip title="Remove">
                     <IconButton
                       color="default"
@@ -100,7 +92,7 @@ const OrderTable = (props) => {
           )}
         </TableBody>
       </Table>
-    </TableContainer>
+    </div>
   );
 };
 

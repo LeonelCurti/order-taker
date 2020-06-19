@@ -7,7 +7,7 @@ import PrivateRoute from "./components/hoc/PrivateRoute";
 
 import Dashboard from "./views/Dashboard";
 import MyOrders from "./views/MyOrders";
-import NewOrder from "./views/NewOrder";
+import NewOrder from "./views/NewOrder2";
 import ProductsList from "./views/ProductsList";
 import NotFound from "./views/NotFound";
 import Register from "./views/Register";

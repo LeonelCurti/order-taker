@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import Layout from "../components/layout/Layout";
-import { CircularProgress } from "@material-ui/core";
+import { CircularProgress, Card, Divider } from "@material-ui/core";
 import SearchInput from "../components/SearchInput";
 import { makeStyles } from "@material-ui/core/styles";
 import ProductsTable from "../components/ProductsTable";
@@ -29,8 +29,7 @@ const useStyles = makeStyles((theme) => ({
     height: "100%",
   },
   searchInput: {
-    height: "42px",
-    marginBottom: theme.spacing(2),
+    height: "47px",    
   },
   centerMe: {
     display: "flex",
@@ -83,13 +82,16 @@ const ProductList = (props) => {
       <ImageModal open={showPhoto} onClose={handleModalClose} />
       {products ? (
         <div className={classes.productList}>
+        <Card >
           <div className={classes.searchInput}>
             <SearchInput onChange={onChange} placeholder="Search products" />
           </div>
+          <Divider />
           <ProductsTable
             products={productsToShow()}
             handleModalOpen={handleModalOpen}
           />
+        </Card>
         </div>
       ) : (
         <div className={classes.centerMe}>
