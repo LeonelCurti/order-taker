@@ -7,8 +7,8 @@ import Sidebar from "../Sidebar";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    paddingTop: 56,
     height: "100%",
+    paddingTop: 56,
     [theme.breakpoints.up("sm")]: {
       paddingTop: 64,
     },
@@ -18,9 +18,10 @@ const useStyles = makeStyles((theme) => ({
   },
   mainContent: { 
     backgroundColor: '#f5f5f5',
-    // backgroundColor: '#fafbfc',
+    // backgroundColor: '#fafbfc',  
     height: "100%",
   },
+  // appBarSpacer: theme.mixins.toolbar,
 }));
 
 const Layout = (props) => {
@@ -53,6 +54,7 @@ const Layout = (props) => {
         open={shouldOpenSidebar}
         variant={isDesktop ? "persistent" : "temporary"}
       />
+      {/* <div className={classes.appBarSpacer} /> */}
       <main className={classes.mainContent}>{props.children}</main>   
     </div>
   );

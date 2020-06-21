@@ -16,7 +16,6 @@ import {
 import {
   CircularProgress,
   Typography,
-  Card,
   Box,
   Button,
   Grid,
@@ -30,12 +29,18 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(2),
     height: "100%",
+    display: "flex", 
+    justifyContent: "center", 
+    alignItems: "center", 
   },
   fixedHeight: {
     height: "100%",
   },
+  test1: {
+    height: "90%",
+  },
   searchInput: {
-    height: "47px",
+    height: "10%",
   },
   actions: {
     display: "flex",
@@ -185,17 +190,17 @@ const NewOrder = (props) => {
 
           <Container maxWidth="lg" className={classes.container}>
             <Grid container spacing={2} className={classes.fixedHeight}>
-              <Grid item xs={12} sm={6}>
-                <Paper>
+              <Grid item xs={12} sm={6} className={classes.fixedHeight}>
+                <Paper className={classes.fixedHeight}>
                   <Typography
-                    variant="h5"
-                    component="h5"
+                    variant="h6"
+                    component="h6"
                     className={classes.paperTitle}
                   >
                     {`Order Number: ${currentOrder.number}`}
                   </Typography>
-                  <Box height="400px">     
-                    <Divider />
+                  <Divider />
+                  <Box height="calc(100% - 48px - 2px - 52px )">
                     <OrderTable
                       order={currentOrder}
                       handleRemoveItem={handleRemoveItem}
@@ -218,30 +223,25 @@ const NewOrder = (props) => {
                     </Button>
                   </div>
                 </Paper>
-              </Grid>         
-         
-
-
-            
-              <Grid item xs={12} sm={6} className={classes.fixedHeight}>
-                <Card className={classes.fixedHeight}>
-                  <div className={classes.searchInput}>
-                    <SearchInput
-                      onChange={handleSearchInputChange}
-                      placeholder="Search products"
-                    />
-                  </div>
-                  <Divider />
-                  <ProductsTable
-                    products={productsToShow()}
-                    handleAddProduct={handleAddItem}
-                    handleModalOpen={handleModalOpen}
-                  />
-                </Card>
               </Grid>
 
-
-
+              <Grid item xs={12} sm={6} className={classes.fixedHeight}>
+                <Paper className={classes.fixedHeight}>
+                  <SearchInput
+                    onChange={handleSearchInputChange}
+                    placeholder="Search products"
+                  />
+                  <Divider />
+                  <Box height="calc(100% - 49px)">
+                    <ProductsTable
+                      products={productsToShow()}
+                      handleAddProduct={handleAddItem}
+                      handleModalOpen={handleModalOpen}
+                    />
+                  </Box>
+                </Paper>
+              </Grid>
+              
             </Grid>
           </Container>
         </Fragment>
