@@ -16,13 +16,8 @@ import AccountCircle from "@material-ui/icons/AccountCircle";
 import { logout } from "../store/actions/auth";
 
 const useStyles = makeStyles((theme) => ({
-  AppBar: {
-    // boxShadow: theme.shadows[1],
-    // boxShadow: "none",
+  AppBar: { 
     backgroundColor: theme.palette.common.white,
-    // backgroundColor: theme.palette.secondary,
-    // backgroundColor: '#E8EAF6',
-
     borderBottom: `1px solid ${theme.palette.divider}`,
   },
   appBarToolbar: {

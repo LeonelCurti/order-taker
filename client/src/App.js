@@ -3,11 +3,12 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { connect } from "react-redux";
 import { ThemeProvider } from "@material-ui/styles";
 import theme from "./theme";
+import CssBaseline from '@material-ui/core/CssBaseline';
 import PrivateRoute from "./components/hoc/PrivateRoute";
 
 import Dashboard from "./views/Dashboard";
 import MyOrders from "./views/MyOrders";
-import NewOrder from "./views/NewOrder2";
+import NewOrder from "./views/NewOrder";
 import ProductsList from "./views/ProductsList";
 import NotFound from "./views/NotFound";
 import Register from "./views/Register";
@@ -26,6 +27,7 @@ const App = (props) => {
   return (
     <Router>
       <ThemeProvider theme={theme}>
+        <CssBaseline />
         <Switch>
           <PrivateRoute path="/new_order" exact component={NewOrder} />
           <PrivateRoute path="/my_orders" exact component={MyOrders} />

@@ -1,37 +1,33 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import Layout from "../components/layout/Layout";
-import { CircularProgress, Card, Divider } from "@material-ui/core";
 import SearchInput from "../components/SearchInput";
-import { makeStyles } from "@material-ui/core/styles";
 import ProductsTable from "../components/ProductsTable";
-import { getPriceList } from "../store/actions/orders";
 import ImageModal from "../components/ImageModal";
+import {
+  CircularProgress,
+  Divider,
+  Box,
+  Paper,
+  Container,
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import { getPriceList } from "../store/actions/orders";
 const useStyles = makeStyles((theme) => ({
-  productList: {
-    display: "flex",
-    flexDirection: "column",
+  container: {
     paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(2),
-    margin: "0 auto",
-    [theme.breakpoints.up("xs")]: {
-      width: "95%",
-    },
-    [theme.breakpoints.up("sm")]: {
-      width: "90%",
-    },
-    [theme.breakpoints.up("md")]: {
-      width: "82.5%",
-    },
-    [theme.breakpoints.up("lg")]: {
-      width: "70%",
-    },
     height: "100%",
   },
-  searchInput: {
-    height: "47px",    
+  fixedPaperHeight: {
+    height: "100%",
   },
-  centerMe: {
+  tableContainer: {
+    overflowX: "auto",
+    //100% - divider 1 - searchInput 48 = rest for table
+    height: "calc(100% - 49px)",
+  },
+  spinnerContainer: {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -81,20 +77,20 @@ const ProductList = (props) => {
     <Layout>
       <ImageModal open={showPhoto} onClose={handleModalClose} />
       {products ? (
-        <div className={classes.productList}>
-        <Card >
-          <div className={classes.searchInput}>
+        <Container maxWidth="md" className={classes.container}>
+          <Paper className={classes.fixedPaperHeight}>
             <SearchInput onChange={onChange} placeholder="Search products" />
-          </div>
-          <Divider />
-          <ProductsTable
-            products={productsToShow()}
-            handleModalOpen={handleModalOpen}
-          />
-        </Card>
-        </div>
+            <Divider />
+            <Box className={classes.tableContainer}>
+              <ProductsTable
+                products={productsToShow()}
+                handleModalOpen={handleModalOpen}
+              />
+            </Box>
+          </Paper>
+        </Container>
       ) : (
-        <div className={classes.centerMe}>
+        <div className={classes.spinnerContainer}>
           <CircularProgress />
         </div>
       )}

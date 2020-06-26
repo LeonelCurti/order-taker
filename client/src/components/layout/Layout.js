@@ -17,11 +17,8 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: 180,
   },
   mainContent: { 
-    backgroundColor: '#f5f5f5',
-    // backgroundColor: '#fafbfc',  
     height: "100%",
   },
-  // appBarSpacer: theme.mixins.toolbar,
 }));
 
 const Layout = (props) => {
@@ -54,7 +51,6 @@ const Layout = (props) => {
         open={shouldOpenSidebar}
         variant={isDesktop ? "persistent" : "temporary"}
       />
-      {/* <div className={classes.appBarSpacer} /> */}
       <main className={classes.mainContent}>{props.children}</main>   
     </div>
   );

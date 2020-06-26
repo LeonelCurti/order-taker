@@ -1,26 +1,20 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import IconButton from "@material-ui/core/IconButton";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import Tooltip from "@material-ui/core/Tooltip";
-import Paper from "@material-ui/core/Paper";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  IconButton,
+  TableHead,
+  TableRow,
+  Tooltip,
+} from "@material-ui/core";
+
 import PhotoCameraOutlinedIcon from "@material-ui/icons/PhotoCameraOutlined";
-import AddCircleOutlineOutlinedIcon from "@material-ui/icons/AddCircleOutlineOutlined";
+import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    height: "100%",
-    overflowX: "auto",
-    width: "100%",
-    "& .MuiTextField-root": {
-      width: "8ch",
-    },
-  },
+  root: {},
   tableCellIcon: {
     paddingLeft: "10px",
     paddingRight: "10px",
@@ -31,18 +25,15 @@ const ProductsTable = (props) => {
   const classes = useStyles();
   const { products, handleModalOpen, handleAddProduct } = props;
 
-   return (
-    <div className={classes.root}> 
+  return (
+    <div className={classes.root}>
       <Table size="small" stickyHeader>
         <TableHead>
           <TableRow>
             <TableCell>Code</TableCell>
             <TableCell>Description</TableCell>
             <TableCell align="right">Price</TableCell>
-            <TableCell className={classes.tableCellIcon}></TableCell>
-            {handleAddProduct && (
-              <TableCell className={classes.tableCellIcon}></TableCell>
-            )}
+            <TableCell colSpan={handleAddProduct ? 2 : 1}></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -52,7 +43,7 @@ const ProductsTable = (props) => {
                 <TableCell>{product.cod}</TableCell>
                 <TableCell>{product.descrip}</TableCell>
                 <TableCell align="right">{product.price}</TableCell>
-                <TableCell className={classes.tableCellIcon}>
+                <TableCell>
                   <Tooltip title="Photo">
                     <IconButton
                       color="default"
@@ -71,7 +62,7 @@ const ProductsTable = (props) => {
                         size="small"
                         onClick={() => handleAddProduct(product)}
                       >
-                        <AddCircleOutlineOutlinedIcon />
+                        <AddCircleOutlineIcon />
                       </IconButton>
                     </Tooltip>
                   </TableCell>

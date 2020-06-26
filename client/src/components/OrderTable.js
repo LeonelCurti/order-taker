@@ -14,9 +14,6 @@ import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    height: "100%",
-    overflowX: "auto",
-    width: "100%",
     "& .MuiTextField-root": {
       width: "8ch",
     },

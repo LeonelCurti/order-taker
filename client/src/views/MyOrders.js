@@ -1,62 +1,44 @@
 import React, { Fragment, useEffect } from "react";
+import { connect } from "react-redux";
 import moment from "moment";
 import Layout from "../components/layout/Layout";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import Tooltip from "@material-ui/core/Tooltip";
-import Paper from "@material-ui/core/Paper";
-import IconButton from "@material-ui/core/IconButton";
+import StatusBullet from "../components/StatusBullet";
+import {
+  Box,
+  CircularProgress,
+  Table,
+  TableHead,
+  TableBody,
+  TableCell,
+  Container,
+  TableRow,
+  Tooltip,
+  Paper,
+  IconButton,
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import PrintOutlinedIcon from "@material-ui/icons/PrintOutlined";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
-import StatusBullet from "../components/StatusBullet";
-import { getMyOrders } from "../store/actions/orders";
-import { connect } from "react-redux";
-import { CircularProgress } from "@material-ui/core";
 import {
   deleteOrder,
   setCurrentOrder,
   clearMyOrders,
+  getMyOrders,
 } from "../store/actions/orders";
 
 const useStyles = makeStyles((theme) => ({
-  productList: {
-    display: "flex",
-    flexDirection: "column",
+  container: {
     paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(2),
-    margin: "0 auto",
-    [theme.breakpoints.up("xs")]: {
-      width: "95%",
-    },
-    [theme.breakpoints.up("sm")]: {
-      width: "90%",
-    },
-    [theme.breakpoints.up("md")]: {
-      width: "82.5%",
-    },
-    [theme.breakpoints.up("lg")]: {
-      width: "70%",
-    },
     height: "100%",
-  },
-  tableContainer: {
-    height: "100%",
-    // display:'block',
-    // height: "80%",
-    // overflowY: "auto",
   },
   tableCellIcon: {
     paddingLeft: "10px",
     paddingRight: "10px",
   },
-  centerMe: {
+  spinnerContainer: {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -64,6 +46,10 @@ const useStyles = makeStyles((theme) => ({
   },
   status: {
     marginRight: theme.spacing(1),
+  },
+  tableContainer: {
+    height: "100%",
+    overflow: "auto",
   },
 }));
 const statusColors = {
@@ -110,8 +96,8 @@ const MyOrders = (props) => {
   return (
     <Layout>
       {myOrders ? (
-        <div className={classes.productList}>
-          <TableContainer className={classes.tableContainer} component={Paper}>
+        <Container maxWidth="md" className={classes.container}>
+          <Paper className={classes.tableContainer}>
             <Table size="small" stickyHeader>
               <TableHead>
                 <TableRow>
@@ -119,9 +105,9 @@ const MyOrders = (props) => {
                   <TableCell>Last update</TableCell>
                   <TableCell align="right">Total</TableCell>
                   <TableCell>State</TableCell>
-                  <TableCell></TableCell>{/*print icon */}
-                  <TableCell></TableCell>{/*view or edit icon */}
-                  <TableCell></TableCell>{/*delete icon */}
+                  <TableCell align="center" colSpan={3}>
+                    Actions
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -134,12 +120,14 @@ const MyOrders = (props) => {
                       </TableCell>
                       <TableCell align="right">{order.total}</TableCell>
                       <TableCell>
-                        <StatusBullet
-                          className={classes.status}
-                          color={statusColors[order.state]}
-                          size="sm"
-                        />
-                        {order.state}
+                        <Box display="flex" alignItems="center">
+                          <StatusBullet
+                            className={classes.status}
+                            color={statusColors[order.state]}
+                            size="sm"
+                          />
+                          <span>{order.state}</span>
+                        </Box>
                       </TableCell>
                       <TableCell className={classes.tableCellIcon}>
                         <Tooltip title="Print">
@@ -212,10 +200,10 @@ const MyOrders = (props) => {
                 )}
               </TableBody>
             </Table>
-          </TableContainer>
-        </div>
+          </Paper>
+        </Container>
       ) : (
-        <div className={classes.centerMe}>
+        <div className={classes.spinnerContainer}>
           <CircularProgress />
         </div>
       )}
