@@ -9,6 +9,7 @@ import PrivateRoute from "./components/hoc/PrivateRoute";
 import Dashboard from "./views/Dashboard";
 import MyOrders from "./views/MyOrders";
 import NewOrder from "./views/NewOrder";
+import ViewOrder from "./views/ViewOrder";
 import ProductsList from "./views/ProductsList";
 import NotFound from "./views/NotFound";
 import Register from "./views/Register";
@@ -30,6 +31,7 @@ const App = (props) => {
         <CssBaseline />
         <Switch>
           <PrivateRoute path="/new_order" exact component={NewOrder} />
+          <PrivateRoute path="/view_order" exact component={ViewOrder} />
           <PrivateRoute path="/my_orders" exact component={MyOrders} />
           <PrivateRoute path="/product_list" exact component={ProductsList} />
           <PrivateRoute path="/dashboard" exact component={Dashboard} />

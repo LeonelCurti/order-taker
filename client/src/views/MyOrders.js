@@ -84,10 +84,8 @@ const MyOrders = (props) => {
     props.history.push("/new_order");
   };
   const handleViewOrder = (order) => {
-    //in progress
-    //open a view where i can only see the order without
-    //posibility to edit
     setCurrentOrder(order);
+    props.history.push("/view_order");
   };
   const handleDeleteOrder = (order_id) => {
     deleteOrder(order_id);
