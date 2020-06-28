@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
 
 const ProductsTable = (props) => {
   const classes = useStyles();
-  const { products, handleModalOpen, handleAddProduct } = props;
+  const { products, handleModalOpen, handleAddProduct } = props; 
 
   return (
     <div className={classes.root}>
@@ -45,6 +45,7 @@ const ProductsTable = (props) => {
                 <TableCell align="right">{product.price}</TableCell>
                 <TableCell>
                   <Tooltip title="Photo">
+                    {/* <SomeContent /> */}
                     <IconButton
                       color="default"
                       size="small"

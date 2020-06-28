@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
   shiftContent: {
     paddingLeft: 180,
   },
-  mainContent: { 
+  mainContent: {
     height: "100%",
   },
 }));
@@ -28,6 +28,7 @@ const Layout = (props) => {
   const isDesktop = useMediaQuery(theme.breakpoints.up("lg"), {
     defaultMatches: true,
   });
+
   const handleSidebarOpen = () => {
     setOpenSidebar(true);
   };
@@ -38,7 +39,7 @@ const Layout = (props) => {
   //only shift main content to left in desktop mode
   const shouldOpenSidebar = isDesktop ? true : openSidebar;
   return (
-    <div  
+    <div
       className={clsx({
         [classes.root]: true,
         [classes.shiftContent]: isDesktop,
@@ -51,7 +52,7 @@ const Layout = (props) => {
         open={shouldOpenSidebar}
         variant={isDesktop ? "persistent" : "temporary"}
       />
-      <main className={classes.mainContent}>{props.children}</main>   
+      <main className={classes.mainContent}>{props.children}</main>
     </div>
   );
 };

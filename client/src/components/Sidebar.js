@@ -11,14 +11,11 @@ import SidebarNav from "./SidebarNav";
 const useStyles = makeStyles((theme) => ({
   drawer: {
     width: 180,
-    // border: 0,
+    // border: 0,  
     [theme.breakpoints.up("lg")]: {
       marginTop: 64,
       height: "calc(100% - 64px)",
     },
-  },
-  nav: {
-    marginBottom: theme.spacing(2),
   },
 }));
 
@@ -57,7 +54,7 @@ const Sidebar = (props) => {
       open={open}
       variant={variant}
     >
-      <SidebarNav className={classes.nav} pages={pages} onClose={onClose} />
+      <SidebarNav pages={pages} onClose={onClose} />
     </Drawer>
   );
 };
