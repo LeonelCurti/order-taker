@@ -1,110 +1,90 @@
 import axios from "axios";
-import {
-  GET_PRICE_LIST,
-  ORDERS_ERROR,
-  GET_MY_ORDERS,
-  SET_CURRENT_ORDER,
-  CLEAR_CURRENT_ORDER,
-  DELETE_ORDER,
-  CLEAR_MY_ORDERS,
-  // DELETE_ORDER_ITEM,
-} from "./types";
+import * as actionTypes from "./types";
 
-export const getPriceList = () => async (dispatch) => {
+export const getOrders = () => async (dispatch) => {
   try {
-    const res = await axios.get("/api/v1/pricelist");
-
-    dispatch({
-      type: GET_PRICE_LIST,
-      payload: res.data.products,
-    });
-  } catch (err) {
-    dispatch({
-      type: ORDERS_ERROR,
-      payload: err.response.data.error,
-    });
-  }
-};
-export const getMyOrders = () => async (dispatch) => {
-  try {
+    dispatch(setLoading());
     const res = await axios.get("/api/v1/order");
-
     dispatch({
-      type: GET_MY_ORDERS,
+      type: actionTypes.GET_ORDERS_SUCCESS,
       payload: res.data.orders,
     });
   } catch (err) {
+    console.log(err.response);
+
     dispatch({
-      type: ORDERS_ERROR,
-      payload: err.response.data.error,
+      type: actionTypes.GET_ORDERS_FAIL,
+      payload: err.response.data.error || "Something went wrong",
     });
   }
 };
 
 export const createNewOrder = () => async (dispatch) => {
   try {
+    dispatch(setLoading());
     const res = await axios.post("/api/v1/order/createOrder");
-
-    dispatch(setCurrentOrder(res.data.order));
+    dispatch({
+      type: actionTypes.CREATE_ORDER_SUCCESS,
+      payload: res.data.order,
+    });
   } catch (err) {
     dispatch({
-      type: ORDERS_ERROR,
+      type: actionTypes.CREATE_ORDER_FAIL,
       payload: err.response.data.error,
     });
   }
 };
 
-export const updateOrder = (updatedOrder) => async (dispatch) => {  
+export const updateOrder = (updatedOrder) => async (dispatch) => {
   try {
-    dispatch(setCurrentOrder(updatedOrder));
+    // dispatch(setCurrentOrder(updatedOrder));
     await axios.put(`/api/v1/order/update`, { updatedOrder });
   } catch (err) {
     dispatch({
-      type: ORDERS_ERROR,
+      type: actionTypes.UPDATE_ORDER_FAIL,
       payload: err.response.data.error,
     });
   }
 };
 
-export const setCurrentOrder = (order) => {
-  return {
-    type: SET_CURRENT_ORDER,
-    payload: order,
-  };
-};
-export const clearCurrentOrder = () => {
-  return {
-    type: CLEAR_CURRENT_ORDER,
-  };
-};
-export const clearMyOrders = () => {
-  return {
-    type: CLEAR_MY_ORDERS,
-  };
-};
 export const deleteOrder = (order_id) => async (dispatch) => {
-  try {    
+  try {
+    // dispatch(setLoading());
     await axios.delete(`/api/v1/order/${order_id}`);
     dispatch({
-      type: DELETE_ORDER,
+      type: actionTypes.DELETE_ORDER_SUCCESS,
       payload: order_id,
-    })
+    });
   } catch (err) {
     dispatch({
-      type: ORDERS_ERROR,
+      type: actionTypes.DELETE_ORDER_FAIL,
       payload: err.response.data.error,
     });
   }
 };
 export const submitOrder = (updatedOrder, history) => async (dispatch) => {
-  try {    
+  try {
+    // dispatch(setLoading());
     await axios.put(`/api/v1/order/update`, { updatedOrder });
-    history.push('/my_orders')
+    dispatch({
+      type: actionTypes.SUBMIT_ORDER_SUCCESS,
+    });
+    history.push("/my_orders");
   } catch (err) {
     dispatch({
-      type: ORDERS_ERROR,
+      type: actionTypes.SUBMIT_ORDER_FAIL,
       payload: err.response.data.error,
     });
   }
 };
 
+export const setLoading = () => ({
+  type: actionTypes.SET_LOADING,
+});
+export const setCurrentOrder = (order) => ({
+  type: actionTypes.SET_CURRENT_ORDER,
+  payload: order,
+});
+export const clearCurrentOrder = () => ({
+  type: actionTypes.CLEAR_CURRENT_ORDER,
+});

@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
+import { getPriceList } from "../store/actions/products";
 import Layout from "../components/layout/Layout";
 import SearchInput from "../components/SearchInput";
 import ProductsTable from "../components/ProductsTable";
 import ImageModal from "../components/ImageModal";
+import FetchError from "../components/hoc/FetchError";
 import {
   CircularProgress,
   Divider,
@@ -12,7 +14,6 @@ import {
   Container,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { getPriceList } from "../store/actions/orders";
 const useStyles = makeStyles((theme) => ({
   container: {
     paddingTop: theme.spacing(2),
@@ -37,18 +38,13 @@ const useStyles = makeStyles((theme) => ({
 
 const ProductList = (props) => {
   const classes = useStyles();
-  const {
-    getPriceList,
-    orders: { products },
-  } = props;
+  const { getPriceList, products, loading, error } = props;
   const [filterStr, setFilterStr] = useState("");
   const [showPhoto, setShowPhoto] = useState(false);
 
   useEffect(() => {
-    if (!products) {
-      getPriceList();
-    }
-  }, [getPriceList, products]);
+    getPriceList();
+  }, [getPriceList]);
 
   const onChange = (e) => {
     setFilterStr(e.target.value.trim());
@@ -76,7 +72,13 @@ const ProductList = (props) => {
   return (
     <Layout>
       <ImageModal open={showPhoto} onClose={handleModalClose} />
-      {products ? (
+      {loading ? (
+        <div className={classes.spinnerContainer}>
+          <CircularProgress />
+        </div>
+      ) : error ? (
+        <FetchError message={error} onRetry={getPriceList} />
+      ) : (
         <Container maxWidth="md" className={classes.container}>
           <Paper className={classes.fixedPaperHeight}>
             <SearchInput onChange={onChange} placeholder="Search products" />
@@ -89,17 +91,15 @@ const ProductList = (props) => {
             </Box>
           </Paper>
         </Container>
-      ) : (
-        <div className={classes.spinnerContainer}>
-          <CircularProgress />
-        </div>
       )}
     </Layout>
   );
 };
 
 const mapStateToProps = (state) => ({
-  orders: state.orders,
+  products: state.catalog.products,
+  loading: state.catalog.loading,
+  error: state.catalog.error,
 });
 
 export default connect(mapStateToProps, { getPriceList })(ProductList);

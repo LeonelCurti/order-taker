@@ -1,18 +1,11 @@
-import {
-  GET_PRICE_LIST,
-  ORDERS_ERROR,
-  GET_MY_ORDERS,
-  SET_CURRENT_ORDER,
-  CLEAR_CURRENT_ORDER,
-  CLEAR_MY_ORDERS,
-  DELETE_ORDER,
-} from "../actions/types";
+import * as actionTypes from "../actions/types";
 
 const initialState = {
-  myOrders: null,
+  myOrders: [], 
   currentOrder: null,
-  products: null,
-  loading: true, //not used yet
+  loading: false,
+  isSubmitting:false,
+  isUpdating:false,
   error: null,
 };
 
@@ -20,45 +13,53 @@ export default function (state = initialState, action) {
   const { type, payload } = action;
 
   switch (type) {
-    case GET_PRICE_LIST:
+    case actionTypes.SET_LOADING:
       return {
         ...state,
-        products: payload,
-        loading: false,
-        error: null,
+        loading: true,
       };
-    case GET_MY_ORDERS:
+    case actionTypes.GET_ORDERS_SUCCESS:
       return {
         ...state,
         myOrders: payload,
         loading: false,
-        error: null,
+      };  
+    case actionTypes.CREATE_ORDER_SUCCESS:
+      return {
+        ...state,
+        currentOrder: payload,
+        loading: false,
       };
-    case SET_CURRENT_ORDER:
+    case actionTypes.DELETE_ORDER_SUCCESS:
+      return {
+        ...state,
+        myOrders: state.myOrders.filter((order) => order._id !== payload),
+        loading: false,
+      };
+    case actionTypes.SUBMIT_ORDER_SUCCESS:
+      return {
+        ...state,      
+        loading: false,
+      };
+    case actionTypes.SET_CURRENT_ORDER:
       return {
         ...state,
         currentOrder: payload,
       };
-    case CLEAR_CURRENT_ORDER:
+    case actionTypes.CLEAR_CURRENT_ORDER:
       return {
         ...state,
         currentOrder: null,
-      };
-    case CLEAR_MY_ORDERS:
-      return {
-        ...state,
-        myOrders: null,
-      };
-    case ORDERS_ERROR:
+      }; 
+    case actionTypes.GET_ORDERS_FAIL:
+    case actionTypes.DELETE_ORDER_FAIL:
+    case actionTypes.SUBMIT_ORDER_FAIL:
+    case actionTypes.CREATE_ORDER_FAIL:
+    case actionTypes.UPDATE_ORDER_FAIL:
       return {
         ...state,
         loading: false,
         error: payload,
-      };
-    case DELETE_ORDER:
-      return {
-        ...state,
-        myOrders: state.myOrders.filter((order) => order._id !== payload),
       };
     default:
       return state;

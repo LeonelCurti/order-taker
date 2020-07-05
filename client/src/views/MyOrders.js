@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import moment from "moment";
 import Layout from "../components/layout/Layout";
 import StatusBullet from "../components/StatusBullet";
+import FetchError from "../components/hoc/FetchError";
 import {
   Box,
   CircularProgress,
@@ -21,12 +22,7 @@ import PrintOutlinedIcon from "@material-ui/icons/PrintOutlined";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
-import {
-  deleteOrder,
-  setCurrentOrder,
-  clearMyOrders,
-  getMyOrders,
-} from "../store/actions/orders";
+import * as actions from "../store/actions/orders";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -61,23 +57,15 @@ const statusColors = {
 const MyOrders = (props) => {
   const classes = useStyles();
   const {
-    getMyOrders,
+    getOrders,
     deleteOrder,
     setCurrentOrder,
-    clearMyOrders,
-    orders: { myOrders },
+    orders: { myOrders, loading, error },
   } = props;
 
   useEffect(() => {
-    getMyOrders();
-  }, [getMyOrders]);
-
-  //willUnmount
-  useEffect(() => {
-    return () => {
-      clearMyOrders();
-    };
-  }, [clearMyOrders]);
+    getOrders();
+  }, [getOrders]);
 
   const handleEditOrder = (order) => {
     setCurrentOrder(order);
@@ -93,7 +81,13 @@ const MyOrders = (props) => {
 
   return (
     <Layout>
-      {myOrders ? (
+      {loading ? (
+        <div className={classes.spinnerContainer}>
+          <CircularProgress />
+        </div>
+      ) : error ? (
+        <FetchError message={error} onRetry={getOrders} />
+      ) : (
         <Container maxWidth="md" className={classes.container}>
           <Paper className={classes.tableContainer}>
             <Table size="small" stickyHeader>
@@ -200,10 +194,6 @@ const MyOrders = (props) => {
             </Table>
           </Paper>
         </Container>
-      ) : (
-        <div className={classes.spinnerContainer}>
-          <CircularProgress />
-        </div>
       )}
     </Layout>
   );
@@ -213,9 +203,4 @@ const mapStateToProps = (state) => ({
   orders: state.orders,
 });
 
-export default connect(mapStateToProps, {
-  getMyOrders,
-  deleteOrder,
-  setCurrentOrder,
-  clearMyOrders,
-})(MyOrders);
+export default connect(mapStateToProps, actions)(MyOrders);

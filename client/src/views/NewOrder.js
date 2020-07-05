@@ -6,13 +6,8 @@ import ProductsTable from "../components/ProductsTable";
 import OrderTable from "../components/OrderTable";
 import ImageModal from "../components/ImageModal";
 import { makeStyles } from "@material-ui/core/styles";
-import {
-  getPriceList,
-  createNewOrder,
-  clearCurrentOrder,
-  updateOrder,
-  submitOrder,
-} from "../store/actions/orders";
+import * as orderActions from "../store/actions/orders";
+import * as productActions from "../store/actions/products";
 import {
   CircularProgress,
   Typography,
@@ -57,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
   },
   orderItemsContainer: {
     overflowX: "auto",
-    height:"calc(100% - 48px - 2px - 52px )"
+    height: "calc(100% - 48px - 2px - 52px )",
   },
 }));
 
@@ -68,17 +63,18 @@ const NewOrder = (props) => {
     clearCurrentOrder,
     submitOrder,
     updateOrder,
-    orders: { products, currentOrder },
+    setCurrentOrder,
+    products,
+    currentOrder,
+    loading,
   } = props;
   const [filterStr, setFilterStr] = useState("");
   const [showPhoto, setShowPhoto] = useState(false);
   const classes = useStyles();
 
   useEffect(() => {
-    if (!products) {
-      getPriceList();
-    }
-  }, [getPriceList, products]);
+    getPriceList();
+  }, [getPriceList]);
 
   useEffect(() => {
     //if currentOrder is null, create new order
@@ -114,7 +110,7 @@ const NewOrder = (props) => {
     item.quantity = Math.floor(Math.random() * 10) + 1;
     item.id = 1469335; //default item category for now
 
-    //check if already exist
+    //check if item already exist
     const alreadyInList =
       currentOrder.items.filter((orderItem) => orderItem.cod === item.cod)
         .length > 0;
@@ -122,10 +118,10 @@ const NewOrder = (props) => {
       alert("Item already added");
       return;
     }
+    //add item into the list
     const updatedOrderItems = [item, ...currentOrder.items];
 
     handleUpdateOrder(updatedOrderItems);
-    //focus quantity selection
   };
   const handleRemoveItem = (itemCode) => {
     const updatedOrderItems = currentOrder.items.filter(
@@ -139,7 +135,8 @@ const NewOrder = (props) => {
       ...currentOrder,
       items: updatedOrderItems,
       total: calculateOrderTotal(updatedOrderItems),
-    };    
+    };
+    setCurrentOrder(updatedOrder);
     updateOrder(updatedOrder);
   };
 
@@ -185,7 +182,7 @@ const NewOrder = (props) => {
 
   return (
     <Layout>
-      {currentOrder && products ? (
+      {!loading && currentOrder ? (
         <Fragment>
           <ImageModal open={showPhoto} onClose={handleModalClose} />
 
@@ -255,13 +252,11 @@ const NewOrder = (props) => {
 };
 
 const mapStateToProps = (state) => ({
-  orders: state.orders,
+  products: state.catalog.products,
+  currentOrder: state.orders.currentOrder,
+  loading: state.orders.loading,
 });
 
-export default connect(mapStateToProps, {
-  getPriceList,
-  createNewOrder,
-  clearCurrentOrder,
-  updateOrder,
-  submitOrder,
-})(NewOrder);
+export default connect(mapStateToProps, { ...orderActions, ...productActions })(
+  NewOrder
+);
