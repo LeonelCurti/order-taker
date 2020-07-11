@@ -16,7 +16,7 @@ import {
   Divider,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { clearCurrentOrder } from "../store/actions/orders";
+import { setCurrentOrder } from "../store/actions/orders";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
 const MyOrders = (props) => {
   const classes = useStyles();
   const {
-    clearCurrentOrder,
+    setCurrentOrder, 
     orders: { currentOrder },
   } = props;
 
@@ -60,9 +60,9 @@ const MyOrders = (props) => {
   //willUnmount
   useEffect(() => {
     return () => {
-      clearCurrentOrder();
+      setCurrentOrder(null);
     };
-  }, [clearCurrentOrder]);
+  }, [setCurrentOrder]);
 
   return (
     <Layout>
@@ -134,5 +134,5 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, {
-  clearCurrentOrder,
+  setCurrentOrder,
 })(MyOrders);

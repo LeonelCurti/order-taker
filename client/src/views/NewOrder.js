@@ -73,8 +73,7 @@ const NewOrder = (props) => {
     products,
     currentOrder,
     getPriceList,
-    createOrder,
-    clearCurrentOrder,
+    createOrder, 
     submitOrder,
     updateOrder,
     setCurrentOrder,
@@ -104,9 +103,9 @@ const NewOrder = (props) => {
   //willUnmount
   useEffect(() => {
     return () => {
-      clearCurrentOrder();
+      setCurrentOrder(null);
     };
-  }, [clearCurrentOrder]);
+  }, [setCurrentOrder]);
 
   const handleSearchInputChange = (e) => {
     setSearchField(e.target.value.trim());

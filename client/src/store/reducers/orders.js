@@ -32,12 +32,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         currentOrder: payload,
-      };
-    case actionTypes.CLEAR_CURRENT_ORDER:
-      return {
-        ...state,
-        currentOrder: null,
-      };    
+      };   
     default:
       return state;
   }

@@ -6,7 +6,9 @@ exports.login = async (req, res, next) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    return res.status(422).json({ success: false, error: "Invalid credentials" });
+    return res
+      .status(422)
+      .json({ success: false, error: "Invalid credentials" });
     //ok but the error message array is not exploited
   }
   try {
@@ -59,7 +61,6 @@ exports.register = async (req, res, next) => {
 
   try {
     const { firstName, lastName, email, password } = req.body;
-    
 
     //See if user already exist
     const check_user = await User.findOne({ email });
@@ -76,12 +77,11 @@ exports.register = async (req, res, next) => {
       email,
       password,
     });
-    return (
-      res
-        .status(200)
-        // .cookie("token", token, cookieOptions)
-        .json({ success: true })
-    );
+    return;
+    res
+      .status(200)
+      // .cookie("token", token, cookieOptions)
+      .json({ success: true });
   } catch (error) {
     next(error);
   }
@@ -96,5 +96,5 @@ exports.logout = (req, res, next) => {
 exports.me = (req, res, next) => {
   setTimeout(() => {
     return res.status(200).json({ success: true, user: req.user });
-  }, 1000); 
+  }, 1000);
 };

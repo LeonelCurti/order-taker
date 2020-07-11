@@ -7,10 +7,10 @@ const morgan = require("morgan");
 const connectDB = require("./config/db");
 const errorHandler = require("./middleware/errorHandler");
 const dotenv = require("dotenv");
-const cors = require('cors')
+const cors = require("cors");
 
 //Environmental variables
-dotenv.config();
+dotenv.config({ path: "./server/config/config.env" });
 
 //Connect DB
 connectDB();
@@ -19,7 +19,7 @@ connectDB();
 app.use(express.json({ extended: false }));
 
 // Cookie parser
-app.use(cookieParser())
+app.use(cookieParser());
 
 //Dev logger middleware
 app.use(morgan("dev"));
@@ -28,18 +28,18 @@ app.use(morgan("dev"));
 app.use(fileupload());
 
 //Enable CORS
-app.use(cors())
+app.use(cors());
 
 //Mount routers
 app.use("/api/v1/pricelist", require("./routes/priceList"));
-app.use("/api/v1/auth", require("./routes/auth"))
-app.use("/api/v1/order", require("./routes/order"))
+app.use("/api/v1/auth", require("./routes/auth"));
+app.use("/api/v1/order", require("./routes/order"));
 
 //Custom express error handler
 app.use(errorHandler);
 
-const server = app.listen(process.env.PORT, () =>
-  console.log(`Server running`.yellow)
+const server = app.listen(process.env.PORT || 5000, () =>
+  console.log(`Server running in ${process.env.NODE_ENV} mode`.yellow)
 );
 
 process.on("unhandledRejection", (err, promise) => {

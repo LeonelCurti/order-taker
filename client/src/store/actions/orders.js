@@ -83,6 +83,3 @@ export const setCurrentOrder = (order) => ({
   type: actionTypes.SET_CURRENT_ORDER,
   payload: order,
 });
-export const clearCurrentOrder = () => ({
-  type: actionTypes.CLEAR_CURRENT_ORDER,
-});
