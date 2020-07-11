@@ -3,7 +3,7 @@ import * as actionTypes from "./types";
 
 export const getPriceList = () => async (dispatch) => {
   try {
-    dispatch({ type: actionTypes.GET_PRICE_LIST_START });
+    dispatch({ type: actionTypes.GET_PRICE_LIST_REQUEST });
     const res = await axios.get("/api/v1/pricelist");
     dispatch({
       type: actionTypes.GET_PRICE_LIST_SUCCESS,

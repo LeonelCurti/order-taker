@@ -6,8 +6,9 @@ import SearchInput from "../components/SearchInput";
 import ProductsTable from "../components/ProductsTable";
 import ImageModal from "../components/ImageModal";
 import FetchError from "../components/hoc/FetchError";
+import { errorMessageSelector, loadingSelector } from "../store/selector/index";
+import CircularLoader from "../components/CircularLoader";
 import {
-  CircularProgress,
   Divider,
   Box,
   Paper,
@@ -27,19 +28,13 @@ const useStyles = makeStyles((theme) => ({
     overflowX: "auto",
     //100% - divider 1 - searchInput 48 = rest for table
     height: "calc(100% - 49px)",
-  },
-  spinnerContainer: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    height: "100%",
-  },
+  }, 
 }));
 
 const ProductList = (props) => {
   const classes = useStyles();
-  const { getPriceList, products, loading, error } = props;
-  const [filterStr, setFilterStr] = useState("");
+  const { getPriceList, products, error, isFetchingProducts } = props;
+  const [searchField, setSearchField] = useState("");
   const [showPhoto, setShowPhoto] = useState(false);
 
   useEffect(() => {
@@ -47,7 +42,7 @@ const ProductList = (props) => {
   }, [getPriceList]);
 
   const onChange = (e) => {
-    setFilterStr(e.target.value.trim());
+    setSearchField(e.target.value.trim());
   };
 
   const handleModalOpen = () => {
@@ -56,26 +51,20 @@ const ProductList = (props) => {
 
   const handleModalClose = () => {
     setShowPhoto(false);
-  };
+  }; 
 
-  const productsToShow = () => {
-    if (filterStr !== "") {
-      return products.filter((product) => {
-        const regex = new RegExp(`${filterStr}`, "gi");
-        return product.cod.match(regex) || product.descrip.match(regex);
-      });
-    } else {
-      return products;
-    }
-  };
+  const filteredProducts = products.filter((product) => {
+    return (
+      product.cod.includes(searchField) ||
+      product.descrip.toLowerCase().includes(searchField.toLowerCase())
+    );
+  });
 
   return (
     <Layout>
       <ImageModal open={showPhoto} onClose={handleModalClose} />
-      {loading ? (
-        <div className={classes.spinnerContainer}>
-          <CircularProgress />
-        </div>
+      {isFetchingProducts ? (    
+          <CircularLoader />     
       ) : error ? (
         <FetchError message={error} onRetry={getPriceList} />
       ) : (
@@ -85,7 +74,7 @@ const ProductList = (props) => {
             <Divider />
             <Box className={classes.tableContainer}>
               <ProductsTable
-                products={productsToShow()}
+                products={filteredProducts}
                 handleModalOpen={handleModalOpen}
               />
             </Box>
@@ -98,8 +87,8 @@ const ProductList = (props) => {
 
 const mapStateToProps = (state) => ({
   products: state.catalog.products,
-  loading: state.catalog.loading,
-  error: state.catalog.error,
+  isFetchingProducts: loadingSelector(["GET_PRICE_LIST"], state),
+  error: errorMessageSelector(["GET_PRICE_LIST"], state),
 });
 
 export default connect(mapStateToProps, { getPriceList })(ProductList);

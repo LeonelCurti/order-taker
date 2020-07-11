@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const {
   createOrder,
-  getUserOrders,
+  getOrders,
   getOrderById,
   updateOrder,
   deleteOrder,
@@ -11,7 +11,7 @@ const { isAuth } = require("../middleware/auth");
 
 
 //@route   /api/v1/order
-router.get("/", isAuth, getUserOrders);
+router.get("/", isAuth, getOrders);
 router.get("/:order_id", isAuth, getOrderById);
 router.post("/createOrder", isAuth, createOrder);
 router.put("/update", updateOrder); 

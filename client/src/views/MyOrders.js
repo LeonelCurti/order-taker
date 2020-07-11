@@ -4,9 +4,9 @@ import moment from "moment";
 import Layout from "../components/layout/Layout";
 import StatusBullet from "../components/StatusBullet";
 import FetchError from "../components/hoc/FetchError";
+import CircularLoader from "../components/CircularLoader";
 import {
   Box,
-  CircularProgress,
   Table,
   TableHead,
   TableBody,
@@ -23,6 +23,7 @@ import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import * as actions from "../store/actions/orders";
+import { loadingSelector, errorMessageSelector } from "../store/selector/index";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -33,13 +34,7 @@ const useStyles = makeStyles((theme) => ({
   tableCellIcon: {
     paddingLeft: "10px",
     paddingRight: "10px",
-  },
-  spinnerContainer: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    height: "100%",
-  },
+  },  
   status: {
     marginRight: theme.spacing(1),
   },
@@ -57,10 +52,12 @@ const statusColors = {
 const MyOrders = (props) => {
   const classes = useStyles();
   const {
+    myOrders,
+    isFetchingOrders,
+    error,
     getOrders,
     deleteOrder,
     setCurrentOrder,
-    orders: { myOrders, loading, error },
   } = props;
 
   useEffect(() => {
@@ -81,10 +78,8 @@ const MyOrders = (props) => {
 
   return (
     <Layout>
-      {loading ? (
-        <div className={classes.spinnerContainer}>
-          <CircularProgress />
-        </div>
+      {isFetchingOrders ? ( 
+          <CircularLoader />   
       ) : error ? (
         <FetchError message={error} onRetry={getOrders} />
       ) : (
@@ -200,7 +195,9 @@ const MyOrders = (props) => {
 };
 
 const mapStateToProps = (state) => ({
-  orders: state.orders,
+  myOrders: state.orders.myOrders,
+  isFetchingOrders: loadingSelector(["GET_ORDERS"], state),
+  error: errorMessageSelector(["GET_ORDERS"], state),
 });
 
 export default connect(mapStateToProps, actions)(MyOrders);

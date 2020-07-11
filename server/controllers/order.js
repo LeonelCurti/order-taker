@@ -1,13 +1,9 @@
 const Order = require("../models/Orders");
 const Counter = require("../models/Counters");
 
-//@desc   Create Order
-//@route  POST /api/v1/order
-//@acces  Private
-
 exports.createOrder = async (req, res, next) => {
-  try {
-    //get the next order number from counter
+  try {     
+    //get the next order number available from counter
     const doc = await Counter.findOneAndUpdate(
       { _id: "UNIQUE COUNT ORDER IDENTIFIER" },
       { $inc: { count: 1 } },
@@ -29,10 +25,9 @@ exports.createOrder = async (req, res, next) => {
     next(error);
   }
 };
-exports.getUserOrders = async (req, res, next) => {
+exports.getOrders = async (req, res, next) => {
   const userId = req.user._id;
-  try {
-      //send all user orders
+  try {    
     const allOrders = await Order.find({ user: userId }).sort({
       updatedAt: -1,
     }); //most recent first
@@ -64,7 +59,7 @@ exports.getOrderById = async (req, res, next) => {
   }
 };
 exports.updateOrder = async (req, res, next) => {
-  try {
+  try {      
     const updatedOrder = await Order.findByIdAndUpdate(
       req.body.updatedOrder._id,
       req.body.updatedOrder,
@@ -89,7 +84,7 @@ exports.updateOrder = async (req, res, next) => {
 };
 exports.deleteOrder = async (req, res, next) => {
   const orderId = req.params.order_id;
-  try {  
+  try {    
     const deletedOrder = await Order.findByIdAndDelete(orderId);
     if (!deletedOrder) {
       return res

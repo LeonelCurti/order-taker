@@ -3,15 +3,15 @@ import * as actionTypes from "./types";
 
 export const getOrders = () => async (dispatch) => {
   try {
-    dispatch(setLoading());
+    dispatch({
+      type: actionTypes.GET_ORDERS_REQUEST,
+    });
     const res = await axios.get("/api/v1/order");
     dispatch({
       type: actionTypes.GET_ORDERS_SUCCESS,
       payload: res.data.orders,
     });
   } catch (err) {
-    console.log(err.response);
-
     dispatch({
       type: actionTypes.GET_ORDERS_FAIL,
       payload: err.response.data.error || "Something went wrong",
@@ -19,9 +19,9 @@ export const getOrders = () => async (dispatch) => {
   }
 };
 
-export const createNewOrder = () => async (dispatch) => {
+export const createOrder = () => async (dispatch) => {
   try {
-    dispatch(setLoading());
+    dispatch({ type: actionTypes.CREATE_ORDER_REQUEST });
     const res = await axios.post("/api/v1/order/createOrder");
     dispatch({
       type: actionTypes.CREATE_ORDER_SUCCESS,
@@ -37,8 +37,9 @@ export const createNewOrder = () => async (dispatch) => {
 
 export const updateOrder = (updatedOrder) => async (dispatch) => {
   try {
-    // dispatch(setCurrentOrder(updatedOrder));
+    dispatch({ type: actionTypes.UPDATE_ORDER_REQUEST });
     await axios.put(`/api/v1/order/update`, { updatedOrder });
+    dispatch({ type: actionTypes.UPDATE_ORDER_SUCCESS });
   } catch (err) {
     dispatch({
       type: actionTypes.UPDATE_ORDER_FAIL,
@@ -47,24 +48,9 @@ export const updateOrder = (updatedOrder) => async (dispatch) => {
   }
 };
 
-export const deleteOrder = (order_id) => async (dispatch) => {
-  try {
-    // dispatch(setLoading());
-    await axios.delete(`/api/v1/order/${order_id}`);
-    dispatch({
-      type: actionTypes.DELETE_ORDER_SUCCESS,
-      payload: order_id,
-    });
-  } catch (err) {
-    dispatch({
-      type: actionTypes.DELETE_ORDER_FAIL,
-      payload: err.response.data.error,
-    });
-  }
-};
 export const submitOrder = (updatedOrder, history) => async (dispatch) => {
   try {
-    // dispatch(setLoading());
+    dispatch({ type: actionTypes.SUBMIT_ORDER_REQUEST });
     await axios.put(`/api/v1/order/update`, { updatedOrder });
     dispatch({
       type: actionTypes.SUBMIT_ORDER_SUCCESS,
@@ -77,10 +63,22 @@ export const submitOrder = (updatedOrder, history) => async (dispatch) => {
     });
   }
 };
+export const deleteOrder = (order_id) => async (dispatch) => {
+  try {
+    dispatch({ type: actionTypes.DELETE_ORDER_REQUEST });
+    await axios.delete(`/api/v1/order/${order_id}`);
+    dispatch({
+      type: actionTypes.DELETE_ORDER_SUCCESS,
+      payload: order_id,
+    });
+  } catch (err) {
+    dispatch({
+      type: actionTypes.DELETE_ORDER_FAIL,
+      payload: err.response.data.error,
+    });
+  }
+};
 
-export const setLoading = () => ({
-  type: actionTypes.SET_LOADING,
-});
 export const setCurrentOrder = (order) => ({
   type: actionTypes.SET_CURRENT_ORDER,
   payload: order,
