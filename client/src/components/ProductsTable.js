@@ -1,5 +1,7 @@
 import React, {useState} from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import { connect } from "react-redux";
+import * as orderActions from "../store/actions/orders";
 import {
   Table,
   TableBody,
@@ -37,7 +39,13 @@ const useStyles = makeStyles((theme) => ({
 
 const ProductsTable = (props) => {
   const classes = useStyles();
-  const { products, handleAddProduct } = props;
+  const { 
+    products, 
+    addProductOn, 
+    setCurrentOrder,
+    updateOrder,
+    currentOrder,
+  } = props;
   const [searchField, setSearchField] = useState("");
   const [showPhoto, setShowPhoto] = useState(false);
 
@@ -58,6 +66,43 @@ const ProductsTable = (props) => {
       product.descrip.toLowerCase().includes(searchField.toLowerCase())
     );
   });
+
+  const handleAddProduct = (newItem) => {
+    newItem.quantity = Math.floor(Math.random() * 10) + 1;
+    newItem.id = 1469335; //default item category for now
+
+    //check if item already exist
+    const alreadyInList = currentOrder.items.some(
+      (orderItem) => orderItem.cod === newItem.cod
+    );
+    if (alreadyInList) {
+      alert("Item already added");
+      return;
+    }
+    //add item into the list
+    const updatedOrderItems = [newItem, ...currentOrder.items];
+
+    handleUpdateOrder(updatedOrderItems);
+  };
+
+  const handleUpdateOrder = (updatedOrderItems) => {
+    const updatedOrder = {
+      ...currentOrder,
+      items: updatedOrderItems,
+      total: calculateOrderTotal(updatedOrderItems),
+    };
+    //update currentOrder locally
+    setCurrentOrder(updatedOrder);
+    //update order in database
+    updateOrder(updatedOrder);
+  };
+
+  const calculateOrderTotal = (itemList) => {
+    return itemList
+      .reduce((accum, item) => accum + item.quantity * item.price, 0)
+      .toFixed(2);
+  };
+
   return (
     <div className={classes.root}>
       <ImageModal open={showPhoto} onClose={handleModalClose} />
@@ -71,7 +116,7 @@ const ProductsTable = (props) => {
                 <TableCell>Code</TableCell>
                 <TableCell>Description</TableCell>
                 <TableCell align="right">Price</TableCell>
-                <TableCell colSpan={handleAddProduct ? 2 : 1}></TableCell>
+                <TableCell colSpan={addProductOn ? 2 : 1}></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -92,7 +137,7 @@ const ProductsTable = (props) => {
                         </IconButton>
                       </Tooltip>
                     </TableCell>
-                    {handleAddProduct && (
+                    {addProductOn && (
                       <TableCell className={classes.tableCellIcon}>
                         <Tooltip title="Add item">
                           <IconButton
@@ -127,4 +172,10 @@ const ProductsTable = (props) => {
   );
 };
 
-export default ProductsTable;
+const mapStateToProps = (state) => ({
+  currentOrder: state.orders.currentOrder,
+  products: state.catalog.products,  
+});
+
+
+export default connect(mapStateToProps, orderActions)(ProductsTable);

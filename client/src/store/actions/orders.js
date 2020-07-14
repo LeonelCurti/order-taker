@@ -52,10 +52,12 @@ export const submitOrder = (updatedOrder, history) => async (dispatch) => {
   try {
     dispatch({ type: actionTypes.SUBMIT_ORDER_REQUEST });
     await axios.put(`/api/v1/order/update`, { updatedOrder });
-    dispatch({
-      type: actionTypes.SUBMIT_ORDER_SUCCESS,
-    });
-    history.push("/my_orders");
+    setTimeout(() => {
+      dispatch({
+        type: actionTypes.SUBMIT_ORDER_SUCCESS,
+      });
+      history.push("/my_orders");
+    }, 1500);
   } catch (err) {
     dispatch({
       type: actionTypes.SUBMIT_ORDER_FAIL,

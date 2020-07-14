@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
 
 const ProductList = (props) => {
   const classes = useStyles();
-  const { getPriceList, products, error, isFetchingProducts } = props; 
+  const { getPriceList, error, isFetchingProducts } = props; 
 
   useEffect(() => {
     getPriceList();
@@ -33,7 +33,7 @@ const ProductList = (props) => {
         <FetchError message={error} onRetry={getPriceList} />
       ) : (
         <Container maxWidth="md" className={classes.container}>
-          <ProductsTable products={products} />
+          <ProductsTable />     
         </Container>
       )}
     </Layout>
@@ -41,7 +41,6 @@ const ProductList = (props) => {
 };
 
 const mapStateToProps = (state) => ({
-  products: state.catalog.products,
   isFetchingProducts: loadingSelector(["GET_PRICE_LIST"], state),
   error: errorMessageSelector(["GET_PRICE_LIST"], state),
 });
