@@ -1,19 +1,14 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useEffect, Fragment } from "react";
 import { connect } from "react-redux";
 import Layout from "../components/layout/Layout";
-import SearchInput from "../components/SearchInput";
 import ProductsTable from "../components/ProductsTable";
 import OrderTable from "../components/OrderTable";
-import ImageModal from "../components/ImageModal";
 import FetchError from "../components/hoc/FetchError";
 import { makeStyles } from "@material-ui/core/styles";
 import * as orderActions from "../store/actions/orders";
 import * as productActions from "../store/actions/products";
 import CircularLoader from "../components/CircularLoader";
-import {
-  loadingSelector,
-  errorMessageSelector,
-} from "../store/selector/index";
+import { loadingSelector, errorMessageSelector } from "../store/selector/index";
 
 import {
   CircularProgress,
@@ -47,10 +42,6 @@ const useStyles = makeStyles((theme) => ({
   paperTitle: {
     padding: theme.spacing(1),
   },
-  productsListContainer: {
-    overflowX: "auto",
-    height: "calc(100% - 49px)",
-  },
   orderItemsContainer: {
     overflowX: "auto",
     height: "calc(100% - 48px - 2px - 52px )",
@@ -73,7 +64,7 @@ const NewOrder = (props) => {
     products,
     currentOrder,
     getPriceList,
-    createOrder, 
+    createOrder,
     submitOrder,
     updateOrder,
     setCurrentOrder,
@@ -83,9 +74,7 @@ const NewOrder = (props) => {
     isUpdatigOrder,
     error,
     updateError,
-  } = props;
-  const [searchField, setSearchField] = useState("");
-  const [showPhoto, setShowPhoto] = useState(false);
+  } = props; 
   const classes = useStyles();
 
   useEffect(() => {
@@ -105,18 +94,7 @@ const NewOrder = (props) => {
     return () => {
       setCurrentOrder(null);
     };
-  }, [setCurrentOrder]);
-
-  const handleSearchInputChange = (e) => {
-    setSearchField(e.target.value.trim());
-  };
-
-  const filteredProducts = products.filter((product) => {
-    return (
-      product.cod.includes(searchField) ||
-      product.descrip.toLowerCase().includes(searchField.toLowerCase())
-    );
-  });
+  }, [setCurrentOrder]);  
 
   const handleAddItem = (newItem) => {
     newItem.quantity = Math.floor(Math.random() * 10) + 1;
@@ -186,25 +164,18 @@ const NewOrder = (props) => {
       submitOrder(updatedOrder, props.history);
     }
   };
-  const handleModalOpen = () => {
-    setShowPhoto(true);
-  };
 
-  const handleModalClose = () => {
-    setShowPhoto(false);
-  };
+ 
   const refreshPage = () => {};
 
   return (
     <Layout>
-      {isFetchingProducts || isCreatingOrder ? (   
-          <CircularLoader />    
+      {isFetchingProducts || isCreatingOrder ? (
+        <CircularLoader />
       ) : error || !currentOrder ? (
         <FetchError message={error} onRetry={refreshPage} />
       ) : (
         <Fragment>
-          <ImageModal open={showPhoto} onClose={handleModalClose} />
-
           <Container maxWidth="lg" className={classes.container}>
             <Grid container spacing={2} className={classes.fixedHeight}>
               <Grid item xs={12} sm={6} className={classes.fixedHeight}>
@@ -267,20 +238,10 @@ const NewOrder = (props) => {
               </Grid>
 
               <Grid item xs={12} sm={6} className={classes.fixedHeight}>
-                <Paper className={classes.fixedHeight}>
-                  <SearchInput
-                    onChange={handleSearchInputChange}
-                    placeholder="Search products"
-                  />
-                  <Divider />
-                  <Box className={classes.productsListContainer}>
-                    <ProductsTable
-                      products={filteredProducts}
-                      handleAddProduct={handleAddItem}
-                      handleModalOpen={handleModalOpen}
-                    />
-                  </Box>
-                </Paper>
+                <ProductsTable
+                  products={products}
+                  handleAddProduct={handleAddItem}
+                />
               </Grid>
             </Grid>
           </Container>
@@ -298,7 +259,7 @@ const mapStateToProps = (state) => ({
   isSubmitting: loadingSelector(["SUBMIT_ORDER"], state),
   isUpdatigOrder: loadingSelector(["UPDATE_ORDER"], state),
   error: errorMessageSelector(["GET_PRICE_LIST", "CREATE_ORDER"], state),
-  updateError: errorMessageSelector(['UPDATE_ORDER'], state),
+  updateError: errorMessageSelector(["UPDATE_ORDER"], state),
 });
 
 const dispatchActionsToProps = { ...orderActions, ...productActions };

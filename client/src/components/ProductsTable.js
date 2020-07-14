@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Table,
@@ -8,82 +8,121 @@ import {
   TableHead,
   TableRow,
   Tooltip,
+  Divider,
+  Box,
+  Paper,
 } from "@material-ui/core";
-
+import SearchInput from "./SearchInput";
 import PhotoCameraOutlinedIcon from "@material-ui/icons/PhotoCameraOutlined";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
+import ImageModal from "./ImageModal";
 
 const useStyles = makeStyles((theme) => ({
-  root: {},
+  root: {
+    height: "100%",
+  },
   tableCellIcon: {
     paddingLeft: "10px",
     paddingRight: "10px",
+  },
+  tableContainer: {
+    overflowX: "auto",
+    //100% - divider 1 - searchInput 48 = rest for table
+    height: "calc(100% - 49px)",
+  },
+  fixedPaperHeight: {
+    height: "100%",
   },
 }));
 
 const ProductsTable = (props) => {
   const classes = useStyles();
-  const { products, handleModalOpen, handleAddProduct } = props; 
+  const { products, handleAddProduct } = props;
+  const [searchField, setSearchField] = useState("");
+  const [showPhoto, setShowPhoto] = useState(false);
 
+  const onChange = (e) => {
+    setSearchField(e.target.value.trim());
+  };
+  const handleModalOpen = () => {
+    setShowPhoto(true);
+  };
+
+  const handleModalClose = () => {
+    setShowPhoto(false);
+  };
+  
+  const filteredProducts = products.filter((product) => {
+    return (
+      product.cod.includes(searchField) ||
+      product.descrip.toLowerCase().includes(searchField.toLowerCase())
+    );
+  });
   return (
     <div className={classes.root}>
-      <Table size="small" stickyHeader>
-        <TableHead>
-          <TableRow>
-            <TableCell>Code</TableCell>
-            <TableCell>Description</TableCell>
-            <TableCell align="right">Price</TableCell>
-            <TableCell colSpan={handleAddProduct ? 2 : 1}></TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {products.length > 0 ? (
-            products.map((product) => (
-              <TableRow hover key={product.cod}>
-                <TableCell>{product.cod}</TableCell>
-                <TableCell>{product.descrip}</TableCell>
-                <TableCell align="right">{product.price}</TableCell>
-                <TableCell>
-                  <Tooltip title="Photo">
-                    {/* <SomeContent /> */}
-                    <IconButton
-                      color="default"
-                      size="small"
-                      onClick={handleModalOpen}
-                    >
-                      <PhotoCameraOutlinedIcon />
-                    </IconButton>
-                  </Tooltip>
-                </TableCell>
-                {handleAddProduct && (
-                  <TableCell className={classes.tableCellIcon}>
-                    <Tooltip title="Add item">
-                      <IconButton
-                        color="default"
-                        size="small"
-                        onClick={() => handleAddProduct(product)}
-                      >
-                        <AddCircleOutlineIcon />
-                      </IconButton>
-                    </Tooltip>
-                  </TableCell>
-                )}
+      <ImageModal open={showPhoto} onClose={handleModalClose} />
+      <Paper className={classes.fixedPaperHeight}>
+        <SearchInput onChange={onChange} placeholder="Search products" />
+        <Divider />
+        <Box className={classes.tableContainer}>
+          <Table size="small" stickyHeader>
+            <TableHead>
+              <TableRow>
+                <TableCell>Code</TableCell>
+                <TableCell>Description</TableCell>
+                <TableCell align="right">Price</TableCell>
+                <TableCell colSpan={handleAddProduct ? 2 : 1}></TableCell>
               </TableRow>
-            ))
-          ) : (
-            <TableRow style={{ height: 49 }}>
-              <TableCell
-                style={{
-                  textAlign: "center",
-                }}
-                colSpan={4}
-              >
-                No matching products found
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+            </TableHead>
+            <TableBody>
+              {filteredProducts.length > 0 ? (
+                filteredProducts.map((product) => (
+                  <TableRow hover key={product.cod}>
+                    <TableCell>{product.cod}</TableCell>
+                    <TableCell>{product.descrip}</TableCell>
+                    <TableCell align="right">{product.price}</TableCell>
+                    <TableCell>
+                      <Tooltip title="Photo">             
+                        <IconButton
+                          color="default"
+                          size="small"
+                          onClick={handleModalOpen}
+                        >
+                          <PhotoCameraOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </TableCell>
+                    {handleAddProduct && (
+                      <TableCell className={classes.tableCellIcon}>
+                        <Tooltip title="Add item">
+                          <IconButton
+                            color="default"
+                            size="small"
+                            onClick={() => handleAddProduct(product)}
+                          >
+                            <AddCircleOutlineIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </TableCell>
+                    )}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow style={{ height: 49 }}>
+                  <TableCell
+                    style={{
+                      textAlign: "center",
+                    }}
+                    colSpan={4}
+                  >
+                    No matching products found
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </Box>
+      </Paper>
     </div>
   );
 };
