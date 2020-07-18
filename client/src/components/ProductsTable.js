@@ -42,7 +42,6 @@ const ProductsTable = (props) => {
   const { 
     products, 
     addProductOn, 
-    setCurrentOrder,
     updateOrder,
     currentOrder,
   } = props;
@@ -81,20 +80,12 @@ const ProductsTable = (props) => {
     }
     //add item into the list
     const updatedOrderItems = [newItem, ...currentOrder.items];
-
-    handleUpdateOrder(updatedOrderItems);
-  };
-
-  const handleUpdateOrder = (updatedOrderItems) => {
-    const updatedOrder = {
+    
+    updateOrder({
       ...currentOrder,
       items: updatedOrderItems,
       total: calculateOrderTotal(updatedOrderItems),
-    };
-    //update currentOrder locally
-    setCurrentOrder(updatedOrder);
-    //update order in database
-    updateOrder(updatedOrder);
+    });
   };
 
   const calculateOrderTotal = (itemList) => {

@@ -37,6 +37,7 @@ export const createOrder = () => async (dispatch) => {
 
 export const updateOrder = (updatedOrder) => async (dispatch) => {
   try {
+    dispatch(setCurrentOrder(updatedOrder));
     dispatch({ type: actionTypes.UPDATE_ORDER_REQUEST });
     await axios.put(`/api/v1/order/update`, { updatedOrder });
     dispatch({ type: actionTypes.UPDATE_ORDER_SUCCESS });
@@ -57,7 +58,7 @@ export const submitOrder = (updatedOrder, history) => async (dispatch) => {
         type: actionTypes.SUBMIT_ORDER_SUCCESS,
       });
       history.push("/my_orders");
-    }, 1500);
+    }, 1200);
   } catch (err) {
     dispatch({
       type: actionTypes.SUBMIT_ORDER_FAIL,
@@ -85,3 +86,10 @@ export const setCurrentOrder = (order) => ({
   type: actionTypes.SET_CURRENT_ORDER,
   payload: order,
 });
+
+export const clearErrors = (errorTypes) => (dispatch) => {
+  dispatch({ 
+    type: actionTypes.CLEAR_ERRORS, 
+    payload: errorTypes 
+  });
+};

@@ -64,7 +64,6 @@ const OrderTable = (props) => {
     currentOrder,
     submitOrder,
     updateOrder,
-    setCurrentOrder,
     isUpdatigOrder,
     isSubmitting,
     updateError,
@@ -74,21 +73,13 @@ const OrderTable = (props) => {
     const updatedOrderItems = currentOrder.items.filter(
       (item) => item.cod !== itemCode
     );
-    handleUpdateOrder(updatedOrderItems);
-  };
-
-  const handleUpdateOrder = (updatedOrderItems) => {
-    const updatedOrder = {
+    updateOrder({
       ...currentOrder,
       items: updatedOrderItems,
       total: calculateOrderTotal(updatedOrderItems),
-    };
-    //update currentOrder locally
-    setCurrentOrder(updatedOrder);
-    //update order in database
-    updateOrder(updatedOrder);
+    });
   };
-
+  
   const changeItemQuantity = (e, product) => {
     const qtyValue = Number(e.target.value);
     //if qtyValue < 0 do not update
@@ -99,7 +90,11 @@ const OrderTable = (props) => {
         }
         return item;
       });
-      handleUpdateOrder(updatedOrderItems);
+      updateOrder({
+        ...currentOrder,
+        items: updatedOrderItems,
+        total: calculateOrderTotal(updatedOrderItems),
+      });
     }
   };
 
@@ -113,11 +108,13 @@ const OrderTable = (props) => {
     if (currentOrder.items.length <= 0) {
       alert("Order can not be empty");
     } else {
-      const updatedOrder = {
-        ...currentOrder,
-        state: "submitted",
-      };
-      submitOrder(updatedOrder, props.history);
+      submitOrder(
+        {
+          ...currentOrder,
+          state: "submitted",
+        },
+        props.history
+      );
     }
   };
 

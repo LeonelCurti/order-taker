@@ -7,7 +7,7 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(4)
   },
   content: {
-    paddingTop: 150,
+    // paddingTop: 150,
     textAlign: 'center'
   },
   image: {
@@ -34,7 +34,7 @@ const NotFound = () => {
           xs={12}
         >
           <div className={classes.content}>
-            <Typography variant="h1">
+            <Typography variant="h3">
               404: The page you are looking for isn’t here
             </Typography>
             {/* <Typography variant="subtitle2">

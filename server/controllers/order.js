@@ -55,7 +55,7 @@ exports.getOrderById = async (req, res, next) => {
   }
 };
 exports.updateOrder = async (req, res, next) => {
-  try {
+  try {  
     const updatedOrder = await Order.findByIdAndUpdate(
       req.body.updatedOrder._id,
       req.body.updatedOrder,
@@ -78,7 +78,7 @@ exports.updateOrder = async (req, res, next) => {
 };
 exports.deleteOrder = async (req, res, next) => {
   const orderId = req.params.order_id;
-  try {
+  try {     
     const deletedOrder = await Order.findByIdAndDelete(orderId);
     if (!deletedOrder) {
       return res.status(400).json({

@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
   tableCellIcon: {
     paddingLeft: "10px",
     paddingRight: "10px",
-  },  
+  },
   status: {
     marginRight: theme.spacing(1),
   },
@@ -54,7 +54,7 @@ const MyOrders = (props) => {
   const {
     myOrders,
     isFetchingOrders,
-    error,
+    errorGetOrders,
     getOrders,
     deleteOrder,
     setCurrentOrder,
@@ -78,10 +78,10 @@ const MyOrders = (props) => {
 
   return (
     <Layout>
-      {isFetchingOrders ? ( 
-          <CircularLoader />   
-      ) : error ? (
-        <FetchError message={error} onRetry={getOrders} />
+      {isFetchingOrders ? (
+        <CircularLoader />
+      ) : errorGetOrders ? (
+        <FetchError message={errorGetOrders} onRetry={getOrders} />
       ) : (
         <Container maxWidth="md" className={classes.container}>
           <Paper className={classes.tableContainer}>
@@ -197,7 +197,7 @@ const MyOrders = (props) => {
 const mapStateToProps = (state) => ({
   myOrders: state.orders.myOrders,
   isFetchingOrders: loadingSelector(["GET_ORDERS"], state),
-  error: errorMessageSelector(["GET_ORDERS"], state),
+  errorGetOrders: errorMessageSelector(["GET_ORDERS"], state),
 });
 
 export default connect(mapStateToProps, actions)(MyOrders);

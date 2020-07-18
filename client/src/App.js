@@ -5,6 +5,7 @@ import { ThemeProvider } from "@material-ui/styles";
 import theme from "./theme";
 import CssBaseline from '@material-ui/core/CssBaseline';
 import PrivateRoute from "./components/hoc/PrivateRoute";
+import ErrorHandler from "./components/ErrorHandler";
 
 import Dashboard from "./views/Dashboard";
 import MyOrders from "./views/MyOrders";
@@ -28,7 +29,8 @@ const App = (props) => {
   return (
     <Router>
       <ThemeProvider theme={theme}>
-        <CssBaseline />
+        <CssBaseline />    
+        {/* <ErrorHandler />   */}
         <Switch>
           <PrivateRoute path="/new_order" exact component={NewOrder} />
           <PrivateRoute path="/view_order" exact component={ViewOrder} />
