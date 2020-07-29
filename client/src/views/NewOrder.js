@@ -1,4 +1,4 @@
-import React, { useEffect, Fragment } from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import Layout from "../components/layout/Layout";
 import ProductsTable from "../components/ProductsTable";
@@ -8,7 +8,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import { createOrder, setCurrentOrder } from "../store/actions/orders";
 import { getPriceList } from "../store/actions/products";
 import CircularLoader from "../components/CircularLoader";
-import { loadingSelector, errorMessageSelector } from "../store/selector/index";
+import { 
+  // errorMessageSelector,
+  hasErrors 
+} from "../store/selector/index";
+import {removeErrors} from '../store/actions/error'
 
 import { Grid, Container } from "@material-ui/core";
 
@@ -56,8 +60,9 @@ const NewOrder = (props) => {
     getPriceList,
     createOrder,
     setCurrentOrder,
-    isFetching,
-    errorMsg,
+    error,
+    isFetchingPriceList,
+    isCreatingOrder,
   } = props;
   const classes = useStyles();
 
@@ -77,6 +82,7 @@ const NewOrder = (props) => {
   useEffect(() => {
     return () => {
       setCurrentOrder(null);
+      removeErrors(["GET_PRICE_LIST","CREATE_ORDER"])
     };
   }, [setCurrentOrder]);
 
@@ -84,24 +90,22 @@ const NewOrder = (props) => {
 
   return (
     <Layout>
-      {isFetching ? (
+      {isFetchingPriceList || isCreatingOrder ? (
         <CircularLoader />
-      ) : errorMsg || !currentOrder ? (
-        <FetchError message={errorMsg} onRetry={refreshPage} />
+      ) : error || !currentOrder ? (
+        <FetchError message={'Something went wrong.'} onRetry={refreshPage} />
       ) : (
-        <Fragment>
-          <Container maxWidth="lg" className={classes.container}>
-            <Grid container spacing={2} className={classes.fixedHeight}>
-              <Grid item xs={12} sm={6} className={classes.fixedHeight}>
-                <OrderTable />
-              </Grid>
-
-              <Grid item xs={12} sm={6} className={classes.fixedHeight}>
-                <ProductsTable addProductOn />
-              </Grid>
+        <Container maxWidth="lg" className={classes.container}>
+          <Grid container spacing={2} className={classes.fixedHeight}>
+            <Grid item xs={12} sm={6} className={classes.fixedHeight}>
+              <OrderTable />
             </Grid>
-          </Container>
-        </Fragment>
+
+            <Grid item xs={12} sm={6} className={classes.fixedHeight}>
+              <ProductsTable addProductOn />
+            </Grid>
+          </Grid>
+        </Container>
       )}
     </Layout>
   );
@@ -109,14 +113,17 @@ const NewOrder = (props) => {
 
 const mapStateToProps = (state) => ({
   currentOrder: state.orders.currentOrder,
-  isFetching: loadingSelector(["GET_PRICE_LIST", "CREATE_ORDER"], state),
-  errorMsg: errorMessageSelector(["GET_PRICE_LIST", "CREATE_ORDER"], state),
+  isFetchingPriceList: state.loading["GET_PRICE_LIST"],
+  isCreatingOrder: state.loading["CREATE_ORDER"],
+  error: hasErrors(["GET_PRICE_LIST", "CREATE_ORDER"], state), 
 });
 
 const mapDispatchToProps = {
   setCurrentOrder,
   createOrder,
   getPriceList,
+  hasErrors,
+  removeErrors
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(NewOrder);

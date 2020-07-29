@@ -23,8 +23,7 @@ import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import * as actions from "../store/actions/orders";
-import { loadingSelector, errorMessageSelector } from "../store/selector/index";
-
+import { removeErrors } from "../store/actions/error";
 const useStyles = makeStyles((theme) => ({
   container: {
     paddingTop: theme.spacing(2),
@@ -58,11 +57,19 @@ const MyOrders = (props) => {
     getOrders,
     deleteOrder,
     setCurrentOrder,
+    removeErrors,
   } = props;
 
   useEffect(() => {
     getOrders();
   }, [getOrders]);
+
+  //willUnmount
+  useEffect(() => {
+    return () => {
+      removeErrors(["GET_ORDERS", "DELETE_ORDER"]);
+    };
+  }, [removeErrors]);
 
   const handleEditOrder = (order) => {
     setCurrentOrder(order);
@@ -70,7 +77,7 @@ const MyOrders = (props) => {
   };
   const handleViewOrder = (order) => {
     setCurrentOrder(order);
-    props.history.push("/view_order");
+    props.history.push("/my_orders/view_order");
   };
   const handleDeleteOrder = (order_id) => {
     deleteOrder(order_id);
@@ -88,7 +95,7 @@ const MyOrders = (props) => {
             <Table size="small" stickyHeader>
               <TableHead>
                 <TableRow>
-                  <TableCell align="right">Number</TableCell>
+                  <TableCell align="right">Nº</TableCell>
                   <TableCell>Last update</TableCell>
                   <TableCell align="right">Total</TableCell>
                   <TableCell>State</TableCell>
@@ -196,8 +203,8 @@ const MyOrders = (props) => {
 
 const mapStateToProps = (state) => ({
   myOrders: state.orders.myOrders,
-  isFetchingOrders: loadingSelector(["GET_ORDERS"], state),
-  errorGetOrders: errorMessageSelector(["GET_ORDERS"], state),
+  isFetchingOrders: state.loading["GET_ORDERS"],
+  errorGetOrders: state.error["GET_ORDERS"],
 });
 
-export default connect(mapStateToProps, actions)(MyOrders);
+export default connect(mapStateToProps, { ...actions, removeErrors })(MyOrders);

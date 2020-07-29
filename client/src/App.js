@@ -5,7 +5,7 @@ import { ThemeProvider } from "@material-ui/styles";
 import theme from "./theme";
 import CssBaseline from '@material-ui/core/CssBaseline';
 import PrivateRoute from "./components/hoc/PrivateRoute";
-import ErrorHandler from "./components/ErrorHandler";
+import AlertHandler from "./components/AlertHandler";
 
 import Dashboard from "./views/Dashboard";
 import MyOrders from "./views/MyOrders";
@@ -30,10 +30,10 @@ const App = (props) => {
     <Router>
       <ThemeProvider theme={theme}>
         <CssBaseline />    
-        {/* <ErrorHandler />   */}
+        <AlertHandler />  
         <Switch>
           <PrivateRoute path="/new_order" exact component={NewOrder} />
-          <PrivateRoute path="/view_order" exact component={ViewOrder} />
+          <PrivateRoute path="/my_orders/view_order" exact component={ViewOrder} />
           <PrivateRoute path="/my_orders" exact component={MyOrders} />
           <PrivateRoute path="/product_list" exact component={ProductsList} />
           <PrivateRoute path="/dashboard" exact component={Dashboard} />

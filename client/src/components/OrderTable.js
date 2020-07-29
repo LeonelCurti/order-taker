@@ -21,6 +21,7 @@ import {
 } from "@material-ui/core";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import * as orderActions from "../store/actions/orders";
+import { showAlert } from "../store/actions/alert";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -67,6 +68,7 @@ const OrderTable = (props) => {
     isUpdatigOrder,
     isSubmitting,
     updateError,
+    showAlert,
   } = props;
 
   const handleRemoveItem = (itemCode) => {
@@ -79,17 +81,18 @@ const OrderTable = (props) => {
       total: calculateOrderTotal(updatedOrderItems),
     });
   };
-  
+
   const changeItemQuantity = (e, product) => {
-    const qtyValue = Number(e.target.value);
-    //if qtyValue < 0 do not update
-    if (qtyValue >= 0) {
+    const qtyValue = e.target.value;
+
+    if (qtyValue >= 0 && qtyValue < 1000) {
       const updatedOrderItems = currentOrder.items.map((item) => {
         if (item.cod === product.cod) {
           item.quantity = qtyValue;
         }
         return item;
       });
+
       updateOrder({
         ...currentOrder,
         items: updatedOrderItems,
@@ -106,7 +109,9 @@ const OrderTable = (props) => {
 
   const handleSubmitOrder = () => {
     if (currentOrder.items.length <= 0) {
-      alert("Order can not be empty");
+      showAlert("Order can not be empty.");
+    } else if (updateError) {
+      showAlert("Order could not be submitted.");
     } else {
       submitOrder(
         {
@@ -133,9 +138,9 @@ const OrderTable = (props) => {
             {isUpdatigOrder ? (
               <CircularProgress size={36} />
             ) : updateError ? (
-              "Changes not saved"
+              "Unsaved changes"
             ) : (
-              "Order saved"
+              "Saved"
             )}
           </Box>
         </Box>
@@ -233,9 +238,11 @@ const OrderTable = (props) => {
 
 const mapStateToProps = (state) => ({
   currentOrder: state.orders.currentOrder,
-  isSubmitting: loadingSelector(["SUBMIT_ORDER"], state),
-  isUpdatigOrder: loadingSelector(["UPDATE_ORDER"], state),
+  isSubmitting: loadingSelector(state, ["SUBMIT_ORDER"]),
+  isUpdatigOrder: loadingSelector(state, ["UPDATE_ORDER"]),
   updateError: errorMessageSelector(["UPDATE_ORDER"], state),
 });
 
-export default connect(mapStateToProps, orderActions)(withRouter(OrderTable));
+export default connect(mapStateToProps, { ...orderActions, showAlert })(
+  withRouter(OrderTable)
+);

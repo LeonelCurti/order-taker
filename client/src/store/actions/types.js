@@ -31,6 +31,10 @@ export const UPDATE_ORDER_FAIL = 'UPDATE_ORDER_FAIL';
 
 export const SET_CURRENT_ORDER = 'SET_CURRENT_ORDER';
 export const CLEAR_ERRORS = 'CLEAR_ERRORS';
+export const REMOVE_ERRORS = 'REMOVE_ERRORS';
+
+export const SET_ALERT = 'SET_ALERT';
+export const CLEAR_ALERT = 'CLEAR_ALERT';
 
 
 

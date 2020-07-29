@@ -8,7 +8,6 @@ const path = require("path");
 
 exports.getPriceList = (req, res, next) => {
   try {  
-   
     const workbook = XLSX.readFile("server/uploads/priceList.xlsx");
 
     //Get array of sheet names

@@ -52,7 +52,7 @@ const MyOrders = (props) => {
   const classes = useStyles();
   const {
     setCurrentOrder, 
-    orders: { currentOrder },
+    currentOrder,
   } = props;
 
   const handlePrintOrder = () => {};
@@ -130,7 +130,7 @@ const MyOrders = (props) => {
 };
 
 const mapStateToProps = (state) => ({
-  orders: state.orders,
+  currentOrder: state.orders.currentOrder,
 });
 
 export default connect(mapStateToProps, {

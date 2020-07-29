@@ -5,18 +5,21 @@ const initialState = {};
 export default function (state = initialState, action) {
   const { type, payload } = action;
 
- if (type === actionTypes.CLEAR_ERRORS) {
-
-    const newState={...state}
-    for(let prop in newState){
-      if(payload.includes(prop))
-        newState[prop]= null;
-      }  
-    return newState;
+  if (type === actionTypes.CLEAR_ERRORS) {
+    //Removes all errors by returning the initial state 
+    return initialState;
   }
-  // if (type === actionTypes.CLEAR_ERRORS) { 
-  //   return initialState;
-  // }
+
+  if (type === actionTypes.REMOVE_ERRORS) {
+    // Create a new state without the errors included in payload.
+    return Object.entries(state).reduce((newState, [key, value]) => {
+      if (!payload.includes(key)) {
+        newState[key] = value;
+      }
+
+      return newState;
+    }, {});
+  }
 
   const matches = /(.*)_(REQUEST|FAIL)/.exec(type);
 
@@ -32,3 +35,5 @@ export default function (state = initialState, action) {
     [requestName]: requestState === "FAIL" ? payload : null,
   };
 }
+
+
