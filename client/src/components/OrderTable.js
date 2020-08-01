@@ -2,7 +2,7 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { loadingSelector, errorMessageSelector } from "../store/selector/index";
+import { loadingSelector, errorMessageSelector } from "../redux/selector/index";
 import {
   Table,
   TableBody,
@@ -20,8 +20,8 @@ import {
   Paper,
 } from "@material-ui/core";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-import * as orderActions from "../store/actions/orders";
-import { showAlert } from "../store/actions/alert";
+import * as orderActions from "../redux/actions/orders";
+import { showAlert } from "../redux/actions/alert";
 
 const useStyles = makeStyles((theme) => ({
   root: {

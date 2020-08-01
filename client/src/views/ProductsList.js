@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import { getPriceList } from "../store/actions/products";
-import { removeErrors } from "../store/actions/error";
+import { getPriceList } from "../redux/actions/products";
+import { removeErrors } from "../redux/actions/error";
 import Layout from "../components/layout/Layout";
 import ProductsTable from "../components/ProductsTable";
 import FetchError from "../components/hoc/FetchError";

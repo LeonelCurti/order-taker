@@ -13,7 +13,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import Logo2 from "../assets/logo2.png";
 import MenuIcon from "@material-ui/icons/Menu";
 import AccountCircle from "@material-ui/icons/AccountCircle";
-import { logout } from "../store/actions/auth";
 
 const useStyles = makeStyles((theme) => ({
   AppBar: { 
@@ -89,4 +88,4 @@ const Navbar = ({ onSidebarOpen, user }) => {
 const mapStateToProps = (state) => ({
   user: state.auth.user,
 });
-export default connect(mapStateToProps, { logout })(Navbar);
+export default connect(mapStateToProps)(Navbar);

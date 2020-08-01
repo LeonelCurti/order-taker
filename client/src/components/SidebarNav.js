@@ -14,7 +14,7 @@ import InputIcon from "@material-ui/icons/Input";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import IconButton from "@material-ui/core/IconButton";
 import { connect } from "react-redux";
-import { logout } from "../store/actions/auth";
+import { logout } from "../redux/actions/auth";
 
 const useStyles = makeStyles((theme) => ({
   listContainer: {

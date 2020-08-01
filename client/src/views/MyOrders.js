@@ -22,8 +22,8 @@ import PrintOutlinedIcon from "@material-ui/icons/PrintOutlined";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
-import * as actions from "../store/actions/orders";
-import { removeErrors } from "../store/actions/error";
+import * as actions from "../redux/actions/orders";
+import { removeErrors } from "../redux/actions/error";
 const useStyles = makeStyles((theme) => ({
   container: {
     paddingTop: theme.spacing(2),

@@ -1,6 +1,14 @@
-export const loadingSelector = (state,actions ) =>
+import { createSelector } from "reselect";
+
+export const loadingSelector = (state, actions) =>
   // return true if any action is true in loading piece of state
   actions.some((action) => state.loading[action]);
+
+export const loadingSelector2 = createSelector(
+  (state) => state,
+  (state, actionTypes) => actionTypes,
+  loadingSelector
+);
 
 export const errorMessageSelector = (actions, state) => {
   // returns the first error messages for actions
@@ -41,7 +49,7 @@ export const errorMessageSelector2 = (actionTypes, errorState) => {
 
     return errorMessages;
   }, []);
-  
+
   console.log(errorList);
 
   if (errorList && errorList[0]) {

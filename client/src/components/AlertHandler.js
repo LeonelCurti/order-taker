@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { IconButton, Snackbar } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
-import { clearAlert } from "../store/actions/alert";
+import { clearAlert } from "../redux/actions/alert";
 
 
 const AlertHandler = (props) => {

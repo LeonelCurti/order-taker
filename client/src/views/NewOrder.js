@@ -5,14 +5,14 @@ import ProductsTable from "../components/ProductsTable";
 import OrderTable from "../components/OrderTable";
 import FetchError from "../components/hoc/FetchError";
 import { makeStyles } from "@material-ui/core/styles";
-import { createOrder, setCurrentOrder } from "../store/actions/orders";
-import { getPriceList } from "../store/actions/products";
+import { createOrder, setCurrentOrder } from "../redux/actions/orders";
+import { getPriceList } from "../redux/actions/products";
 import CircularLoader from "../components/CircularLoader";
 import { 
   // errorMessageSelector,
   hasErrors 
-} from "../store/selector/index";
-import {removeErrors} from '../store/actions/error'
+} from "../redux/selector/index";
+import {removeErrors} from '../redux/actions/error'
 
 import { Grid, Container } from "@material-ui/core";
 

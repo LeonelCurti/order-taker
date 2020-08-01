@@ -6,6 +6,7 @@ import theme from "./theme";
 import CssBaseline from '@material-ui/core/CssBaseline';
 import PrivateRoute from "./components/hoc/PrivateRoute";
 import AlertHandler from "./components/AlertHandler";
+import LinearLoader from './components/LinearLoader'
 
 import Dashboard from "./views/Dashboard";
 import MyOrders from "./views/MyOrders";
@@ -16,21 +17,21 @@ import NotFound from "./views/NotFound";
 import Register from "./views/Register";
 import Login from "./views/Login";
 
-import { loadUser } from "./store/actions/auth";
+import { onTryAutoLogin } from "./redux/actions/auth";
 
 const App = (props) => {
-  const { loadUser } = props;
+  const { onTryAutoLogin } = props;
 
-  useEffect(() => {
-    const isFirstLoad = true;
-    loadUser(isFirstLoad);
-  }, [loadUser]);
+  useEffect(() => { 
+    onTryAutoLogin();
+  }, [onTryAutoLogin]);
 
   return (
     <Router>
       <ThemeProvider theme={theme}>
         <CssBaseline />    
-        <AlertHandler />  
+        <AlertHandler />
+        <LinearLoader />  
         <Switch>
           <PrivateRoute path="/new_order" exact component={NewOrder} />
           <PrivateRoute path="/my_orders/view_order" exact component={ViewOrder} />
@@ -47,4 +48,4 @@ const App = (props) => {
   );
 };
 
-export default connect(null, { loadUser })(App);
+export default connect(null, { onTryAutoLogin })(App);

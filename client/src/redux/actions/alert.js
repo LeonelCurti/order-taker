@@ -1,4 +1,4 @@
-import * as actionTypes from "../actions/types";
+import * as actionTypes from "./types";
 
 export const clearAlert = () => (dispatch) => {
   dispatch({

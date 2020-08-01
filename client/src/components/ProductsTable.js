@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
-import * as orderActions from "../store/actions/orders";
+import * as orderActions from "../redux/actions/orders";
 import {
   Table,
   TableBody,

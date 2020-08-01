@@ -77,11 +77,10 @@ exports.register = async (req, res, next) => {
       email,
       password,
     });
-    return;
-    res
-      .status(200)
-      // .cookie("token", token, cookieOptions)
-      .json({ success: true });
+    return res
+        .status(200)
+        // .cookie("token", token, cookieOptions)
+        .json({ success: true });
   } catch (error) {
     next(error);
   }

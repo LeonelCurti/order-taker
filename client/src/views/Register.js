@@ -13,8 +13,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { connect } from "react-redux";
-import { register, clearErrors } from "../store/actions/auth";
-import LinearLoader from "../components/LinearLoader";
+import { register, clearErrors } from "../redux/actions/auth";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -41,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Register = (props) => {
   const { register, clearErrors, history } = props;
-  const { isAuthenticated, loading, error } = props.auth;
+  const { isAuthenticated, error } = props.auth;
   const classes = useStyles();
   const [formData, setFormData] = useState({
     firstName: {
@@ -144,8 +143,7 @@ const Register = (props) => {
     return <Redirect to="/dashboard" />;
   }
   return (
-    <div className="auth-container">
-      {loading && <LinearLoader />}
+    <div className="auth-container"> 
       <Logo />
       <Container component="main" maxWidth="xs">
         <div className={classes.paper}>

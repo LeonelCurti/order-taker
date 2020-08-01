@@ -16,7 +16,7 @@ import {
   Divider,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { setCurrentOrder } from "../store/actions/orders";
+import { setCurrentOrder } from "../redux/actions/orders";
 
 const useStyles = makeStyles((theme) => ({
   container: {
