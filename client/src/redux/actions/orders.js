@@ -13,10 +13,7 @@ export const getOrders = () => async (dispatch) => {
       payload: res.data.orders,
     });
   } catch (err) {
-    dispatch({
-      type: actionTypes.GET_ORDERS_FAIL,
-      payload: err.response.data.error || "Something went wrong",
-    });
+    dispatch(handleFail(actionTypes.GET_ORDERS_FAIL, err));  
   }
 };
 
@@ -30,10 +27,7 @@ export const createOrder = () => async (dispatch) => {
     });
   } catch (err) {
     dispatch(alertActions.showAlert("Order could not be created."));
-    dispatch({
-      type: actionTypes.CREATE_ORDER_FAIL,
-      payload: err.response.data.error,
-    });
+    dispatch(handleFail(actionTypes.CREATE_ORDER_FAIL, err));
   }
 };
 
@@ -45,10 +39,7 @@ export const updateOrder = (updatedOrder) => async (dispatch) => {
     dispatch({ type: actionTypes.UPDATE_ORDER_SUCCESS });
   } catch (err) {
     dispatch(alertActions.showAlert("Order could not be saved."));
-    dispatch({
-      type: actionTypes.UPDATE_ORDER_FAIL,
-      payload: err.response.data.error,
-    });
+    dispatch(handleFail(actionTypes.UPDATE_ORDER_FAIL, err));
   }
 };
 
@@ -63,10 +54,7 @@ export const submitOrder = (updatedOrder, history) => async (dispatch) => {
     }, 1200);
   } catch (err) {
     dispatch(alertActions.showAlert("Order could not be submitted."));
-    dispatch({
-      type: actionTypes.SUBMIT_ORDER_FAIL,
-      payload: err.response.data.error,
-    });
+    dispatch(handleFail(actionTypes.SUBMIT_ORDER_FAIL, err));    
   }
 };
 export const deleteOrder = (order_id) => async (dispatch) => {
@@ -80,10 +68,7 @@ export const deleteOrder = (order_id) => async (dispatch) => {
     dispatch(alertActions.showAlert("Order deleted."));
   } catch (err) {
     dispatch(alertActions.showAlert("Order could not be deleted."));
-    dispatch({
-      type: actionTypes.DELETE_ORDER_FAIL,
-      payload: err.response.data.error,
-    });
+    dispatch(handleFail(actionTypes.DELETE_ORDER_FAIL, err)); 
   }
 };
 
@@ -91,5 +76,23 @@ export const setCurrentOrder = (order) => ({
   type: actionTypes.SET_CURRENT_ORDER,
   payload: order,
 });
+
+const handleFail = (type, error) => {
+  let errorMsg = "Something went wrong.";
+  if (error.response) {
+    // Request made and server responded
+    errorMsg = error.response.data.error || errorMsg;
+  } else if (error.request) {
+    // The request was made but no response was received
+    errorMsg = "Cannot connect to server.";
+  }else{
+    // Something happened in setting up the request 
+    errorMsg = "Cannot connect to server.";
+  }
+  return {
+    type: type,
+    payload: errorMsg,
+  };
+};
 
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { Redirect } from "react-router-dom";
 import checkInputValidity from "../utils/checkInputValidity";
 import Footer from "../components/Footer";
@@ -14,7 +14,8 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { connect } from "react-redux";
-import { login, clearErrors } from "../redux/actions/auth";
+import { login } from "../redux/actions/auth";
+import { removeErrors } from "../redux/actions/error";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -41,8 +42,14 @@ const useStyles = makeStyles((theme) => ({
 
 const Login = (props) => {
   const classes = useStyles();
-  const { login, clearErrors, history } = props;
-  const { isAuthenticated,  error } = props.auth;
+  const { 
+    login, 
+    history,
+    isAuthenticated,
+    error,
+    removeErrors,
+  } = props;  
+
   const [formData, setFormData] = useState({
     email: {
       value: "",
@@ -66,6 +73,13 @@ const Login = (props) => {
       validationMsg: "",
     },
   });
+
+  //willUnmount
+  useEffect(() => {
+    return () => {
+      removeErrors(["LOGIN",'AUTOLOGIN']);
+    };
+  }, [removeErrors]);
 
   const { email, password } = formData;
 
@@ -110,13 +124,10 @@ const Login = (props) => {
       login(dataToSubmit());
     }
   };
-
+  
   const handleRedirection = (e) => {
-    e.preventDefault();
-    if (error) {
-      clearErrors();
-    }
-    history.push("/register");
+    e.preventDefault();  
+    history.replace("/register");
   };
 
   if (isAuthenticated) {
@@ -215,7 +226,8 @@ const Login = (props) => {
   );
 };
 const mapStateToProps = (state) => ({
-  auth: state.auth,
+  isAuthenticated: state.auth.isAuthenticated,
+  error: state.error["LOGIN"]
 });
 
-export default connect(mapStateToProps, { login, clearErrors })(Login);
+export default connect(mapStateToProps, { login, removeErrors })(Login);

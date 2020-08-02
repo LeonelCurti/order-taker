@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import PropTypes from "prop-types";
 import { Redirect } from "react-router-dom";
 import checkInputValidity from "../utils/checkInputValidity";
@@ -13,8 +13,8 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { connect } from "react-redux";
-import { register, clearErrors } from "../redux/actions/auth";
-
+import { register } from "../redux/actions/auth";
+import { removeErrors } from "../redux/actions/error";
 const useStyles = makeStyles((theme) => ({
   paper: {
     // marginTop: theme.spacing(8),
@@ -39,8 +39,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Register = (props) => {
-  const { register, clearErrors, history } = props;
-  const { isAuthenticated, error } = props.auth;
+  const { register, history, isAuthenticated, error,removeErrors } = props;
   const classes = useStyles();
   const [formData, setFormData] = useState({
     firstName: {
@@ -87,6 +86,13 @@ const Register = (props) => {
     },
   });
 
+  //willUnmount
+  useEffect(() => {
+    return () => {
+      removeErrors(["REGISTER"]);
+    };
+  }, [removeErrors]);
+
   const { firstName, lastName, email, password } = formData;
 
   const handleChanges = (e) => {
@@ -132,18 +138,15 @@ const Register = (props) => {
   };
 
   const handleRedirection = (e) => {
-    e.preventDefault();
-    if (error) {
-      clearErrors();
-    }
-    history.push("/login");
+    e.preventDefault(); 
+    history.replace("/login");
   };
 
   if (isAuthenticated) {
     return <Redirect to="/dashboard" />;
   }
   return (
-    <div className="auth-container"> 
+    <div className="auth-container">
       <Logo />
       <Container component="main" maxWidth="xs">
         <div className={classes.paper}>
@@ -249,9 +252,6 @@ const Register = (props) => {
                 >
                   Already have an account? Log in
                 </Link>
-                {/* <Link component={RouterLink} to="/login" variant="body2">
-                  Already have an account? Log in
-                </Link> */}
               </Grid>
             </Grid>
           </form>
@@ -267,7 +267,8 @@ Register.protoTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  auth: state.auth,
+  isAuthenticated: state.auth.isAuthenticated,
+  error: state.error["REGISTER"],
 });
 
-export default connect(mapStateToProps, { register, clearErrors })(Register);
+export default connect(mapStateToProps, { register, removeErrors })(Register);
