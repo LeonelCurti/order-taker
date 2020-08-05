@@ -86,14 +86,16 @@ const NewOrder = (props) => {
     };
   }, [setCurrentOrder]);
 
-  const refreshPage = () => {};
+  const refreshPage = () => {
+    props.history.replace('/')
+  };
 
   return (
     <Layout>
       {isFetchingPriceList || isCreatingOrder ? (
         <CircularLoader />
       ) : error || !currentOrder ? (
-        <FetchError message={'Something went wrong.'} onRetry={refreshPage} />
+        <FetchError message='We could not load resources.' onRetry={refreshPage} />
       ) : (
         <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={2} className={classes.fixedHeight}>

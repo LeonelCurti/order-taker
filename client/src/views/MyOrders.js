@@ -88,7 +88,7 @@ const MyOrders = (props) => {
       {isFetchingOrders ? (
         <CircularLoader />
       ) : errorGetOrders ? (
-        <FetchError message={errorGetOrders} onRetry={getOrders} />
+        <FetchError message='We could not load resources.' onRetry={getOrders} />
       ) : (
         <Container maxWidth="md" className={classes.container}>
           <Paper className={classes.tableContainer}>

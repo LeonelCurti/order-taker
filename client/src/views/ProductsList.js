@@ -39,7 +39,7 @@ const ProductList = (props) => {
       {isFetchingProducts ? (
         <CircularLoader />
       ) : error ? (
-        <FetchError message={error} onRetry={onRetry} />
+        <FetchError message='We could not load resources.' onRetry={onRetry} />
       ) : (
         <Container maxWidth="md" className={classes.container}>
           <ProductsTable />
