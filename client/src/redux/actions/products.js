@@ -1,5 +1,6 @@
 import axios from "axios";
 import * as actionTypes from "./types";
+import {handleFail} from '../../utils/handleFail'
 
 export const getPriceList = () => async (dispatch) => {
   try {
@@ -10,9 +11,6 @@ export const getPriceList = () => async (dispatch) => {
       payload: res.data.products,
     });
   } catch (err) {
-    dispatch({
-      type: actionTypes.GET_PRICE_LIST_FAIL,
-      payload: err.response.data.error,
-    });
+    dispatch(handleFail(actionTypes.GET_PRICE_LIST_FAIL, err));   
   }
 };
