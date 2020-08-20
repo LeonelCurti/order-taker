@@ -51,7 +51,7 @@ export const submitOrder = (updatedOrder, history) => async (dispatch) => {
     setTimeout(() => {
       dispatch({ type: actionTypes.SUBMIT_ORDER_SUCCESS });
       dispatch(alertActions.showAlert("Order submitted."));
-      history.replace("/my_orders");
+      history.replace("/orders");
     }, 1200);
   } catch (err) {
     dispatch(alertActions.showAlert("Order could not be submitted."));

@@ -77,7 +77,7 @@ const MyOrders = (props) => {
   };
   const handleViewOrder = (order) => {
     setCurrentOrder(order);
-    props.history.push("/my_orders/view_order");
+    props.history.push("/orders/view_order");
   };
   const handleDeleteOrder = (order_id) => {
     deleteOrder(order_id);

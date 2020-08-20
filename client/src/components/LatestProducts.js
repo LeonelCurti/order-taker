@@ -59,21 +59,25 @@ const mockData = [
 
 const useStyles = makeStyles(() => ({
   root: {
-    height: "100%",
+    // height: "100%",
   },
   content: {
     padding: 0,
+    '& .MuiListItem-dense': {
+      paddingTop: '3px',
+      paddingBottom: '3px'
+    }
   },
   image: {
-    height: 40,
-    width: 40,
+    height: 30,
+    width: 30,
   },
   actions: {
     justifyContent: "flex-end",
   },
   cardHeader: {
     "& .MuiCardHeader-title": {
-      fontSize: "1.3rem",
+      fontSize: "1.2rem",
     },
   },
 }));
@@ -95,8 +99,7 @@ const LatestProducts = (props) => {
       <CardContent className={classes.content}>
         <List disablePadding dense>
           {products.map((product, i) => (
-            <ListItem
-            
+            <ListItem       
             // divider={i < products.length - 1} 
             key={i}>
               <ListItemAvatar>

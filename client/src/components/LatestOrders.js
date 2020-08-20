@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
   },
   cardHeader: {
     "& .MuiCardHeader-title": {
-      fontSize: "1.3rem",
+      fontSize: "1.2rem",
     },
     "& .MuiCardHeader-action": {
       // marginTop:0,
@@ -77,6 +77,16 @@ const mockData = [
     amount: 10.99,
     total: 768.57,
   },
+  {
+    notes: "",
+    state: "received",
+    number: 167,
+    createdAt: "2020-06-14T00:52:29.127Z",
+    updatedAt: "2020-06-14T00:52:46.867Z",
+    id: 2,
+    amount: 10.99,
+    total: 4225,
+  },
 ];
 
 const statusColors = {
@@ -106,7 +116,7 @@ const LatestOrders = (props) => {
       <Divider />
       <CardContent className={classes.content}>
         <div className={classes.inner}>
-          <Table>
+          <Table size="small">
             <TableHead>
               <TableRow>
                 <TableCell align="right">Nº</TableCell>

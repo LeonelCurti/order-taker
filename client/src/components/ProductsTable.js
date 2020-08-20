@@ -14,7 +14,7 @@ import {
   Box,
   Paper,
 } from "@material-ui/core";
-import SearchInput from "./SearchInput";
+import SearchInput from "./controls/SearchInput";
 import PhotoCameraOutlinedIcon from "@material-ui/icons/PhotoCameraOutlined";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import ImageModal from "./ImageModal";
@@ -29,6 +29,7 @@ const useStyles = makeStyles((theme) => ({
   },
   tableContainer: {
     overflowX: "auto",
+    overflowY:'auto',  
     //100% - divider 1 - searchInput 48 = rest for table
     height: "calc(100% - 49px)",
   },

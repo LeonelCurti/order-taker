@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const LinearLoader = (props) => {
+const TopLinearLoader = (props) => {
   const classes = useStyles();
   const { isLoading } = props;
 
@@ -37,4 +37,4 @@ const mapStateToProps = (state) => ({
   ]),
 });
 
-export default connect(mapStateToProps)(LinearLoader);
+export default connect(mapStateToProps)(TopLinearLoader);

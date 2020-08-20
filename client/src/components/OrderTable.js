@@ -15,10 +15,10 @@ import {
   CircularProgress,
   Typography,
   Box,
-  Button,
   Divider,
   Paper,
 } from "@material-ui/core";
+import ButtonLoader from "./ButtonLoader";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import * as orderActions from "../redux/actions/orders";
 import { showAlert } from "../redux/actions/alert";
@@ -45,18 +45,7 @@ const useStyles = makeStyles((theme) => ({
   orderItemsContainer: {
     overflowX: "auto",
     height: "calc(100% - 48px - 2px - 52px )",
-  },
-  buttonWrapper: {
-    position: "relative",
-  },
-  buttonProgress: {
-    // color: green[500],
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    marginTop: -12,
-    marginLeft: -12,
-  },
+  },  
 }));
 
 const OrderTable = (props) => {
@@ -217,19 +206,11 @@ const OrderTable = (props) => {
               {`Total:  ${currentOrder.total}`}
             </Typography>
           </Box>
-          <div className={classes.buttonWrapper}>
-            <Button
-              color="primary"
-              variant="contained"
-              onClick={handleSubmitOrder}
-              disabled={isSubmitting}
-            >
-              Submit
-            </Button>
-            {isSubmitting && (
-              <CircularProgress size={24} className={classes.buttonProgress} />
-            )}
-          </div>
+          <ButtonLoader
+            isLoading={isSubmitting}
+            onClick={handleSubmitOrder}
+            text={"Submit"}
+          />
         </div>
       </Paper>
     </div>

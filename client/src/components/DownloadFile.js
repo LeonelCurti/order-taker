@@ -8,7 +8,7 @@ import AssignmentIcon from "@material-ui/icons/Assignment";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    height: 150,
+    height: 140,//
     padding: theme.spacing(2),
   },
   content: {
@@ -25,9 +25,6 @@ const useStyles = makeStyles((theme) => ({
   action: {
     flex: "0 0 auto",
     marginRight: -8,
-  },
-  fixedHeight: {
-    height: 240,
   },
 }));
 

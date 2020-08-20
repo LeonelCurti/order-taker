@@ -5,7 +5,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import { clearAlert } from "../redux/actions/alert";
 
 
-const AlertHandler = (props) => {
+const AlertSnackbar = (props) => {
   const { alertMessage, isOpen, clearAlert } = props;
 
   const handleClose = (event, reason) => {
@@ -42,4 +42,4 @@ const mapStateToProps = (state) => ({
   isOpen: state.alert.isOpen,
 });
 
-export default connect(mapStateToProps, { clearAlert })(AlertHandler);
+export default connect(mapStateToProps, { clearAlert })(AlertSnackbar);

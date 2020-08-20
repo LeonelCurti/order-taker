@@ -30,13 +30,13 @@ const Sidebar = (props) => {
       icon: <DashboardIcon fontSize="small" />,
     },
     {
-      title: "Product List",
-      href: "/product_list",
+      title: "Catalog",
+      href: "/catalog",
       icon: <ListIcon fontSize="small" />,
     },
     {
-      title: "My orders",
-      href: "/my_orders",
+      title: "Orders",
+      href: "/orders",
       icon: <ShoppingBasketIcon fontSize="small" />,
     },
     {

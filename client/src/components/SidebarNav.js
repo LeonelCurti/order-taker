@@ -38,11 +38,12 @@ const ListItemLink = (props) => {
   const { icon, primary, to } = props;
 
   const renderLink = forwardRef((itemProps, ref) => (
-    <RouterLink to={to} ref={ref} {...itemProps} />
+    <RouterLink exact to={to} ref={ref} {...itemProps} />
+    // <RouterLink to={to} ref={ref} {...itemProps} />
   ));
 
   return (
-    <ListItem button component={renderLink} activeClassName="Mui-selected" exact>
+    <ListItem button component={renderLink} activeClassName="Mui-selected" >
       <ListItemIcon>{icon}</ListItemIcon>
       <ListItemText primary={primary} />
     </ListItem>

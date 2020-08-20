@@ -17,7 +17,7 @@ import AccountCircle from "@material-ui/icons/AccountCircle";
 const useStyles = makeStyles((theme) => ({
   AppBar: { 
     backgroundColor: theme.palette.common.white,
-    borderBottom: `1px solid ${theme.palette.divider}`,
+    // borderBottom: `1px solid ${theme.palette.divider}`,
   },
   appBarToolbar: {
     display: "flex",
@@ -54,7 +54,7 @@ const Navbar = ({ onSidebarOpen, user }) => {
   const classes = useStyles();
 
   return (
-    <AppBar elevation={0} className={classes.AppBar}>
+    <AppBar elevation={1} className={classes.AppBar}>
       <Toolbar className={classes.appBarToolbar}>
         <RouterLink to="/dashboard">
           <img src={Logo2} alt="logo" className={classes.logoImg} />
