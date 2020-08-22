@@ -10,6 +10,8 @@ import { Grid, Container } from "@material-ui/core";
 const useStyles = makeStyles((theme) => ({
   container: {
     // border: "1px solid purple",
+    paddingBottom: theme.spacing(2),
+    paddingTop: theme.spacing(2),
     display: "flex",
     flexDirection: "column",
     [theme.breakpoints.up("lg")]: {

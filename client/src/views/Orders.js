@@ -3,8 +3,7 @@ import { connect } from "react-redux";
 import moment from "moment";
 import Layout from "../components/layout/Layout";
 import StatusBullet from "../components/StatusBullet";
-import FetchError from "../components/hoc/FetchError";
-import CircularLoader from "../components/CircularLoader";
+import LoadingIndicator from "../components/LoadingIndicator";
 import {
   Box,
   Table,
@@ -24,11 +23,21 @@ import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import * as actions from "../redux/actions/orders";
 import { removeErrors } from "../redux/actions/error";
+import PageHeader from "../components/PageHeader";
+import ErrorBoundary from "../components/ErrorBoundary";
 const useStyles = makeStyles((theme) => ({
   container: {
-    paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(2),
+    // border: "1px solid purple",
+    display: "flex",
+    flexDirection: "column",
     height: "100%",
+    paddingBottom: theme.spacing(2),
+    paddingTop: theme.spacing(2),
+  },
+  content: {
+    flex: "1",
+    // border: "1px solid green",
+    height: "80%",
   },
   tableCellIcon: {
     paddingLeft: "10px",
@@ -85,118 +94,125 @@ const MyOrders = (props) => {
 
   return (
     <Layout>
-      {isFetchingOrders ? (
-        <CircularLoader />
-      ) : errorGetOrders ? (
-        <FetchError message='We could not load resources.' onRetry={getOrders} />
-      ) : (
-        <Container maxWidth="md" className={classes.container}>
-          <Paper className={classes.tableContainer}>
-            <Table size="small" stickyHeader>
-              <TableHead>
-                <TableRow>
-                  <TableCell align="right">Nº</TableCell>
-                  <TableCell>Last update</TableCell>
-                  <TableCell align="right">Total</TableCell>
-                  <TableCell>State</TableCell>
-                  <TableCell align="center" colSpan={3}>
-                    Actions
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {myOrders.length > 0 ? (
-                  myOrders.map((order) => (
-                    <TableRow hover key={order.number}>
-                      <TableCell align="right">{order.number}</TableCell>
-                      <TableCell>
-                        {moment(order.updatedAt).format("DD/MM/YYYY  h:mm a")}
+      <LoadingIndicator isActive={isFetchingOrders}>
+        <ErrorBoundary
+          error={errorGetOrders}
+          onRetry={getOrders}
+          message="We could not load resources."
+        >
+          <Container className={classes.container}>
+            <PageHeader title="Orders" />
+            <div className={classes.content}>
+              <Paper className={classes.tableContainer}>
+                <Table size="small" stickyHeader>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell align="right">Nº</TableCell>
+                      <TableCell>Last update</TableCell>
+                      <TableCell align="right">Total</TableCell>
+                      <TableCell>State</TableCell>
+                      <TableCell align="center" colSpan={3}>
+                        Actions
                       </TableCell>
-                      <TableCell align="right">{order.total}</TableCell>
-                      <TableCell>
-                        <Box display="flex" alignItems="center">
-                          <StatusBullet
-                            className={classes.status}
-                            color={statusColors[order.state]}
-                            size="sm"
-                          />
-                          <span>{order.state}</span>
-                        </Box>
-                      </TableCell>
-                      <TableCell className={classes.tableCellIcon}>
-                        <Tooltip title="Print">
-                          <div>
-                            <IconButton
-                              disabled={order.state === "open"}
-                              color="default"
-                              size="small"
-                            >
-                              <PrintOutlinedIcon />
-                            </IconButton>
-                          </div>
-                        </Tooltip>
-                      </TableCell>
-
-                      {order.state === "open" ? (
-                        <Fragment>
-                          <TableCell className={classes.tableCellIcon}>
-                            <Tooltip title="Edit">
-                              <IconButton
-                                color="default"
-                                size="small"
-                                onClick={() => handleEditOrder(order)}
-                              >
-                                <EditOutlinedIcon />
-                              </IconButton>
-                            </Tooltip>
-                          </TableCell>
-                          <TableCell className={classes.tableCellIcon}>
-                            <Tooltip title="Delete">
-                              <IconButton
-                                color="default"
-                                size="small"
-                                onClick={() => handleDeleteOrder(order._id)}
-                              >
-                                <DeleteForeverIcon />
-                              </IconButton>
-                            </Tooltip>
-                          </TableCell>
-                        </Fragment>
-                      ) : (
-                        <Fragment>
-                          <TableCell className={classes.tableCellIcon}>
-                            <Tooltip title="View">
-                              <IconButton
-                                color="default"
-                                size="small"
-                                onClick={() => handleViewOrder(order)}
-                              >
-                                <VisibilityOutlinedIcon />
-                              </IconButton>
-                            </Tooltip>
-                          </TableCell>
-                          <TableCell></TableCell>
-                        </Fragment>
-                      )}
                     </TableRow>
-                  ))
-                ) : (
-                  <TableRow style={{ height: 49 }}>
-                    <TableCell
-                      style={{
-                        textAlign: "center",
-                      }}
-                      colSpan={7}
-                    >
-                      No orders found
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </Paper>
-        </Container>
-      )}
+                  </TableHead>
+                  <TableBody>
+                    {myOrders.length > 0 ? (
+                      myOrders.map((order) => (
+                        <TableRow hover key={order.number}>
+                          <TableCell align="right">{order.number}</TableCell>
+                          <TableCell>
+                            {moment(order.updatedAt).format(
+                              "DD/MM/YYYY  h:mm a"
+                            )}
+                          </TableCell>
+                          <TableCell align="right">{order.total}</TableCell>
+                          <TableCell>
+                            <Box display="flex" alignItems="center">
+                              <StatusBullet
+                                className={classes.status}
+                                color={statusColors[order.state]}
+                                size="sm"
+                              />
+                              <span>{order.state}</span>
+                            </Box>
+                          </TableCell>
+                          <TableCell className={classes.tableCellIcon}>
+                            <Tooltip title="Print">
+                              <div>
+                                <IconButton
+                                  disabled={order.state === "open"}
+                                  color="default"
+                                  size="small"
+                                >
+                                  <PrintOutlinedIcon />
+                                </IconButton>
+                              </div>
+                            </Tooltip>
+                          </TableCell>
+
+                          {order.state === "open" ? (
+                            <Fragment>
+                              <TableCell className={classes.tableCellIcon}>
+                                <Tooltip title="Edit">
+                                  <IconButton
+                                    color="default"
+                                    size="small"
+                                    onClick={() => handleEditOrder(order)}
+                                  >
+                                    <EditOutlinedIcon />
+                                  </IconButton>
+                                </Tooltip>
+                              </TableCell>
+                              <TableCell className={classes.tableCellIcon}>
+                                <Tooltip title="Delete">
+                                  <IconButton
+                                    color="default"
+                                    size="small"
+                                    onClick={() => handleDeleteOrder(order._id)}
+                                  >
+                                    <DeleteForeverIcon />
+                                  </IconButton>
+                                </Tooltip>
+                              </TableCell>
+                            </Fragment>
+                          ) : (
+                            <Fragment>
+                              <TableCell className={classes.tableCellIcon}>
+                                <Tooltip title="View">
+                                  <IconButton
+                                    color="default"
+                                    size="small"
+                                    onClick={() => handleViewOrder(order)}
+                                  >
+                                    <VisibilityOutlinedIcon />
+                                  </IconButton>
+                                </Tooltip>
+                              </TableCell>
+                              <TableCell></TableCell>
+                            </Fragment>
+                          )}
+                        </TableRow>
+                      ))
+                    ) : (
+                      <TableRow style={{ height: 49 }}>
+                        <TableCell
+                          style={{
+                            textAlign: "center",
+                          }}
+                          colSpan={7}
+                        >
+                          No orders found
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </Paper>
+            </div>
+          </Container>
+        </ErrorBoundary>
+      </LoadingIndicator>
     </Layout>
   );
 };

@@ -72,7 +72,7 @@ const SidebarNav = (props) => {
         </div>
         <Divider />
       </Hidden>
-      <List className={classes.listContainer}>
+      <List disablePadding className={classes.listContainer}>
         {pages.map((page, i) => (
           <ListItemLink
             key={i}

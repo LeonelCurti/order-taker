@@ -13,7 +13,7 @@ const useStyles = makeStyles({
   },
 });
 
-function CircularLoader(props) {
+function LoadingIndicator(props) {
   const { isActive } = props;
   const classes = useStyles();
 
@@ -30,4 +30,4 @@ function CircularLoader(props) {
   );
 }
 
-export default CircularLoader;
+export default LoadingIndicator;
