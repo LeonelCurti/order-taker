@@ -54,7 +54,7 @@ const ProductList = (props) => {
           onRetry={onRetry}
           message="We could not load resources."
         >
-          <Container className={classes.container}>
+          <Container maxWidth='md' className={classes.container}>
             <PageHeader title="Catalog" className={classes.pageHeader}/>
             <div className={classes.content}>
               <ProductsTable />

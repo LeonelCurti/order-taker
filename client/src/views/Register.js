@@ -1,7 +1,8 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { Redirect } from "react-router-dom";
 import checkInputValidity from "../utils/checkInputValidity";
+import VisibilityPasswordTextField from "../components/VisibilityPasswordTextField";
 import Footer from "../components/Footer";
 import Logo from "../components/Logo";
 import Button from "@material-ui/core/Button";
@@ -39,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Register = (props) => {
-  const { register, history, isAuthenticated, error,removeErrors } = props;
+  const { register, history, isAuthenticated, error, removeErrors } = props;
   const classes = useStyles();
   const [formData, setFormData] = useState({
     firstName: {
@@ -138,7 +139,7 @@ const Register = (props) => {
   };
 
   const handleRedirection = (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
     history.replace("/login");
   };
 
@@ -210,7 +211,7 @@ const Register = (props) => {
                 />
               </Grid>
               <Grid item xs={12}>
-                <TextField
+                <VisibilityPasswordTextField
                   variant="outlined"
                   fullWidth
                   error={
@@ -226,7 +227,7 @@ const Register = (props) => {
                   id="password"
                   helperText={password.validationMsg}
                   autoComplete="current-password"
-                />
+                />                
               </Grid>
             </Grid>
             <Button

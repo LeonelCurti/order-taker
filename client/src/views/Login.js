@@ -1,8 +1,9 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Redirect } from "react-router-dom";
 import checkInputValidity from "../utils/checkInputValidity";
 import Footer from "../components/Footer";
 import Logo from "../components/Logo";
+import VisibilityPasswordTextField from "../components/VisibilityPasswordTextField";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import FormHelperText from "@material-ui/core/FormHelperText";
@@ -42,13 +43,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Login = (props) => {
   const classes = useStyles();
-  const { 
-    login, 
-    history,
-    isAuthenticated,
-    error,
-    removeErrors,
-  } = props;  
+  const { login, history, isAuthenticated, error, removeErrors } = props;
 
   const [formData, setFormData] = useState({
     email: {
@@ -77,7 +72,7 @@ const Login = (props) => {
   //willUnmount
   useEffect(() => {
     return () => {
-      removeErrors(["LOGIN",'AUTOLOGIN']);
+      removeErrors(["LOGIN", "AUTOLOGIN"]);
     };
   }, [removeErrors]);
 
@@ -124,9 +119,9 @@ const Login = (props) => {
       login(dataToSubmit());
     }
   };
-  
+
   const handleRedirection = (e) => {
-    e.preventDefault();  
+    e.preventDefault();
     history.replace("/register");
   };
 
@@ -134,7 +129,7 @@ const Login = (props) => {
     return <Redirect to="/dashboard" />;
   }
   return (
-    <div className="auth-container">   
+    <div className="auth-container">
       <Logo />
       <Container component="main" maxWidth="xs">
         <div className={classes.paper}>
@@ -148,7 +143,6 @@ const Login = (props) => {
                   variant="outlined"
                   fullWidth
                   error={!email.valid && email.touched && !email.focused}
-                  // FormHelperTextProps={{error:true}}
                   onChange={handleChanges}
                   onFocus={toggleFocused}
                   onBlur={toggleFocused}
@@ -163,7 +157,7 @@ const Login = (props) => {
                 />
               </Grid>
               <Grid item xs={12}>
-                <TextField
+                <VisibilityPasswordTextField
                   variant="outlined"
                   fullWidth
                   error={
@@ -178,8 +172,8 @@ const Login = (props) => {
                   type="password"
                   id="password"
                   helperText={password.validationMsg}
-                  autoComplete="current-password"
-                />
+                  autoComplete="current-password"      
+                />                
               </Grid>
               <Grid item xs={12}>
                 <FormControlLabel
@@ -227,7 +221,7 @@ const Login = (props) => {
 };
 const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
-  error: state.error["LOGIN"]
+  error: state.error["LOGIN"],
 });
 
 export default connect(mapStateToProps, { login, removeErrors })(Login);

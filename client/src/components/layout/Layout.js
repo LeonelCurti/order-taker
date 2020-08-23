@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Navbar from "../Navbar";
+import TopBar from "../TopBar";
 import clsx from "clsx";
 import { makeStyles, useTheme } from "@material-ui/styles";
 import { useMediaQuery } from "@material-ui/core";
@@ -45,16 +45,14 @@ const Layout = (props) => {
         [classes.shiftContent]: isDesktop,
       })}
     >
-      <Navbar onSidebarOpen={handleSidebarOpen} />
+      <TopBar onSidebarOpen={handleSidebarOpen} />
 
       <Sidebar
         onClose={handleSidebarClose}
         open={shouldOpenSidebar}
         variant={isDesktop ? "persistent" : "temporary"}
       />
-      <main className={classes.content}>  
-        {props.children}
-        </main>
+      <main className={classes.content}>{props.children}</main>
     </div>
   );
 };

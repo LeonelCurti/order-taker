@@ -10,9 +10,9 @@ import SidebarNav from "./SidebarNav";
 
 const useStyles = makeStyles((theme) => ({
   drawer: {
-    width: 180,
-    // border: 0,  
+    width: 240,  
     [theme.breakpoints.up("lg")]: {
+      width: 180, 
       marginTop: 64,
       height: "calc(100% - 64px)",
     },

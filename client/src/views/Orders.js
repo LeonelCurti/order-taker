@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import moment from "moment";
 import Layout from "../components/layout/Layout";
@@ -25,6 +25,7 @@ import * as actions from "../redux/actions/orders";
 import { removeErrors } from "../redux/actions/error";
 import PageHeader from "../components/PageHeader";
 import ErrorBoundary from "../components/ErrorBoundary";
+import ConfirmationDialog from "../components/ConfirmationDialog";
 const useStyles = makeStyles((theme) => ({
   container: {
     // border: "1px solid purple",
@@ -57,7 +58,7 @@ const statusColors = {
   submitted: "warning",
 };
 
-const MyOrders = (props) => {
+const Orders = (props) => {
   const classes = useStyles();
   const {
     myOrders,
@@ -68,6 +69,8 @@ const MyOrders = (props) => {
     setCurrentOrder,
     removeErrors,
   } = props;
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState(null);
 
   useEffect(() => {
     getOrders();
@@ -80,6 +83,15 @@ const MyOrders = (props) => {
     };
   }, [removeErrors]);
 
+  const handleDeleteTargetDialogClose = () => {
+    setConfirmDialogOpen(false);
+    setDeleteTarget(null);
+  };
+
+  const handleDeleteTargetDialogOpen = (order) => {
+    setConfirmDialogOpen(true);
+    setDeleteTarget(order);
+  };
   const handleEditOrder = (order) => {
     setCurrentOrder(order);
     props.history.push("/new_order");
@@ -88,8 +100,10 @@ const MyOrders = (props) => {
     setCurrentOrder(order);
     props.history.push("/orders/view_order");
   };
-  const handleDeleteOrder = (order_id) => {
-    deleteOrder(order_id);
+  const handleDeleteOrder = () => {
+    setConfirmDialogOpen(false);
+    deleteOrder(deleteTarget._id);
+    setDeleteTarget(null);
   };
 
   return (
@@ -100,7 +114,20 @@ const MyOrders = (props) => {
           onRetry={getOrders}
           message="We could not load resources."
         >
-          <Container className={classes.container}>
+          <ConfirmationDialog
+            open={confirmDialogOpen}
+            title="Confirmation"
+            content={
+              <span>
+                {"Do you really want to remove order number "}
+                <b>{deleteTarget && deleteTarget.number}</b>
+                {" from your list?"}
+              </span>
+            }
+            onClose={handleDeleteTargetDialogClose}
+            onConfirm={handleDeleteOrder}
+          />
+          <Container maxWidth="md" className={classes.container}>
             <PageHeader title="Orders" />
             <div className={classes.content}>
               <Paper className={classes.tableContainer}>
@@ -169,7 +196,9 @@ const MyOrders = (props) => {
                                   <IconButton
                                     color="default"
                                     size="small"
-                                    onClick={() => handleDeleteOrder(order._id)}
+                                    onClick={() =>
+                                      handleDeleteTargetDialogOpen(order)
+                                    }
                                   >
                                     <DeleteForeverIcon />
                                   </IconButton>
@@ -223,4 +252,4 @@ const mapStateToProps = (state) => ({
   errorGetOrders: state.error["GET_ORDERS"],
 });
 
-export default connect(mapStateToProps, { ...actions, removeErrors })(MyOrders);
+export default connect(mapStateToProps, { ...actions, removeErrors })(Orders);
