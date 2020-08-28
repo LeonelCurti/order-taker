@@ -55,7 +55,7 @@ const SidebarNav = (props) => {
   const classes = useStyles();
 
   const handleLogout = () => {
-    logout();
+    logout(props.history);
   };
   const handleDrawerClose = () => {
     onClose();

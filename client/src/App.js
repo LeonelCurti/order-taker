@@ -1,12 +1,17 @@
-import React, { useEffect } from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { connect } from "react-redux";
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+} from "react-router-dom";
+import { Provider } from "react-redux";
+import store from "./redux/store";
 import { ThemeProvider } from "@material-ui/styles";
 import theme from "./theme";
-import CssBaseline from '@material-ui/core/CssBaseline';
+import CssBaseline from "@material-ui/core/CssBaseline";
 import PrivateRoute from "./components/hoc/PrivateRoute";
 import AlertSnackbar from "./components/AlertSnackbar";
-import TopLinearLoader from './components/TopLinearLoader'
+import TopLinearLoader from "./components/TopLinearLoader";
 
 import Dashboard from "./views/Dashboard";
 import Orders from "./views/Orders";
@@ -19,33 +24,36 @@ import Login from "./views/Login";
 
 import { onTryAutoLogin } from "./redux/actions/auth";
 
-const App = (props) => {
-  const { onTryAutoLogin } = props;
 
-  useEffect(() => { 
-    onTryAutoLogin();
-  }, [onTryAutoLogin]);
-
+const App = () => {
+  store.dispatch(onTryAutoLogin());
+  console.log('render App');
   return (
-    <Router>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />    
-        <AlertSnackbar />
-        <TopLinearLoader />  
-        <Switch>
-          <PrivateRoute path="/new_order" exact component={NewOrder} />
-          <PrivateRoute path="/orders/view_order" exact component={ViewOrder} />
-          <PrivateRoute path="/orders" exact component={Orders} />
-          <PrivateRoute path="/catalog" exact component={Catalog} />
-          <PrivateRoute path="/dashboard" exact component={Dashboard} />
-          <Route path="/register" exact component={Register} />
-          <Route path="/login" exact component={Login} />
-          <Route path="/" exact component={Login} />
-          <Route component={NotFound} />
-        </Switch>
-      </ThemeProvider>
-    </Router>
+    <Provider store={store}>
+      <Router>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <AlertSnackbar />
+          <TopLinearLoader />
+          <Switch>
+            <PrivateRoute path="/new_order" exact component={NewOrder} />
+            <PrivateRoute
+              path="/orders/view_order"
+              exact
+              component={ViewOrder}
+            />
+            <PrivateRoute path="/orders" exact component={Orders} />
+            <PrivateRoute path="/catalog" exact component={Catalog} />
+            <PrivateRoute path="/dashboard" exact component={Dashboard} />
+            <Route path="/register" exact component={Register} />
+            <Route path="/login" exact component={Login} />
+            <Route path="/" exact component={Login} />
+            <Route component={NotFound} />
+          </Switch>
+        </ThemeProvider>
+      </Router>
+    </Provider>
   );
 };
 
-export default connect(null, { onTryAutoLogin })(App);
+export default App;

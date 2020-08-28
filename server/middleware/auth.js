@@ -4,13 +4,13 @@ const User = require("../models/Users");
 //Protect routes
 exports.isAuth = async (req, res, next) => {
   //get token from client cookie
-  let token = req.cookies.token;  
-  
+  let token = req.cookies.token;
+    
   //check if no token
   if (!token) {
     return res.status(401).json({
       success: false,
-      error: "Not authorize to access this route"
+      error: "No token provided!"
     });
   } 
 
@@ -24,7 +24,7 @@ exports.isAuth = async (req, res, next) => {
     if (!req.user) {
       return res.status(401).json({
         success: false,
-        error: "Not authorize to access this route"
+        error: "Unauthorized!"
       });
     }
     //if everything ok, pass user to next middleware
@@ -39,7 +39,7 @@ exports.isAdmin = (req, res, next) =>{
   if (!req.user.isAdmin) {
     return res.status(401).json({
       success: false,
-      error: "Not authorize to access this route"
+      error: "Unauthorized!"
     });
   }
   next() 

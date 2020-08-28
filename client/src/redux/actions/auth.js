@@ -9,7 +9,7 @@ export const register = (dataToSubmit, history) => {
       dispatch({ type: actionTypes.REGISTER_REQUEST });
       await axios.post("/api/v1/auth/register", dataToSubmit);
       dispatch({ type: actionTypes.REGISTER_SUCCESS });
-      history.push("/login");
+      history.replace("/login");
     } catch (err) {
       dispatch(handleFail(actionTypes.REGISTER_FAIL, err));
     }
@@ -43,7 +43,12 @@ export const loadUser = () => async (dispatch) => {
 export const onTryAutoLogin = () => async (dispatch) => {
   try {
     dispatch({ type: actionTypes.AUTOLOGIN_REQUEST });
-    const res = await axios.get("/api/v1/auth/me");
+    const res = await axios.get("/api/v1/auth/me", {
+      headers: {
+        'Cache-Control': 'no-cache',
+      },
+    });
+
     dispatch({
       type: actionTypes.AUTOLOGIN_SUCCESS,
       payload: res.data,

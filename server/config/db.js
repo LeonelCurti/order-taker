@@ -6,12 +6,12 @@ const connectDB = async () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useCreateIndex: true,
-      useFindAndModify: false
+      useFindAndModify: false,
     });
-    console.log("MongoDB connected".yellow);
+    console.log("Successfully connect to MongoDB".yellow);
   } catch (err) {
-    console.log(err);
-    process.exit(1);
+    console.error("Connection error", err);
+    process.exit();
   }
 };
 

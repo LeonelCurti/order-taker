@@ -8,8 +8,7 @@ exports.login = async (req, res, next) => {
   if (!errors.isEmpty()) {
     return res
       .status(422)
-      .json({ success: false, error: "Invalid credentials" });
-    //ok but the error message array is not exploited
+      .json({ success: false, error: "Invalid credentials" });   
   }
   try {
     const { email, password } = req.body;
@@ -78,9 +77,8 @@ exports.register = async (req, res, next) => {
       password,
     });
     return res
-        .status(200)
-        // .cookie("token", token, cookieOptions)
-        .json({ success: true });
+      .status(200)
+      .json({ success: true, message: "User was registered successfully!" });
   } catch (error) {
     next(error);
   }
