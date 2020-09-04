@@ -8,7 +8,7 @@ exports.login = async (req, res, next) => {
   if (!errors.isEmpty()) {
     return res
       .status(422)
-      .json({ success: false, error: "Invalid credentials" });   
+      .json({ success: false, error: "Invalid credentials" });
   }
   try {
     const { email, password } = req.body;
@@ -33,18 +33,28 @@ exports.login = async (req, res, next) => {
     const token = user.getSignedJwtToken();
 
     //Set cookie options
-    const cookieOptions = {
-      expires: new Date(
-        Date.now() + process.env.COOKIE_EXPIRE * 24 * 60 * 60 * 1000
-      ),
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production" ? true : false,
-    };
+    // const cookieOptions = {
+    //   expires: new Date(
+    //     Date.now() + process.env.COOKIE_EXPIRE * 24 * 60 * 60 * 1000
+    //   ),
+    //   httpOnly: true,
+    //   secure: process.env.NODE_ENV === "production" ? true : false,
+    // };
 
     return res
       .status(200)
-      .cookie("token", token, cookieOptions)
-      .json({ success: true });
+      // .cookie("token", token, cookieOptions)
+      .json({
+        success: true,
+        accessToken: token,
+        user: {
+          // _id: user._id,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          isAdmin: user.isAdmin,
+        },
+      });
   } catch (error) {
     next(error);
   }
@@ -90,8 +100,20 @@ exports.logout = (req, res, next) => {
   }, 1000);
 };
 
-exports.me = (req, res, next) => {
-  setTimeout(() => {
-    return res.status(200).json({ success: true, user: req.user });
-  }, 1000);
+exports.me = async (req, res, next) => {
+  try {
+    user = await User.findById(req.userId);
+
+    return res.status(200).json({
+      success: true,
+      user: {        
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        isAdmin: user.isAdmin,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
 };

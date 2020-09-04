@@ -22,7 +22,7 @@ const TopLinearLoader = (props) => {
   return (
     isLoading && (
       <div className={classes.root}>
-        <LinearProgress />
+        <LinearProgress color='secondary' />
       </div>
     )
   );
