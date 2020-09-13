@@ -1,19 +1,31 @@
-const User = require("../models/Users");
+const User = require("../models/User");
+const RefreshToken = require("../models/RefreshTokens");
+const bcrypt = require("bcrypt");
 const { validationResult } = require("express-validator");
+const jwt = require("jsonwebtoken");
+const {
+  signRefreshToken,
+  setTokenCookie,
+  signAccessToken,
+} = require("../utils/jwt_helper");
 
 exports.login = async (req, res, next) => {
-  //check for errors
-  const errors = validationResult(req);
-
-  if (!errors.isEmpty()) {
-    return res
-      .status(422)
-      .json({ success: false, error: "Invalid credentials" });
-  }
   try {
+    // Check for input errors
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res
+        .status(422)
+        .json({ success: false, error: errors.array()[0].msg });
+    }
     const { email, password } = req.body;
 
-    //See if user exist
+    //Get request ip
+    let ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+    ip = ip.replace("::ffff:", "");
+
+    // See if user exist
     const user = await User.findOne({ email }).select("+password");
     if (!user) {
       return res
@@ -21,40 +33,33 @@ exports.login = async (req, res, next) => {
         .json({ success: false, error: "Invalid credentials" });
     }
 
-    //Check if password matches
-    const isMatch = await user.matchPassword(password);
+    // Check if password matches
+    const isMatch = await user.comparePassword(password);
 
     if (!isMatch) {
       return res
         .status(401)
         .json({ success: false, error: "Invalid credentials" });
     }
-    //Create token
-    const token = user.getSignedJwtToken();
+    // Create access token
+    const accessToken = signAccessToken({ id: user._id });
 
-    //Set cookie options
-    // const cookieOptions = {
-    //   expires: new Date(
-    //     Date.now() + process.env.COOKIE_EXPIRE * 24 * 60 * 60 * 1000
-    //   ),
-    //   httpOnly: true,
-    //   secure: process.env.NODE_ENV === "production" ? true : false,
-    // };
+    // Create refresh token in db
+    const refreshToken = await RefreshToken.create({
+      user: user._id,
+      createdByIp: ip,
+      expireAt: new Date(Date.now() + 5 * 60000), //5 min after created
+    });
 
-    return res
-      .status(200)
-      // .cookie("token", token, cookieOptions)
-      .json({
-        success: true,
-        accessToken: token,
-        user: {
-          // _id: user._id,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          email: user.email,
-          isAdmin: user.isAdmin,
-        },
-      });
+    const signedRefreshToken = signRefreshToken({ tokenId: refreshToken._id });
+
+    setTokenCookie(res, "refresh_token", signedRefreshToken);
+
+    return res.status(200).json({
+      success: true,
+      accessToken,
+      user,
+    });
   } catch (error) {
     next(error);
   }
@@ -65,7 +70,9 @@ exports.register = async (req, res, next) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    return res.status(422).json({ success: false, error: "Invalid fields" });
+    return res
+      .status(422)
+      .json({ success: false, error: errors.array()[0].msg });
   }
 
   try {
@@ -94,24 +101,62 @@ exports.register = async (req, res, next) => {
   }
 };
 
-exports.logout = (req, res, next) => {
-  setTimeout(() => {
-    return res.clearCookie("token").json({ success: true });
-  }, 1000);
+exports.logout = async (req, res, next) => {
+  try {
+    const refreshToken = req.cookies.refresh_token;
+    if (refreshToken) {
+      const decoded = jwt.verify(refreshToken, process.env.REFRESH_JWT_SECRET);
+
+      // pending: users can revoke their own tokens and admins can delete any tokens
+
+      await RefreshToken.findByIdAndRemove(decoded.tokenId);
+    }
+    return res
+      .clearCookie("refresh_token")
+      .json({ success: true, message: "User was logged out successfully!" });
+  } catch (error) {
+    console.log(error);
+    return res.clearCookie("refresh_token").json({ success: true });
+  }
 };
 
 exports.me = async (req, res, next) => {
   try {
-    user = await User.findById(req.userId);
+    return res.status(200).json({
+      success: true,
+      user: req.user,
+      message:'User successfully loaded.'
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+exports.refreshToken = async (req, res, next) => {
+  try {
+    const refreshToken = req.cookies.refresh_token;
+    if (!refreshToken) {
+      return res.status(401).json({
+        success: false,
+        error: "No refresh token provided!",        
+      });
+    }
+
+    const decoded = jwt.verify(refreshToken, process.env.REFRESH_JWT_SECRET);
+
+    const token = await RefreshToken.findById(decoded.tokenId).populate("user");
+    if (!token) {
+      return res.status(401).json({
+        success: false,
+        error: "No token found",
+      });
+    }
+
+    const accessToken = signAccessToken({ id: token.user._id });
 
     return res.status(200).json({
       success: true,
-      user: {        
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        isAdmin: user.isAdmin,
-      },
+      accessToken,
+      message:'Access token successfully created.'
     });
   } catch (error) {
     next(error);

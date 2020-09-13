@@ -39,10 +39,19 @@ app.use("/api/v1/order", require("./routes/order"));
 app.use(errorHandler);
 
 const server = app.listen(process.env.PORT || 5000, () =>
-  console.log(`Server running in ${process.env.NODE_ENV} mode`.yellow)
+  console.log(`Server running: ${process.env.NODE_ENV} mode`.yellow)
 );
 
 process.on("unhandledRejection", (err, promise) => {
-  console.log(`Error: ${err}`);
-  server.close(() => proccess.exit(1));
+  console.log("Unhandled rejection at ", promise, `reason: ${err.message}`);
+  server.close(() => {
+    process.exit(0);
+  });  
+});
+
+process.on("uncaughtException", (err) => {
+  console.log(`Uncaught Exception: ${err.message}`);
+  server.close(() => {
+    process.exit(0);
+  });
 });

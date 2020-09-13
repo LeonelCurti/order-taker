@@ -11,7 +11,7 @@ exports.createOrder = async (req, res, next) => {
     );
 
     const orderCreated = await Order.create({
-      user: req.userId,
+      user: req.user._id,
       number: doc.count,
     });
     return res.status(200).json({
@@ -24,7 +24,7 @@ exports.createOrder = async (req, res, next) => {
   }
 };
 exports.getOrders = async (req, res, next) => {
-  const userId = req.userId;
+  const userId = req.user._id;
   try {
     // throw Error()
     const allOrders = await Order.find({ user: userId }).sort({

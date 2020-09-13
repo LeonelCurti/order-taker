@@ -6,21 +6,21 @@ exports.validate = method => {
       return [
         check("firstName", "First Name is required").trim().notEmpty(),
         check("lastName", "Last name is required").trim().notEmpty(),
-        check("email", "Please include a valid email").isEmail().normalizeEmail().trim(),
+        check("email", "Please include a valid email").trim().isEmail().normalizeEmail(),
         check(
           "password",
           "Password must must be 4 or more characters"
         ).isLength({
           min: 4
-        })
+        }).trim()
       ];
     }
     case 'login':{
       return [
-        check("email", "Please include a valid email").isEmail().trim(),
+        check("email", "Please include a valid email").trim().isEmail().normalizeEmail(),
         check("password", "Password must must be 4 or more characters").isLength({
           min: 4
-        })
+        }).trim()
       ]
     }
   }
