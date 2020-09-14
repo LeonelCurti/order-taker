@@ -1,18 +1,22 @@
 const errorHandler = (err, req, res, next) => {
-  //log to console for dev
-  console.log("-----------------------".red);
-  console.log("----ERROR--------------".red);
-  console.log(`ERROR NAME:\n${err.name}\n`);
-  console.log(`ERROR MESSAGE:\n${err.message}\n`);
-  console.log(`ERROR STACK:\n${err.stack}`);
-  console.log("-----------------------------".red);
-  console.log("-----------------------------".red);
-
-  res.status(500).json({
-    success: false,
-    error: "Server Error",
-    message: err.message || "Server Error",
-  });
+  // Operational, trusted error: send message to client
+  if (err.isOperational) {
+    res.status(err.statusCode || 500).json({
+      success: false,
+      // error: "Server Error",
+      message: err.message || "Something went wrong!",
+    });
+  } else {
+    //log to console for dev  
+    console.log("----ERROR--------------".red);
+    console.log(err.stack);
+    console.log("------------------------".red);
+    res.status(500).json({
+      success: false,
+      // error: "Server Error",
+      message: "Something went wrong!",
+    });
+  }
 };
 
 module.exports = errorHandler;

@@ -6,7 +6,7 @@ exports.isAuth = async (req, res, next) => {
   if (!token) {
     return res.status(401).json({
       success: false,
-      error: "No token provided!",
+      error: "No token provided.",
     });
   }
 
@@ -14,7 +14,7 @@ exports.isAuth = async (req, res, next) => {
     if (err) {
       return res.status(401).json({
         success: false,
-        error: err.message,
+        message: 'Token not valid.',
       });
     }
     const userId = decoded.id;
@@ -22,7 +22,7 @@ exports.isAuth = async (req, res, next) => {
       if (error || !user) {
         return res.status(401).json({
           success: false,
-          error: "No user found",
+          message: "No user found.",
         });
       }
       req.user = user;
@@ -36,7 +36,7 @@ exports.isAdmin = (req, res, next) => {
   if (!req.user.isAdmin) {
     return res.status(401).json({
       success: false,
-      error: "Unauthorized!",
+      error: "Unauthorized.",
     });
   }
   next();

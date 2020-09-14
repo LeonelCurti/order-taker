@@ -55,7 +55,7 @@ exports.uploadPriceList = (req, res, next) => {
     // Save file in storage
     file.mv(`./server/uploads/${file.name}`, async (err) => {
       if (err) {
-        next(new ErrorResponse(err.message, "Cannot upload price list"));
+        next(new ErrorResponse("Cannot upload price list"));
       } else {
         return res.status(200).json({ success: true, data: file.name });
       }

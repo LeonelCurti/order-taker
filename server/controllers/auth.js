@@ -1,6 +1,5 @@
 const User = require("../models/User");
 const RefreshToken = require("../models/RefreshTokens");
-const bcrypt = require("bcrypt");
 const { validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 const {
@@ -8,6 +7,7 @@ const {
   setTokenCookie,
   signAccessToken,
 } = require("../utils/jwt_helper");
+const ErrorResponse = require("../utils/errorResponse");
 
 exports.login = async (req, res, next) => {
   try {
@@ -15,9 +15,7 @@ exports.login = async (req, res, next) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-      return res
-        .status(422)
-        .json({ success: false, error: errors.array()[0].msg });
+      return next(new ErrorResponse(errors.array()[0].msg, 422));
     }
     const { email, password } = req.body;
 
@@ -28,18 +26,13 @@ exports.login = async (req, res, next) => {
     // See if user exist
     const user = await User.findOne({ email }).select("+password");
     if (!user) {
-      return res
-        .status(401)
-        .json({ success: false, error: "Invalid credentials" });
+      return next(new ErrorResponse("Incorrect username or password.", 401));
     }
-
     // Check if password matches
     const isMatch = await user.comparePassword(password);
 
     if (!isMatch) {
-      return res
-        .status(401)
-        .json({ success: false, error: "Invalid credentials" });
+      return next(new ErrorResponse("Incorrect username or password.", 401));
     }
     // Create access token
     const accessToken = signAccessToken({ id: user._id });
@@ -48,7 +41,8 @@ exports.login = async (req, res, next) => {
     const refreshToken = await RefreshToken.create({
       user: user._id,
       createdByIp: ip,
-      expireAt: new Date(Date.now() + 5 * 60000), //5 min after created
+      expireAt: new Date(Date.now() + 5 * 60000),
+      //5 min after created mongodb will clean this token from db
     });
 
     const signedRefreshToken = signRefreshToken({ tokenId: refreshToken._id });
@@ -66,24 +60,20 @@ exports.login = async (req, res, next) => {
 };
 
 exports.register = async (req, res, next) => {
-  //check for errors
-  const errors = validationResult(req);
-
-  if (!errors.isEmpty()) {
-    return res
-      .status(422)
-      .json({ success: false, error: errors.array()[0].msg });
-  }
-
   try {
+    //check for errors
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return next(new ErrorResponse(errors.array()[0].msg, 422));
+    }
+
     const { firstName, lastName, email, password } = req.body;
 
     //See if user already exist
     const check_user = await User.findOne({ email });
     if (check_user) {
-      return res
-        .status(400)
-        .json({ success: false, error: "Email already exist" });
+      return next(new ErrorResponse("Email already taken.", 409));
     }
 
     //Create new user and save in db
@@ -95,7 +85,7 @@ exports.register = async (req, res, next) => {
     });
     return res
       .status(200)
-      .json({ success: true, message: "User was registered successfully!" });
+      .json({ success: true, message: "User was registered successfully." });
   } catch (error) {
     next(error);
   }
@@ -113,19 +103,19 @@ exports.logout = async (req, res, next) => {
     }
     return res
       .clearCookie("refresh_token")
-      .json({ success: true, message: "User was logged out successfully!" });
+      .json({ success: true, message: "User was logged out successfully." });
   } catch (error) {
     console.log(error);
     return res.clearCookie("refresh_token").json({ success: true });
   }
 };
 
-exports.me = async (req, res, next) => {
+exports.me = (req, res, next) => {
   try {
     return res.status(200).json({
       success: true,
       user: req.user,
-      message:'User successfully loaded.'
+      message: "User successfully loaded.",
     });
   } catch (error) {
     next(error);
@@ -135,20 +125,14 @@ exports.refreshToken = async (req, res, next) => {
   try {
     const refreshToken = req.cookies.refresh_token;
     if (!refreshToken) {
-      return res.status(401).json({
-        success: false,
-        error: "No refresh token provided!",        
-      });
+      return next(new ErrorResponse("No refresh token provided.", 403));
     }
 
     const decoded = jwt.verify(refreshToken, process.env.REFRESH_JWT_SECRET);
 
     const token = await RefreshToken.findById(decoded.tokenId).populate("user");
     if (!token) {
-      return res.status(401).json({
-        success: false,
-        error: "No token found",
-      });
+      return next(new ErrorResponse("No token found.", 403));
     }
 
     const accessToken = signAccessToken({ id: token.user._id });
@@ -156,7 +140,7 @@ exports.refreshToken = async (req, res, next) => {
     return res.status(200).json({
       success: true,
       accessToken,
-      message:'Access token successfully created.'
+      message: "Access token successfully created.",
     });
   } catch (error) {
     next(error);
