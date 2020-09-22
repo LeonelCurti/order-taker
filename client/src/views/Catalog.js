@@ -55,7 +55,7 @@ const ProductList = (props) => {
           message="We could not load resources."
         >
           <Container maxWidth='md' className={classes.container}>
-            <PageHeader title="Catalog" className={classes.pageHeader}/>
+            <PageHeader title="Catalog" />
             <div className={classes.content}>
               <ProductsTable />
             </div>

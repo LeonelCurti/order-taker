@@ -41,8 +41,9 @@ exports.login = async (req, res, next) => {
     const refreshToken = await RefreshToken.create({
       user: user._id,
       createdByIp: ip,
-      expireAt: new Date(Date.now() + 5 * 60000),
-      //5 min after created mongodb will clean this token from db
+      expireAt: new Date(Date.now() + 8 * 60000),//for testing
+      //8 min after created mongodb will clean this token from db
+      // expireAt: new Date(Date.now() + process.env.REFRESH_COOKIE_EXPIRE_DAYS * 24 * 60 * 60 * 1000),
     });
 
     const signedRefreshToken = signRefreshToken({ tokenId: refreshToken._id });
@@ -105,7 +106,6 @@ exports.logout = async (req, res, next) => {
       .clearCookie("refresh_token")
       .json({ success: true, message: "User was logged out successfully." });
   } catch (error) {
-    console.log(error);
     return res.clearCookie("refresh_token").json({ success: true });
   }
 };
@@ -122,7 +122,7 @@ exports.me = (req, res, next) => {
   }
 };
 exports.refreshToken = async (req, res, next) => {
-  try {
+  try {      
     const refreshToken = req.cookies.refresh_token;
     if (!refreshToken) {
       return next(new ErrorResponse("No refresh token provided.", 403));

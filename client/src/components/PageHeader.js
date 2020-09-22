@@ -19,7 +19,7 @@ const PageHeader = ({ title, subtitle, className, ...attrs }) => {
 
   return (
     <div className={clsx(classes.root, className)}>
-      <Grid container  className={classes} {...attrs}>
+      <Grid container  {...attrs}>
         <Grid item xs={12} sm={4}>
           <Typography component="h5" variant="h5">
             {title}
