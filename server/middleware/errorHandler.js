@@ -2,8 +2,7 @@ const errorHandler = (err, req, res, next) => {
   // Operational, trusted error: send message to client
   if (err.isOperational) {
     res.status(err.statusCode || 500).json({
-      success: false,
-      // error: "Server Error",
+      success: false,  
       message: err.message || "Something went wrong!",
     });
   } else {
@@ -13,7 +12,6 @@ const errorHandler = (err, req, res, next) => {
     console.log("------------------------".red);
     res.status(500).json({
       success: false,
-      // error: "Server Error",
       message: "Something went wrong!",
     });
   }

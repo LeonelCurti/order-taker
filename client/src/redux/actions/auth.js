@@ -34,32 +34,60 @@ export const login = (dataToSubmit) => async (dispatch) => {
   }
 };
 
-
 export const onTryAutoLogin = () => async (dispatch) => {
   //When app load/reload
-  const accessToken = localStorage.getItem("access_token");
-  if (accessToken) {
-    const tokenHasBeenRefreshed = await jwtAuthService.silentRefresh();
-    if (tokenHasBeenRefreshed) {
-      try {
-        dispatch({ type: actionTypes.AUTOLOGIN_REQUEST });
+  const currentAccessToken = localStorage.getItem("access_token");
+  if (currentAccessToken) {
+    try {
+      dispatch({ type: actionTypes.AUTOLOGIN_REQUEST });
 
-        const res = await axios.get("/api/v1/auth/me", {
-          headers: { "Cache-Control": "no-cache" },
-        });
-        dispatch({
-          type: actionTypes.AUTOLOGIN_SUCCESS,
-          payload: res.data.user,
-        });
-      } catch (err) {
-        dispatch({
-          type: actionTypes.AUTOLOGIN_FAIL,
-          payload: null,
-        });
-      }
+      let res = await axios.get("/api/v1/auth/refresh-token");
+      const newAccessToken = res.data.accessToken;
+      jwtAuthService.setSession(newAccessToken);
+      jwtAuthService.startRefreshTokenTimer(newAccessToken);
+
+      res = await axios.get("/api/v1/auth/me", {
+        headers: { "Cache-Control": "no-cache" },
+      });
+      dispatch({
+        type: actionTypes.AUTOLOGIN_SUCCESS,
+        payload: res.data.user,
+      });
+    } catch (err) {
+      dispatch({
+        type: actionTypes.AUTOLOGIN_FAIL,
+        payload: null,
+      });
+      jwtAuthService.setSession(null);
+      jwtAuthService.stopRefreshTokenTimer();
     }
   }
 };
+// export const onTryAutoLogin = () => async (dispatch) => {
+//   //When app load/reload
+//   const accessToken = localStorage.getItem("access_token");
+//   if (accessToken) {
+//     const tokenHasBeenRefreshed = await jwtAuthService.silentRefresh();
+//     if (tokenHasBeenRefreshed) {
+//       try {
+//         dispatch({ type: actionTypes.AUTOLOGIN_REQUEST });
+
+//         const res = await axios.get("/api/v1/auth/me", {
+//           headers: { "Cache-Control": "no-cache" },
+//         });
+//         dispatch({
+//           type: actionTypes.AUTOLOGIN_SUCCESS,
+//           payload: res.data.user,
+//         });
+//       } catch (err) {
+//         dispatch({
+//           type: actionTypes.AUTOLOGIN_FAIL,
+//           payload: null,
+//         });
+//       }
+//     }
+//   }
+// };
 
 export const logout = () => async (dispatch) => {
   try {

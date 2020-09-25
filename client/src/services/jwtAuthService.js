@@ -22,7 +22,7 @@ const isExpired = (token) => {
 };
 
 const startRefreshTokenTimer = (token) => {
-  console.log("starting  contdown");
+  console.log("starting refreshToken timer");
   const expirationDate = getExpirationDate(token);
   const delay = expirationDate - new Date().getTime();
   refreshTokenTimeout = setTimeout(silentRefresh, delay - 7000);
@@ -39,16 +39,14 @@ const stopRefreshTokenTimer = () => {
 
 const silentRefresh = async () => {
   try {
-    console.log("silentRefresh()");
+    console.log("executing silentRefresh");
     const res = await axios.get("/api/v1/auth/refresh-token");
     const newAccessToken = res.data.accessToken;
     setSession(newAccessToken);
     startRefreshTokenTimer(newAccessToken);
-    return true;
   } catch (error) {
-    console.log("SilentRefresh() failed");
-    store.dispatch(logout());
-    return false;
+    console.log("SilentRefresh failed, proceed to logout");
+    store.dispatch(logout()); 
   }
 };
 

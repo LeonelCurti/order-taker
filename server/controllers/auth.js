@@ -1,13 +1,13 @@
 const User = require("../models/User");
 const RefreshToken = require("../models/RefreshTokens");
 const { validationResult } = require("express-validator");
+const ErrorResponse = require("../utils/errorResponse");
 const jwt = require("jsonwebtoken");
 const {
   signRefreshToken,
   setTokenCookie,
   signAccessToken,
 } = require("../utils/jwt_helper");
-const ErrorResponse = require("../utils/errorResponse");
 
 exports.login = async (req, res, next) => {
   try {
@@ -41,7 +41,7 @@ exports.login = async (req, res, next) => {
     const refreshToken = await RefreshToken.create({
       user: user._id,
       createdByIp: ip,
-      expireAt: new Date(Date.now() + 8 * 60000),//for testing
+      expireAt: new Date(Date.now() + 8 * 60000), //for testing
       //8 min after created mongodb will clean this token from db
       // expireAt: new Date(Date.now() + process.env.REFRESH_COOKIE_EXPIRE_DAYS * 24 * 60 * 60 * 1000),
     });
@@ -102,17 +102,18 @@ exports.logout = async (req, res, next) => {
 
       await RefreshToken.findByIdAndRemove(decoded.tokenId);
     }
+  } catch (error) {
+    console.log(`logout warning: ${error.message}`);
+  } finally {
     return res
       .clearCookie("refresh_token")
       .json({ success: true, message: "User was logged out successfully." });
-  } catch (error) {
-    return res.clearCookie("refresh_token").json({ success: true });
   }
 };
 
 exports.me = (req, res, next) => {
   try {
-    return res.status(200).json({
+    res.status(200).json({
       success: true,
       user: req.user,
       message: "User successfully loaded.",
@@ -122,7 +123,7 @@ exports.me = (req, res, next) => {
   }
 };
 exports.refreshToken = async (req, res, next) => {
-  try {      
+  try {
     const refreshToken = req.cookies.refresh_token;
     if (!refreshToken) {
       return next(new ErrorResponse("No refresh token provided.", 403));
