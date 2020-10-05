@@ -41,9 +41,8 @@ const App = () => {
               <PrivateRoute path="/dashboard" exact component={Dashboard} />
               <Route path="/register" exact component={Register} />
               <Route path="/login" exact component={Login} />
-              <Route path="/testing" exact component={Testing} />
-              <Route path="/" exact component={Login} />
-              {/* <Route path="/" exact component={Testing} /> */}
+              <Route path="/test" exact component={Testing} />
+              <Route path="/" exact component={Login} />            
               <Route component={NotFound} />
             </Switch>
           </ThemeProvider>

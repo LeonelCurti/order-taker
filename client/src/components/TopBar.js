@@ -39,18 +39,15 @@ const TopBar = (props) => {
   const classes = useStyles();
 
   return (
-    <AppBar className={clsx(classes.root, className)} >
+    <AppBar className={clsx(classes.root, className)}>
       <Toolbar className={classes.appBarToolbar}>
         <RouterLink to="/dashboard">
-        <img
-            alt="Logo"
-            src={Logo}
-          />
+          <img alt="Logo" src={Logo} />
         </RouterLink>
         <div className={classes.flexGrow} />
         <Hidden mdDown>
           <Typography className={classes.userNameText}>
-            {user.firstName}
+            {user && user.firstName}
           </Typography>
           <IconButton color="inherit">
             <AccountCircle />

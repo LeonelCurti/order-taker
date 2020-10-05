@@ -44,6 +44,11 @@ const Sidebar = (props) => {
       href: "/new_order",
       icon: <QueuqueIcon fontSize="small" />,
     },
+    {
+      title: "Test",
+      href: "/test",
+      icon: <QueuqueIcon fontSize="small" />,
+    },
   ];
 
   return (
