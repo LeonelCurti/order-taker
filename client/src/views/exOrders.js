@@ -16,12 +16,6 @@ import {
   Paper,
   IconButton,
   TableContainer,
-  Hidden,
-  TableFooter,
-  TablePagination,
-  Toolbar,
-  Typography,
-  Button,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import PrintOutlinedIcon from "@material-ui/icons/PrintOutlined";
@@ -33,30 +27,34 @@ import { removeErrors } from "../redux/actions/error";
 import PageHeader from "../components/PageHeader";
 import ErrorBoundary from "../components/ErrorBoundary";
 import ConfirmationDialog from "../components/ConfirmationDialog";
-import { generatePdf } from "../utils/generatePdf";
+import EnhancedTableToolbar from "../components/EnhancedTableToolbar";
 const useStyles = makeStyles((theme) => ({
-  root: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-  },
   container: {
-    paddingTop: theme.spacing(2),
+    // border: "1px solid purple",
+    display: "flex",
+    flexDirection: "column",
+    height: "100%",
     paddingBottom: theme.spacing(2),
+    paddingTop: theme.spacing(2),
   },
-  paper: {},
-  table: {},
-  status: {
-    marginRight: theme.spacing(1),
+  content: {
+    flex: "1",
+    // border: "1px solid green",
+    height: "80%",
   },
-  actionIcon: {
-    paddingRight: "30px",
+  paper: {
+    height: "100%",
+  },
+  table: {
+    height: "calc(100% - 64px)",
+    // overflow: "auto",
   },
   tableCellIcon: {
-    width: 100,
+    paddingLeft: "10px",
+    paddingRight: "10px",
   },
-  title: {
-    flexGrow: 1,
+  status: {
+    marginRight: theme.spacing(1),
   },
 }));
 const statusColors = {
@@ -79,19 +77,6 @@ const Orders = (props) => {
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState(null);
 
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-  const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, myOrders.length - page * rowsPerPage);
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
   useEffect(() => {
     getOrders();
   }, [getOrders]);
@@ -119,52 +104,10 @@ const Orders = (props) => {
     setCurrentOrder(order);
     props.history.push("/orders/view_order");
   };
-  const handleCreateNewOrder = () => {
-    props.history.push("/new_order");
-  };
-
   const handleDeleteOrder = () => {
     setConfirmDialogOpen(false);
     deleteOrder(deleteTarget._id);
     setDeleteTarget(null);
-  };
-  const generateOrderPfd = (order) => {
-    const title = `Order nº ${order.number}`;
-    const columns = [["Code", "Description", "Qty", "Price", "Subtotal"]];
-
-    const rows = order.items.map((elt) => [
-      elt.cod,
-      elt.descrip,
-      elt.quantity,
-      elt.price,
-      elt.price * elt.quantity,
-    ]);
-    rows.push([
-      "",
-      "",
-      "",
-      {
-        content: "Total",
-        styles: { fontStyle: "bold" },
-      },
-      {
-        content: order.total,
-        styles: { fontStyle: "bold" },
-      },
-    ]);
-
-    let tableContent = {
-      startY: 50,
-      head: columns,
-      body: rows,
-    };
-
-    const data = {
-      title,
-      fileName: `Order_${order.number}`,
-      tableContent,
-    };
-    generatePdf(data);
   };
 
   return (
@@ -188,57 +131,36 @@ const Orders = (props) => {
             onClose={handleDeleteTargetDialogClose}
             onConfirm={handleDeleteOrder}
           />
-          <div className={classes.root}>
-            <Container maxWidth="md" className={classes.container}>
-              <Hidden lgUp>
-                <PageHeader title="Orders" />
-              </Hidden>
-
-              <Paper elevation={2} className={classes.paper}>
-                <Toolbar>
-                  <Typography variant="h6" className={classes.title}>
-                    Orders
-                  </Typography>
-                  <Button
-                    color="primary"
-                    size="small"
-                    variant="outlined"
-                    onClick={handleCreateNewOrder}
-                  >
-                    New order
-                  </Button>
-                </Toolbar>
-
+          <Container maxWidth="md" className={classes.container}>
+            <PageHeader title="Orders" />
+            <div className={classes.content}>
+              <Paper className={classes.paper}>
+                <EnhancedTableToolbar title="Order List" />
                 <TableContainer className={classes.table}>
-                  <Table>
+                  <Table size="small" stickyHeader>
                     <TableHead>
                       <TableRow>
-                        <TableCell>Nº</TableCell>
+                        <TableCell align="right">Nº</TableCell>
                         <TableCell>Last update</TableCell>
-                        <TableCell>State</TableCell>
                         <TableCell align="right">Total</TableCell>
-                        <TableCell align="center" colSpan={2}>
+                        <TableCell>State</TableCell>
+                        <TableCell align="center" colSpan={3}>
                           Actions
                         </TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
                       {myOrders.length > 0 ? (
-                        (rowsPerPage > 0
-                          ? myOrders.slice(
-                              page * rowsPerPage,
-                              page * rowsPerPage + rowsPerPage
-                            )
-                          : myOrders
-                        ).map((order, i) => (
-                          <TableRow hover key={i}>
-                            <TableCell>{order.number}</TableCell>
-                            <TableCell style={{ minWidth: 180 }}>
+                        myOrders.map((order) => (
+                          <TableRow hover key={order.number}>
+                            <TableCell align="right">{order.number}</TableCell>
+                            <TableCell>
                               {moment(order.updatedAt).format(
                                 "DD/MM/YYYY  h:mm a"
                               )}
                             </TableCell>
-                            <TableCell style={{ width: 120 }}>
+                            <TableCell align="right">{order.total}</TableCell>
+                            <TableCell>
                               <Box display="flex" alignItems="center">
                                 <StatusBullet
                                   className={classes.status}
@@ -248,32 +170,38 @@ const Orders = (props) => {
                                 <span>{order.state}</span>
                               </Box>
                             </TableCell>
-                            <TableCell align="right">{order.total}</TableCell>
+                            <TableCell className={classes.tableCellIcon}>
+                              <Tooltip title="Print">
+                                <div>
+                                  <IconButton
+                                    disabled={order.state === "open"}
+                                    color="default"
+                                    size="small"
+                                  >
+                                    <PrintOutlinedIcon />
+                                  </IconButton>
+                                </div>
+                              </Tooltip>
+                            </TableCell>
 
                             {order.state === "open" ? (
                               <Fragment>
-                                <TableCell
-                                  align="center"
-                                  padding="checkbox"
-                                  className={classes.tableCellIcon}
-                                >
+                                <TableCell className={classes.tableCellIcon}>
                                   <Tooltip title="Edit">
                                     <IconButton
                                       color="default"
+                                      size="small"
                                       onClick={() => handleEditOrder(order)}
                                     >
                                       <EditOutlinedIcon />
                                     </IconButton>
                                   </Tooltip>
                                 </TableCell>
-                                <TableCell
-                                  align="center"
-                                  padding="checkbox"
-                                  className={classes.tableCellIcon}
-                                >
+                                <TableCell className={classes.tableCellIcon}>
                                   <Tooltip title="Delete">
                                     <IconButton
                                       color="default"
+                                      size="small"
                                       onClick={() =>
                                         handleDeleteTargetDialogOpen(order)
                                       }
@@ -285,87 +213,40 @@ const Orders = (props) => {
                               </Fragment>
                             ) : (
                               <Fragment>
-                                <TableCell
-                                  align="center"
-                                  padding="checkbox"
-                                  className={classes.tableCellIcon}
-                                >
-                                  <Tooltip title="Print">
-                                    <IconButton
-                                      disabled={order.state === "open"}
-                                      color="default"
-                                      onClick={() => generateOrderPfd(order)}
-                                    >
-                                      <PrintOutlinedIcon />
-                                    </IconButton>
-                                  </Tooltip>
-                                </TableCell>
-                                <TableCell
-                                  align="center"
-                                  padding="checkbox"
-                                  className={classes.tableCellIcon}
-                                >
+                                <TableCell className={classes.tableCellIcon}>
                                   <Tooltip title="View">
                                     <IconButton
                                       color="default"
+                                      size="small"
                                       onClick={() => handleViewOrder(order)}
                                     >
                                       <VisibilityOutlinedIcon />
                                     </IconButton>
                                   </Tooltip>
                                 </TableCell>
+                                <TableCell></TableCell>
                               </Fragment>
                             )}
                           </TableRow>
                         ))
                       ) : (
-                        <Fragment>
-                          <TableRow style={{ height: 52.8 }}>
-                            <TableCell
-                              style={{
-                                textAlign: "center",
-                              }}
-                              colSpan={5}
-                            >
-                              "Sorry we could not find any records!"
-                            </TableCell>
-                          </TableRow>
-                          <TableRow
-                            style={{ height: 52.8 * (rowsPerPage - 1) }}
+                        <TableRow style={{ height: 49 }}>
+                          <TableCell
+                            style={{
+                              textAlign: "center",
+                            }}
+                            colSpan={7}
                           >
-                            <TableCell colSpan={5} />
-                          </TableRow>
-                        </Fragment>
-                      )}
-
-                      {emptyRows > 0 && (
-                        <TableRow style={{ height: 52.8 * emptyRows }}>
-                          <TableCell colSpan={6} />
+                            No orders found
+                          </TableCell>
                         </TableRow>
                       )}
                     </TableBody>
-                    <TableFooter>
-                      <TableRow>
-                        <TablePagination
-                          rowsPerPageOptions={[
-                            5,
-                            10,
-                            25,
-                            { label: "All", value: -1 },
-                          ]}
-                          count={myOrders.length}
-                          rowsPerPage={rowsPerPage}
-                          page={page}
-                          onChangePage={handleChangePage}
-                          onChangeRowsPerPage={handleChangeRowsPerPage}
-                        />
-                      </TableRow>
-                    </TableFooter>
                   </Table>
                 </TableContainer>
               </Paper>
-            </Container>
-          </div>
+            </div>
+          </Container>
         </ErrorBoundary>
       </LoadingIndicator>
     </Layout>

@@ -118,7 +118,7 @@ const EnhancedTableToolbar = ({ title }) => {
             searchPlaceholder="Search"
           />
         ) : (
-          <div className={classes.titleRoot} aria-hidden={"true"}>
+          <div className={classes.titleRoot}>
             <Typography
               className={true ? classes.titleText : classes.fullWidthTitleText}
               variant="h6"
