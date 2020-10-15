@@ -1,78 +1,69 @@
 import axios from "axios";
-import localStorageService from "./localStorageService";
+import store from "../redux/store";
+import { logout } from "../redux/actions/auth";
 
-class JwtAuthService {
+let refreshTokenTimeout;
 
-  // Dummy user object just for the demo
-  user = {
-    userId: "1",
-    role: 'ADMIN',
-    displayName: "Jason Alexander",
-    email: "jasonalexander@gmail.com",
-    photoURL: "/assets/images/face-6.jpg",
-    age: 25,
-    token: "faslkhfh423oiu4h4kj432rkj23h432u49ufjaklj423h4jkhkjh"
+const setSession = (token) => {
+  if (token) {
+    localStorage.setItem("access_token", token);
+    axios.defaults.headers.common["x-auth-token"] = token;
+  } else {
+    localStorage.removeItem("access_token");
+    delete axios.defaults.headers.common["x-auth-token"];
   }
-
-  // You need to send http request with email and passsword to your server in this method
-  // Your server will return user object & a Token
-  // User should have role property
-  // You can define roles in app/auth/authRoles.js
-  loginWithEmailAndPassword = (email, password) => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve(this.user);
-      }, 1000);
-    }).then(data => {
-      // Login successful
-      // Save token
-      this.setSession(data.token);
-      // Set user
-      this.setUser(data);
-      return data;
-    });
-  };
-
-  // You need to send http requst with existing token to your server to check token is valid
-  // This method is being used when user logged in & app is reloaded
-  loginWithToken = () => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve(this.user);
-      }, 100);
-    }).then(data => {
-      // Token is valid
-      this.setSession(data.token);
-      this.setUser(data);
-      return data;
-    });
-  };
-
-  logout = () => {
-    this.setSession(null);
-    this.removeUser();
+};
+const isExpired = (token) => {
+  const expireDate = getExpirationDate(token);
+  if (!expireDate) {
+    return false;
   }
+  return Date.now() > expireDate;
+};
 
-  // Set token to all http request header, so you don't need to attach everytime
-  setSession = token => {
-    if (token) {
-      localStorage.setItem("jwt_token", token);
-      axios.defaults.headers.common["Authorization"] = token;
-      // axios.defaults.headers.common["Authorization"] = "Bearer " + token;
-    } else {
-      localStorage.removeItem("jwt_token");
-      delete axios.defaults.headers.common["Authorization"];
-    }
-  };
+const startRefreshTokenTimer = (token) => {
+  console.log("starting refreshToken timer");
+  const expirationDate = getExpirationDate(token);
+  const delay = expirationDate - new Date().getTime();
+  refreshTokenTimeout = setTimeout(silentRefresh, delay - 7000);
+  console.log(`timeoutIdcreated:${refreshTokenTimeout}`);
+};
 
-  // Save user to localstorage
-  setUser = (user) => {    
-    localStorageService.setItem("auth_user", user);
+const stopRefreshTokenTimer = () => {
+  if (refreshTokenTimeout) {
+    console.log(`timeoutIdDeleted:${refreshTokenTimeout}`);
+    clearTimeout(refreshTokenTimeout);
   }
-  // Remove user from localstorage
-  removeUser = () => {
-    localStorage.removeItem("auth_user");
-  }
-}
+};
 
-export default new JwtAuthService();
+
+const silentRefresh = async () => {
+  try {
+    console.log("executing silentRefresh");
+    const res = await axios.get("/api/v1/auth/refresh-token");
+    const newAccessToken = res.data.accessToken;
+    setSession(newAccessToken);
+    startRefreshTokenTimer(newAccessToken);
+  } catch (error) {
+    console.log("SilentRefresh failed, proceed to logout");
+    store.dispatch(logout()); 
+  }
+};
+
+const getExpirationDate = (token) => {
+  if (!token) {
+    return null;
+  }
+  const jwt = JSON.parse(atob(token.split(".")[1]));
+
+  // multiply by 1000 to convert seconds into milliseconds
+  return (jwt && jwt.exp && jwt.exp * 1000) || null;
+};
+
+export const jwtAuthService = {
+  setSession,
+  startRefreshTokenTimer,
+  silentRefresh,
+  stopRefreshTokenTimer,
+  isExpired,
+};

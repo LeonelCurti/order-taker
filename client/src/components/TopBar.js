@@ -35,22 +35,19 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const TopBar = (props) => {
-  const { className, user, onSidebarOpen, ...rest } = props;
+  const { className, user, onSidebarOpen } = props;
   const classes = useStyles();
 
   return (
-    <AppBar className={clsx(classes.root, className)} {...rest}>
+    <AppBar className={clsx(classes.root, className)}>
       <Toolbar className={classes.appBarToolbar}>
         <RouterLink to="/dashboard">
-        <img
-            alt="Logo"
-            src={Logo}
-          />
+          <img alt="Logo" src={Logo} />
         </RouterLink>
         <div className={classes.flexGrow} />
         <Hidden mdDown>
           <Typography className={classes.userNameText}>
-            {user.firstName}
+            {user && user.firstName}
           </Typography>
           <IconButton color="inherit">
             <AccountCircle />

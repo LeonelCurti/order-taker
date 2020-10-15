@@ -2,7 +2,7 @@ export const handleFail = (type, error) => {
   let errorMsg = "Something went wrong.";
   if (error.response) {
     // Request made and server responded
-    errorMsg = error.response.data.error || errorMsg;
+    errorMsg = error.response.data.message || errorMsg;
   } else if (error.request) {
     // The request was made but no response was received
     errorMsg = "Cannot connect to server.";

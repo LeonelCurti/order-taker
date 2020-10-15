@@ -1,5 +1,4 @@
 const jwt = require("jsonwebtoken");
-const RefreshToken = require("../models/RefreshTokens");
 
 module.exports = {
   signRefreshToken,

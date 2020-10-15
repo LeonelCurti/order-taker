@@ -26,7 +26,6 @@ exports.createOrder = async (req, res, next) => {
 exports.getOrders = async (req, res, next) => {
   const userId = req.user._id;
   try {
-    // throw Error()
     const allOrders = await Order.find({ user: userId }).sort({
       updatedAt: -1,
     }); //most recent first
@@ -57,7 +56,6 @@ exports.getOrderById = async (req, res, next) => {
 };
 exports.updateOrder = async (req, res, next) => {
   try {
-    // throw Error()  
     const updatedOrder = await Order.findByIdAndUpdate(
       req.body.updatedOrder._id,
       req.body.updatedOrder,
@@ -80,8 +78,7 @@ exports.updateOrder = async (req, res, next) => {
 };
 exports.deleteOrder = async (req, res, next) => {
   const orderId = req.params.order_id;
-  try {
-    // throw Error() 
+  try {  
     const deletedOrder = await Order.findByIdAndDelete(orderId);
     if (!deletedOrder) {
       return res.status(400).json({

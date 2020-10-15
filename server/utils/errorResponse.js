@@ -1,9 +1,9 @@
 class ErrorResponse extends Error {
-  //keep original message and add detail or status to client
-  constructor(originalMessage, detailToClient, statusCode) {
-    super(originalMessage);
+
+  constructor(message, statusCode) {
+    super(message);
     this.statusCode = statusCode;
-    this.detailToClient = detailToClient;
+    this.isOperational = true;
   }
 }
 

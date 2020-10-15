@@ -18,6 +18,7 @@ import Catalog from "./views/Catalog";
 import NotFound from "./views/NotFound";
 import Register from "./views/Register";
 import Login from "./views/Login";
+import Testing from "./views/Testing";
 
 const App = () => {
   return (
@@ -40,7 +41,8 @@ const App = () => {
               <PrivateRoute path="/dashboard" exact component={Dashboard} />
               <Route path="/register" exact component={Register} />
               <Route path="/login" exact component={Login} />
-              <Route path="/" exact component={Login} />
+              <Route path="/test" exact component={Testing} />
+              <Route path="/" exact component={Login} />            
               <Route component={NotFound} />
             </Switch>
           </ThemeProvider>

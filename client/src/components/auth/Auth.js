@@ -3,8 +3,9 @@ import { onTryAutoLogin, logout } from "../../redux/actions/auth";
 import { connect } from "react-redux";
 /*
 Features of this hoc:
-autologin when app loads (if auth token exist
-and is not expired) and autologout in all other open tabs
+autologin when app load/reload (if auth token exist
+and is not expired) and 
+autologout in all other open tabs
 when user performs a logout.
 */
 const Auth = (props) => {

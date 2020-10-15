@@ -9,7 +9,21 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(2),
-    // border: "1px solid red",
+  },
+  title: {
+    paddingBottom: theme.spacing(1),
+    position: "relative",
+    textTransform: "capitalize",
+    fontSize: 28,
+    "&:after": {
+      content: '""',
+      display: "block",
+      position: "absolute",
+      bottom: 0,
+      left: 0,
+      width: 40,
+      borderBottom: `4px solid ${theme.palette.primary.main}`,
+    },
   },
 }));
 
@@ -19,9 +33,9 @@ const PageHeader = ({ title, subtitle, className, ...attrs }) => {
 
   return (
     <div className={clsx(classes.root, className)}>
-      <Grid container  className={classes} {...attrs}>
+      <Grid container  {...attrs}>
         <Grid item xs={12} sm={4}>
-          <Typography component="h5" variant="h5">
+          <Typography component="h5" variant="h5" className={classes.title}>
             {title}
           </Typography>
         </Grid>
