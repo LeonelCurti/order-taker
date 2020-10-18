@@ -3,11 +3,11 @@ import { connect } from "react-redux";
 import { getPriceList } from "../redux/actions/products";
 import { removeErrors } from "../redux/actions/error";
 import Layout from "../components/layout/Layout";
-import ProductsTable from "../components/ProductsTable";
+import CatalogTable from "../components/CatalogTable";
 import ErrorBoundary from "../components/ErrorBoundary";
 import PageHeader from "../components/PageHeader";
 import LoadingIndicator from "../components/LoadingIndicator";
-import { Container } from "@material-ui/core";
+import { Container, Hidden } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -24,8 +24,11 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     flex: "1",
-    // border: "1px solid green", 
-    height: "80%",
+    // border: "1px solid green",
+    height:'calc(100% - 92.8px)',
+    [theme.breakpoints.up("lg")]: {
+      height: "100%",
+    },   
   },
 }));
 
@@ -54,10 +57,12 @@ const ProductList = (props) => {
           onRetry={onRetry}
           message="We could not load resources."
         >
-          <Container maxWidth='md' className={classes.container}>
-            <PageHeader title="Catalog" />
+          <Container maxWidth="md" className={classes.container}>
+            <Hidden lgUp>
+              <PageHeader title="Catalog" />
+            </Hidden>
             <div className={classes.content}>
-              <ProductsTable />
+              <CatalogTable />
             </div>
           </Container>
         </ErrorBoundary>

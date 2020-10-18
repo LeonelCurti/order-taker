@@ -22,6 +22,7 @@ import {
   Toolbar,
   Typography,
   Button,
+  useMediaQuery,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import PrintOutlinedIcon from "@material-ui/icons/PrintOutlined";
@@ -39,6 +40,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+    // border: "1px solid red",
   },
   container: {
     paddingTop: theme.spacing(2),
@@ -78,9 +80,10 @@ const Orders = (props) => {
   } = props;
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState(null);
-
   const [page, setPage] = useState(0);
+  const matches = useMediaQuery("(min-height:800px)");
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, myOrders.length - page * rowsPerPage);
 
@@ -95,6 +98,14 @@ const Orders = (props) => {
   useEffect(() => {
     getOrders();
   }, [getOrders]);
+
+  useEffect(() => {
+    if (matches) {
+      setRowsPerPage(10);
+    } else {
+      setRowsPerPage(5);
+    }
+  }, [matches]);
 
   //willUnmount
   useEffect(() => {

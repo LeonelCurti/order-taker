@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
   content: {
     flex: "1",
     // border: "1px solid green",    
-    height: "80%",
+    maxHeight: "85%",
   },
   fixedHeight: {
     height: "100%",

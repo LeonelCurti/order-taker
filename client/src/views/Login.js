@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
   },
   input: {
     //remove white background on textField when autofill
-    // WebkitBoxShadow: "0 0 0 1000px #f4f6f8 inset",
+    WebkitBoxShadow: "0 0 0 1000px #f4f6f8 inset",
   },
 }));
 
@@ -136,7 +136,7 @@ const Login = (props) => {
           <Typography component="h1" variant="h4">
             Log In
           </Typography>
-          <form className={classes.form} onSubmit={handleSubmit} noValidate>
+          <form className={classes.form} onSubmit={handleSubmit} noValidate autoComplete="on">
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
@@ -172,6 +172,7 @@ const Login = (props) => {
                   type="password"
                   id="password"
                   helperText={password.validationMsg}
+                  inputProps={{ className: classes.input }}
                   autoComplete="current-password"      
                 />                
               </Grid>

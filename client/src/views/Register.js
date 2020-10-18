@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
   },
   input: {
     //remove white background on textField when autofill
-    // WebkitBoxShadow: "0 0 0 1000px #f4f6f8 inset",
+    WebkitBoxShadow: "0 0 0 1000px #f4f6f8 inset",
   },
 }));
 
@@ -154,11 +154,10 @@ const Register = (props) => {
           <Typography component="h1" variant="h5">
             Register
           </Typography>
-          <form className={classes.form} noValidate>
+          <form className={classes.form} noValidate >
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
-                <TextField
-                  autoComplete="fname"
+                <TextField                  
                   name="firstName"
                   variant="outlined"
                   error={
@@ -168,6 +167,7 @@ const Register = (props) => {
                   onChange={handleChanges}
                   onFocus={toggleFocused}
                   onBlur={toggleFocused}
+                  inputProps={{ className: classes.input }}
                   id="firstName"
                   label="First Name"
                   value={firstName.value}
@@ -185,12 +185,12 @@ const Register = (props) => {
                   onChange={handleChanges}
                   onFocus={toggleFocused}
                   onBlur={toggleFocused}
+                  inputProps={{ className: classes.input }}
                   id="lastName"
                   label="Last Name"
                   name="lastName"
                   value={lastName.value}
                   helperText={lastName.validationMsg}
-                  autoComplete="lname"
                 />
               </Grid>
               <Grid item xs={12}>
@@ -207,7 +207,6 @@ const Register = (props) => {
                   name="email"
                   helperText={email.validationMsg}
                   inputProps={{ className: classes.input }}
-                  autoComplete="email"
                 />
               </Grid>
               <Grid item xs={12}>
@@ -226,8 +225,8 @@ const Register = (props) => {
                   type="password"
                   id="password"
                   helperText={password.validationMsg}
-                  autoComplete="current-password"
-                />                
+                  inputProps={{ className: classes.input }}
+                />
               </Grid>
             </Grid>
             <Button

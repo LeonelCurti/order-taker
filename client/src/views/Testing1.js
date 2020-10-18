@@ -1,6 +1,6 @@
 import React, { useState, Fragment } from "react";
-import clsx from "clsx";
-import MUIDataTable from "mui-datatables";
+// import clsx from "clsx";
+// import MUIDataTable from "mui-datatables";
 import PrintOutlinedIcon from "@material-ui/icons/PrintOutlined";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
@@ -545,7 +545,7 @@ const exportPDF = (order) => {
   // doc.setFontSize(15);
 
   const title = `Order nº ${order.number}`;
-  const headers = [["Code", "Description", "Qty", "Price", "Subtotal"]];
+  // const headers = [["Code", "Description", "Qty", "Price", "Subtotal"]];
 
   // const people = [
   //   {
@@ -600,7 +600,7 @@ const exportPDF = (order) => {
   }
 };
 
-const Testing = () => {
+const Testing1 = () => {
   const classes = useStyles();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -616,11 +616,11 @@ const Testing = () => {
     setPage(0);
   };
 
-  const handleDeleteTargetDialogClose = () => {};
+  // const handleDeleteTargetDialogClose = () => {};
   const handleDeleteTargetDialogOpen = (order) => {};
   const handleEditOrder = (order) => {};
   const handleViewOrder = (order) => {};
-  const handleDeleteOrder = () => {};
+  // const handleDeleteOrder = () => {};
 
   return (
     <Layout>
@@ -795,30 +795,30 @@ const Testing = () => {
 };
 //aca
 
-const columns = ["Name", "Company", "City", "State"];
+// const columns = ["Name", "Company", "City", "State"];
 
-const data = [
-  ["Joe James", "Test Corp", "Yonkers", "NY"],
-  ["John Walsh", "Test Corp", "Hartford", "CT"],
-  ["Bob Herm", "Test Corp", "Tampa", "FL"],
-  ["James Houston", "Test Corp", "Dallas", "TX"],
-  ["James Houston", "Test Corp", "Dallas", "TX"],
-  ["James Houston", "Test Corp", "Dallas", "TX"],
-  ["John Walsh", "Test Corp", "Hartford", "CT"],
-  ["Bob Herm", "Test Corp", "Tampa", "FL"],
-  ["James Houston", "Test Corp", "Dallas", "TX"],
-  ["James Houston", "Test Corp", "Dallas", "TX"],
-  ["James Houston", "Test Corp", "Dallas", "TX"],
-  ["James Houston", "Test Corp", "Dallas", "TX"],
-  ["James Houston", "Test Corp", "Dallas", "TX"],
-];
+// const data = [
+//   ["Joe James", "Test Corp", "Yonkers", "NY"],
+//   ["John Walsh", "Test Corp", "Hartford", "CT"],
+//   ["Bob Herm", "Test Corp", "Tampa", "FL"],
+//   ["James Houston", "Test Corp", "Dallas", "TX"],
+//   ["James Houston", "Test Corp", "Dallas", "TX"],
+//   ["James Houston", "Test Corp", "Dallas", "TX"],
+//   ["John Walsh", "Test Corp", "Hartford", "CT"],
+//   ["Bob Herm", "Test Corp", "Tampa", "FL"],
+//   ["James Houston", "Test Corp", "Dallas", "TX"],
+//   ["James Houston", "Test Corp", "Dallas", "TX"],
+//   ["James Houston", "Test Corp", "Dallas", "TX"],
+//   ["James Houston", "Test Corp", "Dallas", "TX"],
+//   ["James Houston", "Test Corp", "Dallas", "TX"],
+// ];
 
-const options = {
-  filter: false,
-  tableBodyHeight: "400px",
-  viewColumns: false,
-  // resizableColumns:true
-};
+// const options = {
+//   filter: false,
+//   tableBodyHeight: "400px",
+//   viewColumns: false,
+//   // resizableColumns:true
+// };
 
 const useToolbarStyles = makeStyles((theme) => ({
   root: {
@@ -968,4 +968,4 @@ const EnhancedTableToolbar = ({ title }) => {
   );
 };
 
-export default Testing;
+export default Testing1;
