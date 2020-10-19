@@ -10,11 +10,14 @@ import AlertSnackbar from "./components/AlertSnackbar";
 import TopLinearLoader from "./components/TopLinearLoader";
 import Auth from "./components/auth/Auth";
 
-import Dashboard from "./views/Dashboard";
+import {
+  Dashboard,
+  Catalog
+} from './views';
+
 import Orders from "./views/Orders";
 import NewOrder from "./views/NewOrder";
 import ViewOrder from "./views/ViewOrder";
-import Catalog from "./views/Catalog";
 import NotFound from "./views/NotFound";
 import Register from "./views/Register";
 import Login from "./views/Login";

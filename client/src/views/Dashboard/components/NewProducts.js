@@ -16,10 +16,10 @@ import {
 } from "@material-ui/core";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import moment from "moment";
-import Product1 from "../assets/product_1.png";
-import Product2 from "../assets/product_2.png";
-import Product3 from "../assets/product_3.png";
-import Product4 from "../assets/product_4.png";
+import Product1 from "../../../assets/product_1.png";
+import Product2 from "../../../assets/product_2.png";
+import Product3 from "../../../assets/product_3.png";
+import Product4 from "../../../assets/product_4.png";
 
 
 const mockData = [
@@ -82,7 +82,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const LatestProducts = (props) => {
+const NewProducts = (props) => {
   const { className, ...rest } = props;
 
   const classes = useStyles();
@@ -126,8 +126,8 @@ const LatestProducts = (props) => {
   );
 };
 
-LatestProducts.propTypes = {
+NewProducts.propTypes = {
   className: PropTypes.string,
 };
 
-export default LatestProducts;
+export default NewProducts;
