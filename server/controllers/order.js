@@ -27,8 +27,9 @@ exports.getOrders = async (req, res, next) => {
   const userId = req.user._id;
   try {
     const allOrders = await Order.find({ user: userId }).sort({
-      updatedAt: -1,
-    }); //most recent first
+      createdAt: -1,
+      // updatedAt: -1,
+    }); //most recent created first
 
     return res.status(200).json({
       success: true,

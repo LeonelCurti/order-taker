@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import Layout from "../components/layout/Layout";
+import Layout from "../../components/layout/Layout";
 import {
   CircularProgress,
   Table,
@@ -11,34 +11,33 @@ import {
   TableRow,
   Paper,
   Typography,
-  Box,
-  Button,
   Divider,
+  Toolbar,
+  Tooltip,
+  IconButton
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { setCurrentOrder } from "../redux/actions/orders";
-
+import PictureAsPdfIcon from "@material-ui/icons/PictureAsPdf";
+import { setCurrentOrder } from "../../redux/actions/orders";
+import { generateOrderPdf } from "../../utils/generatePdf";
 const useStyles = makeStyles((theme) => ({
   container: {
-    paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(2),
-    height: "100%",
+    padding: theme.spacing(4),
+    [theme.breakpoints.down("sm")]: {
+      paddingTop: theme.spacing(3),
+      paddingBottom: theme.spacing(3),
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2),
+    },
   },
-  peperContainer: {
-    height: "100%",
+  peper: {
+    minHeight: 600,
   },
-  orderTableContainer: {
+  tableContainer: {
     overflowX: "auto",
-    height: "calc(100% - 48px - 2px - 52px )",
   },
-  paperTitle: {
-    padding: theme.spacing(1),
-  },
-  actions: {
-    display: "flex",
-    justifyContent: "flex-end",
-    alignItems: "center",
-    padding: theme.spacing(1),
+  title: {
+    flexGrow: 1,
   },
   spinnerContainer: {
     display: "flex",
@@ -50,12 +49,12 @@ const useStyles = makeStyles((theme) => ({
 
 const MyOrders = (props) => {
   const classes = useStyles();
-  const {
-    setCurrentOrder, 
-    currentOrder,
-  } = props;
+  const { setCurrentOrder, currentOrder } = props;
 
-  const handlePrintOrder = () => {};
+
+  const handlePrintOrder = () => {  
+    generateOrderPdf(currentOrder);
+  };
 
   //willUnmount
   useEffect(() => {
@@ -67,18 +66,24 @@ const MyOrders = (props) => {
   return (
     <Layout>
       {currentOrder ? (
-        <Container maxWidth="md" className={classes.container}>
-          <Paper className={classes.peperContainer}>
-            <Typography
-              variant="h6"
-              component="h6"
-              className={classes.paperTitle}
-            >
-              {`Order Number: ${currentOrder.number}`}
-            </Typography>
+        <Container maxWidth="lg" className={classes.container}>
+          <Paper className={classes.peper}>
+            <Toolbar>
+              <Typography variant="h6" className={classes.title}>
+                {`Order Number: ${currentOrder.number}`}
+              </Typography>
+              <Tooltip title="Download Pdf">
+                <IconButton
+                  classes={{ root: classes.icon }}
+                  onClick={handlePrintOrder}
+                >
+                  <PictureAsPdfIcon />
+                </IconButton>
+              </Tooltip>
+            </Toolbar>
             <Divider />
-            <Box className={classes.orderTableContainer}>
-              <Table size="small" stickyHeader>
+            <div className={classes.tableContainer}>
+              <Table size="small">
                 <TableHead>
                   <TableRow>
                     <TableCell align="right">Code</TableCell>
@@ -100,23 +105,17 @@ const MyOrders = (props) => {
                       </TableCell>
                     </TableRow>
                   ))}
+                  <TableRow>
+                    <TableCell colSpan={3} />
+                    <TableCell align="right">
+                      <Typography>Total</Typography>
+                    </TableCell>
+                    <TableCell align="right">
+                      <Typography>{currentOrder.total}</Typography>
+                    </TableCell>
+                  </TableRow>
                 </TableBody>
               </Table>
-            </Box>
-            <Divider />
-            <div className={classes.actions}>
-              <Box mr={1}>
-                <Typography variant="body1">
-                  {`Total:  ${currentOrder.total}`}
-                </Typography>
-              </Box>
-              <Button
-                color="primary"
-                variant="contained"
-                onClick={handlePrintOrder}
-              >
-                Print
-              </Button>
             </div>
           </Paper>
         </Container>

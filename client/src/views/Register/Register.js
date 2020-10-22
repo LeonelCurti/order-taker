@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { Redirect } from "react-router-dom";
-import checkInputValidity from "../utils/checkInputValidity";
-import VisibilityPasswordTextField from "../components/VisibilityPasswordTextField";
-import Footer from "../components/Footer";
-import Logo from "../components/Logo";
+import checkInputValidity from "../../utils/checkInputValidity";
+import VisibilityPasswordTextField from "../../components/VisibilityPasswordTextField";
+import Footer from "../../components/Footer";
+import Logo from "../../components/Logo";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import FormHelperText from "@material-ui/core/FormHelperText";
@@ -14,8 +14,8 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { connect } from "react-redux";
-import { register } from "../redux/actions/auth";
-import { removeErrors } from "../redux/actions/error";
+import { register } from "../../redux/actions/auth";
+import { removeErrors } from "../../redux/actions/error";
 const useStyles = makeStyles((theme) => ({
   paper: {
     // marginTop: theme.spacing(8),

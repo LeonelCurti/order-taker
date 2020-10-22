@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { Redirect } from "react-router-dom";
-import checkInputValidity from "../utils/checkInputValidity";
-import Footer from "../components/Footer";
-import Logo from "../components/Logo";
-import VisibilityPasswordTextField from "../components/VisibilityPasswordTextField";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
-import Link from "@material-ui/core/Link";
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core/styles";
-import Container from "@material-ui/core/Container";
 import { connect } from "react-redux";
-import { login } from "../redux/actions/auth";
-import { removeErrors } from "../redux/actions/error";
+import Footer from "../../components/Footer";
+import Logo from "../../components/Logo";
+import VisibilityPasswordTextField from "../../components/VisibilityPasswordTextField";
+import {
+  Button,
+  TextField,
+  Link,
+  Grid,
+  Typography,
+  FormHelperText,
+  Container,
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import checkInputValidity from "../../utils/checkInputValidity";
+import { login } from "../../redux/actions/auth";
+import { removeErrors } from "../../redux/actions/error";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -136,7 +136,12 @@ const Login = (props) => {
           <Typography component="h1" variant="h4">
             Log In
           </Typography>
-          <form className={classes.form} onSubmit={handleSubmit} noValidate autoComplete="on">
+          <form
+            className={classes.form}
+            onSubmit={handleSubmit}
+            noValidate
+            autoComplete="on"
+          >
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
@@ -173,23 +178,16 @@ const Login = (props) => {
                   id="password"
                   helperText={password.validationMsg}
                   inputProps={{ className: classes.input }}
-                  autoComplete="current-password"      
-                />                
-              </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox value="remember" color="primary" />}
-                  label="Remember me"
+                  autoComplete="current-password"
                 />
-              </Grid>
+              </Grid>      
             </Grid>
             <Button
               type="submit"
               fullWidth
               variant="contained"
               color="primary"
-              className={classes.submit}
-              // onClick={handleSubmit}
+              className={classes.submit}        
               disabled={!formIsValid()}
             >
               Sign In

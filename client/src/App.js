@@ -12,15 +12,15 @@ import Auth from "./components/auth/Auth";
 
 import {
   Dashboard,
-  Catalog
-} from './views';
+  Orders,
+  Catalog,
+  ViewOrder,
+  NotFound,
+  Login,
+  Register,
+  NewOrder,
+} from "./views";
 
-import Orders from "./views/Orders";
-import NewOrder from "./views/NewOrder";
-import ViewOrder from "./views/ViewOrder";
-import NotFound from "./views/NotFound";
-import Register from "./views/Register";
-import Login from "./views/Login";
 import Testing1 from "./views/Testing1";
 import Testing2 from "./views/Testing2";
 
@@ -47,7 +47,7 @@ const App = () => {
               <Route path="/login" exact component={Login} />
               <Route path="/test1" exact component={Testing1} />
               <Route path="/test2" exact component={Testing2} />
-              <Route path="/" exact component={Login} />            
+              <Route path="/" exact component={Login} />
               <Route component={NotFound} />
             </Switch>
           </ThemeProvider>

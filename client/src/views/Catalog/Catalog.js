@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { getPriceList } from "../../redux/actions/products";
 import { removeErrors } from "../../redux/actions/error";
-import { Container, Hidden, Paper } from "@material-ui/core";
+import { Container, Hidden, Paper, Divider } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Layout from "../../components/layout/Layout";
 import CatalogTable from "./components/CatalogTable";
@@ -13,8 +13,13 @@ import ImageModal from "../../components/ImageModal";
 import CatalogTableToolbar from "./components/CatalogTableToolbar";
 const useStyles = makeStyles((theme) => ({
   container: {
-    paddingBottom: theme.spacing(2),
-    paddingTop: theme.spacing(2),
+    padding: theme.spacing(4),
+    [theme.breakpoints.down("sm")]: {
+      paddingTop: theme.spacing(3),
+      paddingBottom: theme.spacing(3),
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2),
+    },
   },
   catalogTable: {
     height: 600,
@@ -77,11 +82,12 @@ const ProductList = (props) => {
               <PageHeader title="Catalog" />
             </Hidden>
 
-            <Paper>
+            <Paper elevation={2}>
               <CatalogTableToolbar
                 title="Products"
                 searchTextUpdate={onChange}
               />
+              <Divider />
               <div className={classes.catalogTable}>
                 <CatalogTable
                   products={filteredProducts}

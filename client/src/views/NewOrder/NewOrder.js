@@ -1,16 +1,16 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import Layout from "../components/layout/Layout";
-import ProductsTable from "../components/ProductsTable";
-import OrderTable from "../components/OrderTable";
+import Layout from "../../components/layout/Layout";
+import ProductsTable from "../../components/ProductsTable";
+import OrderTable from "../../components/OrderTable";
 import { makeStyles } from "@material-ui/core/styles";
-import { createOrder, setCurrentOrder } from "../redux/actions/orders";
-import { getPriceList } from "../redux/actions/products";
-import { hasErrors } from "../redux/selector/index";
-import { removeErrors } from "../redux/actions/error";
-import PageHeader from "../components/PageHeader";
-import ErrorBoundary from "../components/ErrorBoundary";
-import LoadingIndicator from "../components/LoadingIndicator";
+import { createOrder, setCurrentOrder } from "../../redux/actions/orders";
+import { getPriceList } from "../../redux/actions/products";
+import { hasErrors } from "../../redux/selector/index";
+import { removeErrors } from "../../redux/actions/error";
+import PageHeader from "../../components/PageHeader";
+import ErrorBoundary from "../../components/ErrorBoundary";
+import LoadingIndicator from "../../components/LoadingIndicator";
 import { Grid, Container } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
