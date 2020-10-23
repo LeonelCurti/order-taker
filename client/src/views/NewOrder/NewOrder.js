@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import Layout from "../../components/layout/Layout";
-import ProductsTable from "../../components/ProductsTable";
-import OrderTable from "../../components/OrderTable";
+import ProductsTable from "./components/ProductsTable";
+import OrderTable from "./components/OrderTable";
 import { makeStyles } from "@material-ui/core/styles";
 import { createOrder, setCurrentOrder } from "../../redux/actions/orders";
 import { getPriceList } from "../../redux/actions/products";
@@ -11,24 +11,17 @@ import { removeErrors } from "../../redux/actions/error";
 import PageHeader from "../../components/PageHeader";
 import ErrorBoundary from "../../components/ErrorBoundary";
 import LoadingIndicator from "../../components/LoadingIndicator";
-import { Grid, Container } from "@material-ui/core";
+import { Grid, Hidden } from "@material-ui/core";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme) => ({ 
   container: {
-    // border: "1px solid purple",
-    display: "flex",
-    flexDirection: "column",
-    height: "100%",
-    paddingBottom: theme.spacing(2),
-    paddingTop: theme.spacing(2),
-  },
-  content: {
-    flex: "1",
-    // border: "1px solid green",    
-    maxHeight: "85%",
-  },
-  fixedHeight: {
-    height: "100%",
+    padding: theme.spacing(4),
+    [theme.breakpoints.down("sm")]: {
+      paddingTop: theme.spacing(3),
+      paddingBottom: theme.spacing(3),
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2),
+    },
   },
 }));
 
@@ -76,20 +69,21 @@ const NewOrder = (props) => {
           onRetry={refreshPage}
           message="We could not load resources."
         >
-          <Container className={classes.container}>
-            <PageHeader title="New Order" />
-            <div className={classes.content}>
-              <Grid container spacing={2} className={classes.fixedHeight}>
-                <Grid item xs={12} sm={6} className={classes.fixedHeight}>
-                  <OrderTable />
-                </Grid>
+          <div className={classes.container}>
+            <Hidden lgUp>
+              <PageHeader title="New Order" />
+            </Hidden>
 
-                <Grid item xs={12} sm={6} className={classes.fixedHeight}>
-                  <ProductsTable addProductOn />
-                </Grid>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <OrderTable />
               </Grid>
-            </div>
-          </Container>
+
+              <Grid item xs={12} sm={6}>
+                <ProductsTable />
+              </Grid>
+            </Grid>
+          </div>        
         </ErrorBoundary>
       </LoadingIndicator>
     </Layout>

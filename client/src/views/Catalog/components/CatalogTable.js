@@ -13,18 +13,19 @@ import PhotoCameraOutlinedIcon from "@material-ui/icons/PhotoCameraOutlined";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    height: "100%",
+    // height: "100%",
+    height: 600,
     overflow: "auto",
-  },
-  tableCellIcon: {
-    paddingLeft: "10px",
-    paddingRight: "10px",
   },
   table: {
     minWidth: 650,
   },
   title: {
     flexGrow: 1,
+  },
+  tableCellIcon: {
+    paddingLeft: "10px",
+    paddingRight: "10px",
   },
 }));
 

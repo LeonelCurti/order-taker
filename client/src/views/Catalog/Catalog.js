@@ -21,9 +21,6 @@ const useStyles = makeStyles((theme) => ({
       paddingRight: theme.spacing(2),
     },
   },
-  catalogTable: {
-    height: 600,
-  },
 }));
 
 const ProductList = (props) => {
@@ -88,12 +85,10 @@ const ProductList = (props) => {
                 searchTextUpdate={onChange}
               />
               <Divider />
-              <div className={classes.catalogTable}>
-                <CatalogTable
-                  products={filteredProducts}
-                  onShowProduct={onShowProduct}
-                />
-              </div>
+              <CatalogTable
+                products={filteredProducts}
+                onShowProduct={onShowProduct}
+              />
             </Paper>
           </Container>
         </ErrorBoundary>

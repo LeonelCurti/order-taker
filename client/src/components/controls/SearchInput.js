@@ -23,17 +23,17 @@ const useStyles = makeStyles((theme) => ({
 
 const SearchInput = (props) => {
   const classes = useStyles();
-  const { className, style, onChange, placeholder } = props;
+  const { className,  onChange, placeholder } = props;
 
   return (
-    <div className={clsx(classes.root, className)} style={style}>
+    <div className={clsx(classes.root, className)}>
       <SearchIcon className={classes.icon} />
       <Input
         className={classes.input}
         disableUnderline
         onChange={(e) => onChange(e)}
         placeholder={placeholder ? placeholder : "Search"}
-      />
+      />      
     </div>
   );
 };

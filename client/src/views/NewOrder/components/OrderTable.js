@@ -2,7 +2,7 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { loadingSelector, errorMessageSelector } from "../redux/selector/index";
+import { loadingSelector, errorMessageSelector } from "../../../redux/selector/index";
 import {
   Table,
   TableBody,
@@ -18,20 +18,24 @@ import {
   Divider,
   Paper,
 } from "@material-ui/core";
-import ButtonLoader from "./ButtonLoader";
+import ButtonLoader from "../../../components/ButtonLoader";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-import * as orderActions from "../redux/actions/orders";
-import { showAlert } from "../redux/actions/alert";
+import * as orderActions from "../../../redux/actions/orders";
+import { showAlert } from "../../../redux/actions/alert";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     "& .MuiTextField-root": {
       width: "8ch",
     },
-    height: "100%",
+  }, 
+  paper: { },
+  tableContainer: {
+    overflow: "auto",
+    height: 547,
   },
-  fixedHeight: {
-    height: "100%",
+  table: {
+    minWidth: 500,
   },
   actions: {
     display: "flex",
@@ -42,10 +46,6 @@ const useStyles = makeStyles((theme) => ({
   paperTitle: {
     padding: theme.spacing(1),
   },
-  orderItemsContainer: {
-    overflowX: "auto",
-    height: "calc(100% - 48px - 2px - 52px )",
-  },  
 }));
 
 const OrderTable = (props) => {
@@ -114,7 +114,7 @@ const OrderTable = (props) => {
 
   return (
     <div className={classes.root}>
-      <Paper className={classes.fixedHeight}>
+      <Paper className={classes.paper}>
         <Box display="flex" justifyContent="space-between" alignItems="center">
           <Typography
             variant="h6"
@@ -134,8 +134,8 @@ const OrderTable = (props) => {
           </Box>
         </Box>
         <Divider />
-        <Box className={classes.orderItemsContainer}>
-          <Table size="small" stickyHeader>
+        <div className={classes.tableContainer}>
+          <Table size="small" stickyHeader className={classes.table}>
             <TableHead>
               <TableRow>
                 <TableCell align="center">Code</TableCell>
@@ -198,7 +198,7 @@ const OrderTable = (props) => {
               )}
             </TableBody>
           </Table>
-        </Box>
+        </div>
         <Divider />
         <div className={classes.actions}>
           <Box mr={1}>

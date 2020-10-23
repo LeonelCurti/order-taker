@@ -1,6 +1,6 @@
 html {
   height: 100%;
-  font-family: "Roboto", sans-serif;
+  font-family: "Roboto", sans-serif;  
 }
 
 body {
@@ -20,13 +20,14 @@ a {
 
 ::-webkit-scrollbar {
   width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  border-radius: 5px;
+  /* border-radius: 5px; */
   background: rgba(0, 0, 0, 0.1);
 }
 ::-webkit-scrollbar-thumb {
-  border-radius: 5px;
+  /* border-radius: 5px; */
   background: rgba(0, 0, 0, 0.2);
 }
 

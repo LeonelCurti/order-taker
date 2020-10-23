@@ -1,7 +1,7 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
-import * as orderActions from "../redux/actions/orders";
+import * as orderActions from "../../../redux/actions/orders";
 import {
   Table,
   TableBody,
@@ -11,41 +11,31 @@ import {
   TableRow,
   Tooltip,
   Divider,
-  Box,
   Paper,
 } from "@material-ui/core";
-import SearchInput from "./controls/SearchInput";
+import SearchInput from "../../../components/controls/SearchInput";
 import PhotoCameraOutlinedIcon from "@material-ui/icons/PhotoCameraOutlined";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
-import ImageModal from "./ImageModal";
+import ImageModal from "../../../components/ImageModal";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    height: "100%",
+  root: {},
+  tableContainer: {
+    overflow: "auto",
+    height: 600,
+  },
+  table: {
+    minWidth: 500,
   },
   tableCellIcon: {
     paddingLeft: "10px",
     paddingRight: "10px",
   },
-  tableContainer: {
-    overflowX: "auto",
-    overflowY:'auto',  
-    //100% - divider 1 - searchInput 48 = rest for table
-    height: "calc(100% - 49px)",
-  },
-  fixedPaperHeight: {
-    height: "100%",
-  },
 }));
 
 const ProductsTable = (props) => {
   const classes = useStyles();
-  const { 
-    products, 
-    addProductOn, 
-    updateOrder,
-    currentOrder,
-  } = props;
+  const { products, updateOrder, currentOrder } = props;
   const [searchField, setSearchField] = useState("");
   const [showPhoto, setShowPhoto] = useState(false);
 
@@ -59,7 +49,7 @@ const ProductsTable = (props) => {
   const handleModalClose = () => {
     setShowPhoto(false);
   };
-  
+
   const filteredProducts = products.filter((product) => {
     return (
       product.cod.includes(searchField) ||
@@ -81,7 +71,7 @@ const ProductsTable = (props) => {
     }
     //add item into the list
     const updatedOrderItems = [newItem, ...currentOrder.items];
-    
+
     updateOrder({
       ...currentOrder,
       items: updatedOrderItems,
@@ -98,17 +88,17 @@ const ProductsTable = (props) => {
   return (
     <div className={classes.root}>
       <ImageModal open={showPhoto} onClose={handleModalClose} />
-      <Paper className={classes.fixedPaperHeight}>
+      <Paper>
         <SearchInput onChange={onChange} placeholder="Search products" />
         <Divider />
-        <Box className={classes.tableContainer}>
-          <Table size="small" stickyHeader>
+        <div className={classes.tableContainer}>
+          <Table size="small" stickyHeader className={classes.table}>
             <TableHead>
               <TableRow>
                 <TableCell>Code</TableCell>
                 <TableCell>Description</TableCell>
                 <TableCell align="right">Price</TableCell>
-                <TableCell colSpan={addProductOn ? 2 : 1}></TableCell>
+                <TableCell colSpan={2}></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -119,7 +109,7 @@ const ProductsTable = (props) => {
                     <TableCell>{product.descrip}</TableCell>
                     <TableCell align="right">{product.price}</TableCell>
                     <TableCell>
-                      <Tooltip title="Photo">             
+                      <Tooltip title="Photo">
                         <IconButton
                           color="default"
                           size="small"
@@ -129,19 +119,17 @@ const ProductsTable = (props) => {
                         </IconButton>
                       </Tooltip>
                     </TableCell>
-                    {addProductOn && (
-                      <TableCell className={classes.tableCellIcon}>
-                        <Tooltip title="Add item">
-                          <IconButton
-                            color="default"
-                            size="small"
-                            onClick={() => handleAddProduct(product)}
-                          >
-                            <AddCircleOutlineIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </TableCell>
-                    )}
+                    <TableCell className={classes.tableCellIcon}>
+                      <Tooltip title="Add item">
+                        <IconButton
+                          color="default"
+                          size="small"
+                          onClick={() => handleAddProduct(product)}
+                        >
+                          <AddCircleOutlineIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </TableCell>
                   </TableRow>
                 ))
               ) : (
@@ -158,7 +146,7 @@ const ProductsTable = (props) => {
               )}
             </TableBody>
           </Table>
-        </Box>
+        </div>
       </Paper>
     </div>
   );
@@ -166,8 +154,7 @@ const ProductsTable = (props) => {
 
 const mapStateToProps = (state) => ({
   currentOrder: state.orders.currentOrder,
-  products: state.catalog.products,  
+  products: state.catalog.products,
 });
-
 
 export default connect(mapStateToProps, orderActions)(ProductsTable);
