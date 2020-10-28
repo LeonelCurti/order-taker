@@ -8,7 +8,7 @@ import AssignmentIcon from "@material-ui/icons/Assignment";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    height: 140,//
+    height: 170,
     padding: theme.spacing(2),
   },
   content: {

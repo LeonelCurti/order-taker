@@ -7,8 +7,9 @@ import { makeStyles } from "@material-ui/core/styles";
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
-    paddingTop: theme.spacing(2),
+    // paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(2),
+    // border:'1px solid black'
   },
   title: {
     paddingBottom: theme.spacing(1),

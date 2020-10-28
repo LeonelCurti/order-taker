@@ -46,7 +46,7 @@ const Sidebar = (props) => {
     },
     {
       title: "Test",
-      href: "/test",
+      href: "/test1",
       icon: <QueuqueIcon fontSize="small" />,
     },
   ];

@@ -1,23 +1,21 @@
 import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import { Redirect } from "react-router-dom";
-import checkInputValidity from "../utils/checkInputValidity";
-import Footer from "../components/Footer";
-import Logo from "../components/Logo";
-import VisibilityPasswordTextField from "../components/VisibilityPasswordTextField";
+import checkInputValidity from "../../utils/checkInputValidity";
+import VisibilityPasswordTextField from "../../components/VisibilityPasswordTextField";
+import Footer from "../../components/Footer";
+import Logo from "../../components/Logo";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import FormHelperText from "@material-ui/core/FormHelperText";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { connect } from "react-redux";
-import { login } from "../redux/actions/auth";
-import { removeErrors } from "../redux/actions/error";
-
+import { register } from "../../redux/actions/auth";
+import { removeErrors } from "../../redux/actions/error";
 const useStyles = makeStyles((theme) => ({
   paper: {
     // marginTop: theme.spacing(8),
@@ -33,19 +31,38 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(1),
   },
   submit: {
-    margin: theme.spacing(3, 0, 2),
+    margin: theme.spacing(3, 0, 1),
   },
   input: {
     //remove white background on textField when autofill
-    // WebkitBoxShadow: "0 0 0 1000px #f4f6f8 inset",
+    WebkitBoxShadow: "0 0 0 1000px #f4f6f8 inset",
   },
 }));
 
-const Login = (props) => {
+const Register = (props) => {
+  const { register, history, isAuthenticated, error, removeErrors } = props;
   const classes = useStyles();
-  const { login, history, isAuthenticated, error, removeErrors } = props;
-
   const [formData, setFormData] = useState({
+    firstName: {
+      value: "",
+      valid: false,
+      touched: false,
+      focused: false,
+      validation: {
+        required: true,
+      },
+      validationMsg: "",
+    },
+    lastName: {
+      value: "",
+      valid: false,
+      touched: false,
+      focused: false,
+      validation: {
+        required: true,
+      },
+      validationMsg: "",
+    },
     email: {
       value: "",
       valid: false,
@@ -64,6 +81,7 @@ const Login = (props) => {
       focused: false,
       validation: {
         required: true,
+        minLength: 4,
       },
       validationMsg: "",
     },
@@ -72,11 +90,11 @@ const Login = (props) => {
   //willUnmount
   useEffect(() => {
     return () => {
-      removeErrors(["LOGIN", "AUTOLOGIN"]);
+      removeErrors(["REGISTER"]);
     };
   }, [removeErrors]);
 
-  const { email, password } = formData;
+  const { firstName, lastName, email, password } = formData;
 
   const handleChanges = (e) => {
     const updatedFormData = { ...formData };
@@ -116,13 +134,13 @@ const Login = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (formIsValid()) {
-      login(dataToSubmit());
+      register(dataToSubmit(), history);
     }
   };
 
   const handleRedirection = (e) => {
     e.preventDefault();
-    history.replace("/register");
+    history.replace("/login");
   };
 
   if (isAuthenticated) {
@@ -133,11 +151,48 @@ const Login = (props) => {
       <Logo />
       <Container component="main" maxWidth="xs">
         <div className={classes.paper}>
-          <Typography component="h1" variant="h4">
-            Log In
+          <Typography component="h1" variant="h5">
+            Register
           </Typography>
-          <form className={classes.form} onSubmit={handleSubmit} noValidate>
+          <form className={classes.form} noValidate >
             <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <TextField                  
+                  name="firstName"
+                  variant="outlined"
+                  error={
+                    !firstName.valid && firstName.touched && !firstName.focused
+                  }
+                  fullWidth
+                  onChange={handleChanges}
+                  onFocus={toggleFocused}
+                  onBlur={toggleFocused}
+                  inputProps={{ className: classes.input }}
+                  id="firstName"
+                  label="First Name"
+                  value={firstName.value}
+                  helperText={firstName.validationMsg}
+                  autoFocus
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  variant="outlined"
+                  fullWidth
+                  error={
+                    !lastName.valid && lastName.touched && !lastName.focused
+                  }
+                  onChange={handleChanges}
+                  onFocus={toggleFocused}
+                  onBlur={toggleFocused}
+                  inputProps={{ className: classes.input }}
+                  id="lastName"
+                  label="Last Name"
+                  name="lastName"
+                  value={lastName.value}
+                  helperText={lastName.validationMsg}
+                />
+              </Grid>
               <Grid item xs={12}>
                 <TextField
                   variant="outlined"
@@ -152,8 +207,6 @@ const Login = (props) => {
                   name="email"
                   helperText={email.validationMsg}
                   inputProps={{ className: classes.input }}
-                  autoComplete="email"
-                  autoFocus
                 />
               </Grid>
               <Grid item xs={12}>
@@ -172,13 +225,7 @@ const Login = (props) => {
                   type="password"
                   id="password"
                   helperText={password.validationMsg}
-                  autoComplete="current-password"      
-                />                
-              </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox value="remember" color="primary" />}
-                  label="Remember me"
+                  inputProps={{ className: classes.input }}
                 />
               </Grid>
             </Grid>
@@ -188,27 +235,22 @@ const Login = (props) => {
               variant="contained"
               color="primary"
               className={classes.submit}
-              // onClick={handleSubmit}
+              onClick={handleSubmit}
               disabled={!formIsValid()}
             >
-              Sign In
+              Sign Up
             </Button>
             <FormHelperText error={true} className={classes.errorMsg}>
               {error}
             </FormHelperText>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
+            <Grid container justify="flex-end">
               <Grid item>
                 <Link
                   component="button"
                   variant="body2"
                   onClick={handleRedirection}
                 >
-                  Need an account? Register
+                  Already have an account? Log in
                 </Link>
               </Grid>
             </Grid>
@@ -219,9 +261,14 @@ const Login = (props) => {
     </div>
   );
 };
+
+Register.protoTypes = {
+  register: PropTypes.func.isRequired,
+};
+
 const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
-  error: state.error["LOGIN"],
+  error: state.error["REGISTER"],
 });
 
-export default connect(mapStateToProps, { login, removeErrors })(Login);
+export default connect(mapStateToProps, { register, removeErrors })(Register);

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import TopBar from "../TopBar";
 import clsx from "clsx";
 import { makeStyles, useTheme } from "@material-ui/styles";
 import { useMediaQuery } from "@material-ui/core";
 import Sidebar from "../Sidebar";
+import TopBar from "../TopBar";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,12 +22,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Layout = (props) => {
-  const [openSidebar, setOpenSidebar] = useState(false);
   const classes = useStyles();
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("lg"), {
     defaultMatches: true,
   });
+  const [openSidebar, setOpenSidebar] = useState(false);
 
   const handleSidebarOpen = () => {
     setOpenSidebar(true);

@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const fileupload = require("express-fileupload");
+// const path = require('path')
 const cookieParser = require("cookie-parser");
 const colors = require("colors");
 const morgan = require("morgan");
@@ -35,11 +36,14 @@ app.use("/api/v1/pricelist", require("./routes/priceList"));
 app.use("/api/v1/auth", require("./routes/auth"));
 app.use("/api/v1/order", require("./routes/order"));
 
+// app.use(express.static(path.join(__dirname,'uploads')))
+
 //Custom express error handler
 app.use(errorHandler);
 
-const server = app.listen(process.env.PORT || 5000, () =>
+const server = app.listen(process.env.PORT || 5000, () =>{
   console.log(`Server running: ${process.env.NODE_ENV} mode`.yellow)
+}
 );
 
 process.on("unhandledRejection", (err, promise) => {

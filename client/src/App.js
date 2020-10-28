@@ -10,15 +10,19 @@ import AlertSnackbar from "./components/AlertSnackbar";
 import TopLinearLoader from "./components/TopLinearLoader";
 import Auth from "./components/auth/Auth";
 
-import Dashboard from "./views/Dashboard";
-import Orders from "./views/Orders";
-import NewOrder from "./views/NewOrder";
-import ViewOrder from "./views/ViewOrder";
-import Catalog from "./views/Catalog";
-import NotFound from "./views/NotFound";
-import Register from "./views/Register";
-import Login from "./views/Login";
-import Testing from "./views/Testing";
+import {
+  Dashboard,
+  Orders,
+  Catalog,
+  ViewOrder,
+  NotFound,
+  Login,
+  Register,
+  NewOrder,
+} from "./views";
+
+import Test from "./views/Test";
+
 
 const App = () => {
   return (
@@ -41,8 +45,8 @@ const App = () => {
               <PrivateRoute path="/dashboard" exact component={Dashboard} />
               <Route path="/register" exact component={Register} />
               <Route path="/login" exact component={Login} />
-              <Route path="/test" exact component={Testing} />
-              <Route path="/" exact component={Login} />            
+              <Route path="/test" exact component={Test} />
+              <Route path="/" exact component={Login} />
               <Route component={NotFound} />
             </Switch>
           </ThemeProvider>

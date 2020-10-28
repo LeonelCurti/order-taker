@@ -18,7 +18,7 @@ import {
   Box,
 } from "@material-ui/core";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
-import StatusBullet from "../components/StatusBullet";
+import StatusBullet from "../../../components/StatusBullet";
 
 const useStyles = makeStyles((theme) => ({
   root: {},
