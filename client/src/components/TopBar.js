@@ -17,8 +17,7 @@ import AccountCircle from "@material-ui/icons/AccountCircle";
 const useStyles = makeStyles((theme) => ({
   root: {
     // backgroundColor: theme.palette.common.white,
-    // borderBottom: `1px solid ${theme.palette.divider}`,
-    // boxShadow: 'none'
+    // borderBottom: `1px solid ${theme.palette.divider}`,    
   },
   flexGrow: {
     flexGrow: 1,

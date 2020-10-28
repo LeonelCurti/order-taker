@@ -21,8 +21,8 @@ import {
   NewOrder,
 } from "./views";
 
-import Testing1 from "./views/Testing1";
-import Testing2 from "./views/Testing2";
+import Test from "./views/Test";
+
 
 const App = () => {
   return (
@@ -45,8 +45,7 @@ const App = () => {
               <PrivateRoute path="/dashboard" exact component={Dashboard} />
               <Route path="/register" exact component={Register} />
               <Route path="/login" exact component={Login} />
-              <Route path="/test1" exact component={Testing1} />
-              <Route path="/test2" exact component={Testing2} />
+              <Route path="/test" exact component={Test} />
               <Route path="/" exact component={Login} />
               <Route component={NotFound} />
             </Switch>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { getPriceList } from "../../redux/actions/products";
 import { removeErrors } from "../../redux/actions/error";
+import { generateCatalogPdf } from "../../utils/generatePdf";
 import { Container, Hidden, Paper, Divider } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Layout from "../../components/layout/Layout";
@@ -63,6 +64,12 @@ const ProductList = (props) => {
   const handleModalClose = () => {
     setShowPhotoModal(false);
   };
+  const onDownloadCatalogPdf = () => {
+    if (products) {
+      generateCatalogPdf(products);
+    }
+  };
+
   const onRetry = () => getPriceList();
 
   return (
@@ -83,6 +90,7 @@ const ProductList = (props) => {
               <CatalogTableToolbar
                 title="Products"
                 searchTextUpdate={onChange}
+                onDownloadCatalogPdf={onDownloadCatalogPdf}
               />
               <Divider />
               <CatalogTable

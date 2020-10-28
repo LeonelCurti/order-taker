@@ -7,7 +7,7 @@ const path = require("path");
 //@access  Public
 
 exports.getPriceList = (req, res, next) => {
-  try {  
+  try {
     const workbook = XLSX.readFile("server/uploads/priceList.xlsx");
 
     //Get array of sheet names
@@ -65,4 +65,8 @@ exports.uploadPriceList = (req, res, next) => {
       .status(400)
       .json({ success: false, error: "Invalid excel file" });
   }
+};
+
+exports.downloadPriceList = (req, res, next) => {
+  res.download("server/uploads/priceList.xlsx")
 };
