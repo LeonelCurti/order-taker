@@ -12,7 +12,7 @@ const Test = () => {
   return (
     <Layout>
       <div className={classes.root}>
-      
+      hello
       </div>
     </Layout>
   );

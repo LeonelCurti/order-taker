@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import { Redirect } from "react-router-dom";
-import checkInputValidity from "../../utils/checkInputValidity";
 import VisibilityPasswordTextField from "../../components/VisibilityPasswordTextField";
 import Footer from "../../components/Footer";
 import Logo from "../../components/Logo";
@@ -16,6 +15,9 @@ import Container from "@material-ui/core/Container";
 import { connect } from "react-redux";
 import { register } from "../../redux/actions/auth";
 import { removeErrors } from "../../redux/actions/error";
+import * as Yup from "yup";
+import { Formik } from "formik";
+
 const useStyles = makeStyles((theme) => ({
   paper: {
     // marginTop: theme.spacing(8),
@@ -42,101 +44,13 @@ const useStyles = makeStyles((theme) => ({
 const Register = (props) => {
   const { register, history, isAuthenticated, error, removeErrors } = props;
   const classes = useStyles();
-  const [formData, setFormData] = useState({
-    firstName: {
-      value: "",
-      valid: false,
-      touched: false,
-      focused: false,
-      validation: {
-        required: true,
-      },
-      validationMsg: "",
-    },
-    lastName: {
-      value: "",
-      valid: false,
-      touched: false,
-      focused: false,
-      validation: {
-        required: true,
-      },
-      validationMsg: "",
-    },
-    email: {
-      value: "",
-      valid: false,
-      touched: false,
-      focused: false,
-      validation: {
-        required: true,
-        isEmail: true,
-      },
-      validationMsg: "",
-    },
-    password: {
-      value: "",
-      valid: false,
-      touched: false,
-      focused: false,
-      validation: {
-        required: true,
-        minLength: 4,
-      },
-      validationMsg: "",
-    },
-  });
 
   //willUnmount
   useEffect(() => {
     return () => {
       removeErrors(["REGISTER"]);
     };
-  }, [removeErrors]);
-
-  const { firstName, lastName, email, password } = formData;
-
-  const handleChanges = (e) => {
-    const updatedFormData = { ...formData };
-    let formElement = { ...updatedFormData[e.target.name] };
-
-    formElement.value = e.target.value;
-    formElement.touched = true;
-    formElement = checkInputValidity(formElement);
-    updatedFormData[e.target.name] = formElement;
-
-    setFormData(updatedFormData);
-  };
-
-  const toggleFocused = (e) => {
-    const updatedFormData = { ...formData };
-    let formElement = { ...updatedFormData[e.target.name] };
-    formElement.focused = !formElement.focused;
-    updatedFormData[e.target.name] = formElement;
-    setFormData(updatedFormData);
-  };
-
-  const formIsValid = () => {
-    const formIsValid = Object.values(formData).every(
-      (identifier) => identifier.valid
-    );
-    return formIsValid;
-  };
-
-  const dataToSubmit = () => {
-    const newFormData = {};
-    for (let formIdentifier in formData) {
-      newFormData[formIdentifier] = formData[formIdentifier].value;
-    }
-    return newFormData;
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (formIsValid()) {
-      register(dataToSubmit(), history);
-    }
-  };
+  }, [removeErrors]); 
 
   const handleRedirection = (e) => {
     e.preventDefault();
@@ -154,107 +68,135 @@ const Register = (props) => {
           <Typography component="h1" variant="h5">
             Register
           </Typography>
-          <form className={classes.form} noValidate >
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField                  
-                  name="firstName"
-                  variant="outlined"
-                  error={
-                    !firstName.valid && firstName.touched && !firstName.focused
-                  }
+
+          <Formik
+            initialValues={{
+              email: "",
+              firstName: "",
+              lastName: "",
+              password: "",
+              // policy: false,
+            }}
+            validationSchema={Yup.object().shape({
+              email: Yup.string()
+                .email("Must be a valid email")
+                .max(64)
+                .required("Email is required"),
+              firstName: Yup.string()
+                .max(32)
+                .required("First name is required"),
+              lastName: Yup.string().max(32).required("Last name is required"),
+              password: Yup.string().max(100).min(4).required("password is required"),
+              // policy: Yup.boolean().oneOf([true], "This field must be checked"),
+            })}
+            onSubmit={(values, { setSubmitting }) => {
+              register(values, history);
+              setTimeout(() => {
+                setSubmitting(false);
+              }, 400);
+            }}
+          >
+            {({
+              errors,
+              handleBlur,
+              handleChange,
+              handleSubmit,
+              isSubmitting,
+              touched,
+              values,
+            }) => (
+              <form className={classes.form} onSubmit={handleSubmit}>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      name="firstName"
+                      variant="outlined"
+                      error={Boolean(touched.firstName && errors.firstName)}
+                      fullWidth                   
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      inputProps={{ className: classes.input }}
+                      id="firstName"
+                      label="First Name"
+                      value={values.firstName}
+                      helperText={touched.firstName && errors.firstName}                   
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      variant="outlined"
+                      fullWidth
+                      error={Boolean(touched.lastName && errors.lastName)}
+                      helperText={touched.lastName && errors.lastName}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      inputProps={{ className: classes.input }}
+                      id="lastName"
+                      label="Last Name"
+                      name="lastName"
+                      value={values.lastName}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      variant="outlined"
+                      fullWidth
+                      error={Boolean(touched.email && errors.email)}
+                      helperText={touched.email && errors.email}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      id="email"
+                      label="Email"
+                      value={values.email}
+                      name="email"
+                      inputProps={{ className: classes.input }}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <VisibilityPasswordTextField
+                      variant="outlined"
+                      fullWidth
+                      error={Boolean(touched.password && errors.password)}
+                      helperText={touched.password && errors.password}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      name="password"
+                      label="Password"
+                      value={values.password}
+                      type="password"
+                      id="password"
+                      inputProps={{ className: classes.input }}
+                    />
+                  </Grid>
+                </Grid>
+                <Button
+                  type="submit"
                   fullWidth
-                  onChange={handleChanges}
-                  onFocus={toggleFocused}
-                  onBlur={toggleFocused}
-                  inputProps={{ className: classes.input }}
-                  id="firstName"
-                  label="First Name"
-                  value={firstName.value}
-                  helperText={firstName.validationMsg}
-                  autoFocus
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  variant="outlined"
-                  fullWidth
-                  error={
-                    !lastName.valid && lastName.touched && !lastName.focused
-                  }
-                  onChange={handleChanges}
-                  onFocus={toggleFocused}
-                  onBlur={toggleFocused}
-                  inputProps={{ className: classes.input }}
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  value={lastName.value}
-                  helperText={lastName.validationMsg}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  variant="outlined"
-                  fullWidth
-                  error={!email.valid && email.touched && !email.focused}
-                  onChange={handleChanges}
-                  onFocus={toggleFocused}
-                  onBlur={toggleFocused}
-                  id="email"
-                  label="Email"
-                  value={email.value}
-                  name="email"
-                  helperText={email.validationMsg}
-                  inputProps={{ className: classes.input }}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <VisibilityPasswordTextField
-                  variant="outlined"
-                  fullWidth
-                  error={
-                    !password.valid && password.touched && !password.focused
-                  }
-                  onChange={handleChanges}
-                  onFocus={toggleFocused}
-                  onBlur={toggleFocused}
-                  name="password"
-                  label="Password"
-                  value={password.value}
-                  type="password"
-                  id="password"
-                  helperText={password.validationMsg}
-                  inputProps={{ className: classes.input }}
-                />
-              </Grid>
-            </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-              onClick={handleSubmit}
-              disabled={!formIsValid()}
-            >
-              Sign Up
-            </Button>
-            <FormHelperText error={true} className={classes.errorMsg}>
-              {error}
-            </FormHelperText>
-            <Grid container justify="flex-end">
-              <Grid item>
-                <Link
-                  component="button"
-                  variant="body2"
-                  onClick={handleRedirection}
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                  className={classes.submit}             
+                  disabled={isSubmitting}
                 >
-                  Already have an account? Log in
-                </Link>
-              </Grid>
-            </Grid>
-          </form>
+                  Sign Up
+                </Button>
+                <FormHelperText error={true} className={classes.errorMsg}>
+                  {error}
+                </FormHelperText>
+                <Grid container justify="flex-end">
+                  <Grid item>
+                    <Link
+                      component="button"
+                      variant="body2"
+                      onClick={handleRedirection}
+                    >
+                      Already have an account? Log in
+                    </Link>
+                  </Grid>
+                </Grid>
+              </form>
+            )}
+          </Formik>
         </div>
       </Container>
       <Footer />

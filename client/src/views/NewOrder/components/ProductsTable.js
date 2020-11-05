@@ -13,7 +13,7 @@ import {
   Divider,
   Paper,
 } from "@material-ui/core";
-import SearchInput from "../../../components/controls/SearchInput";
+import SearchInput from "./SearchInput";
 import PhotoCameraOutlinedIcon from "@material-ui/icons/PhotoCameraOutlined";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import ImageModal from "../../../components/ImageModal";

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import Footer from "../../components/Footer";
@@ -14,9 +14,10 @@ import {
   Container,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import checkInputValidity from "../../utils/checkInputValidity";
 import { login } from "../../redux/actions/auth";
 import { removeErrors } from "../../redux/actions/error";
+import * as Yup from "yup";
+import { Formik } from "formik";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -38,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
   input: {
     //remove white background on textField when autofill
     WebkitBoxShadow: "0 0 0 1000px #f4f6f8 inset",
+    // boxShadow: '0 0 0 0',    
   },
 }));
 
@@ -45,80 +47,12 @@ const Login = (props) => {
   const classes = useStyles();
   const { login, history, isAuthenticated, error, removeErrors } = props;
 
-  const [formData, setFormData] = useState({
-    email: {
-      value: "",
-      valid: false,
-      touched: false,
-      focused: false,
-      validation: {
-        required: true,
-        isEmail: true,
-      },
-      validationMsg: "",
-    },
-    password: {
-      value: "",
-      valid: false,
-      touched: false,
-      focused: false,
-      validation: {
-        required: true,
-      },
-      validationMsg: "",
-    },
-  });
-
   //willUnmount
   useEffect(() => {
     return () => {
       removeErrors(["LOGIN", "AUTOLOGIN"]);
     };
   }, [removeErrors]);
-
-  const { email, password } = formData;
-
-  const handleChanges = (e) => {
-    const updatedFormData = { ...formData };
-    let formElement = { ...updatedFormData[e.target.name] };
-
-    formElement.value = e.target.value;
-    formElement.touched = true;
-    formElement = checkInputValidity(formElement);
-    updatedFormData[e.target.name] = formElement;
-
-    setFormData(updatedFormData);
-  };
-
-  const toggleFocused = (e) => {
-    const updatedFormData = { ...formData };
-    let formElement = { ...updatedFormData[e.target.name] };
-    formElement.focused = !formElement.focused;
-    updatedFormData[e.target.name] = formElement;
-    setFormData(updatedFormData);
-  };
-
-  const formIsValid = () => {
-    const formIsValid = Object.values(formData).every(
-      (identifier) => identifier.valid
-    );
-    return formIsValid;
-  };
-
-  const dataToSubmit = () => {
-    const newFormData = {};
-    for (let formIdentifier in formData) {
-      newFormData[formIdentifier] = formData[formIdentifier].value;
-    }
-    return newFormData;
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (formIsValid()) {
-      login(dataToSubmit());
-    }
-  };
 
   const handleRedirection = (e) => {
     e.preventDefault();
@@ -136,82 +70,103 @@ const Login = (props) => {
           <Typography component="h1" variant="h4">
             Log In
           </Typography>
-          <form
-            className={classes.form}
-            onSubmit={handleSubmit}
-            noValidate
-            autoComplete="on"
+          <Formik
+            initialValues={{
+              email: "",
+              password: "",
+            }}
+            validationSchema={Yup.object().shape({
+              email: Yup.string()
+                .email("Must be a valid email")
+                .max(255)
+                .required("Email is required"),
+              password: Yup.string().max(255).required("Password is required"),
+            })}     
+            onSubmit={(values, { setSubmitting }) => {
+              login(values);
+              setTimeout(() => {
+                setSubmitting(false);
+              }, 400);
+            }}
           >
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  variant="outlined"
+            {({
+              errors,
+              handleBlur,
+              handleChange,
+              handleSubmit,
+              isSubmitting,
+              touched,
+              values,       
+            }) => (
+              <form className={classes.form} onSubmit={handleSubmit}>
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <TextField
+                      variant="outlined"
+                      fullWidth
+                      error={Boolean(touched.email && errors.email)}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      id="email"
+                      label="Email address"
+                      value={values.email}
+                      name="email"
+                      helperText={touched.email && errors.email}
+                      inputProps={{ className: classes.input }}
+                      autoComplete="email"
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <VisibilityPasswordTextField
+                      variant="outlined"
+                      fullWidth
+                      error={Boolean(touched.password && errors.password)}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      name="password"
+                      label="Password"
+                      value={values.password}
+                      type="password"
+                      id="password"
+                      helperText={touched.password && errors.password}
+                      inputProps={{ className: classes.input }}
+                      autoComplete="current-password"
+                    />
+                  </Grid>
+                </Grid>
+                <Button
+                  type="submit"
                   fullWidth
-                  error={!email.valid && email.touched && !email.focused}
-                  onChange={handleChanges}
-                  onFocus={toggleFocused}
-                  onBlur={toggleFocused}
-                  id="email"
-                  label="Email"
-                  value={email.value}
-                  name="email"
-                  helperText={email.validationMsg}
-                  inputProps={{ className: classes.input }}
-                  autoComplete="email"
-                  autoFocus
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <VisibilityPasswordTextField
-                  variant="outlined"
-                  fullWidth
-                  error={
-                    !password.valid && password.touched && !password.focused
-                  }
-                  onChange={handleChanges}
-                  onFocus={toggleFocused}
-                  onBlur={toggleFocused}
-                  name="password"
-                  label="Password"
-                  value={password.value}
-                  type="password"
-                  id="password"
-                  helperText={password.validationMsg}
-                  inputProps={{ className: classes.input }}
-                  autoComplete="current-password"
-                />
-              </Grid>      
-            </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}        
-              disabled={!formIsValid()}
-            >
-              Sign In
-            </Button>
-            <FormHelperText error={true} className={classes.errorMsg}>
-              {error}
-            </FormHelperText>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link
-                  component="button"
-                  variant="body2"
-                  onClick={handleRedirection}
+                  variant="contained"
+                  size="large"
+                  color="primary"
+                  className={classes.submit}
+                  disabled={isSubmitting}
                 >
-                  Need an account? Register
-                </Link>
-              </Grid>
-            </Grid>
-          </form>
+                  Sign In
+                </Button>
+                <FormHelperText error={true} className={classes.errorMsg}>
+                  {error}
+                </FormHelperText>
+                <Grid container>
+                  <Grid item xs>
+                    <Link href="#" variant="body2">
+                      Forgot password?
+                    </Link>
+                  </Grid>
+                  <Grid item>
+                    <Link
+                      component="button"
+                      variant="body2"
+                      onClick={handleRedirection}
+                    >
+                      Need an account? Register
+                    </Link>
+                  </Grid>
+                </Grid>
+              </form>
+            )}
+          </Formik>
         </div>
       </Container>
       <Footer />
