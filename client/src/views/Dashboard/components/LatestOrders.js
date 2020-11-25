@@ -103,7 +103,7 @@ const LatestOrders = (props) => {
   const [orders] = useState(mockData);
 
   return (
-    <Card {...rest} className={clsx(classes.root, className)}>
+    <Card {...rest} className={clsx(classes.root, className)} elevation={4}>
       <CardHeader
         action={          
           <Button color="primary" size="small" variant="outlined">

@@ -108,7 +108,7 @@ const Login = (props) => {
                       onChange={handleChange}
                       onBlur={handleBlur}
                       id="email"
-                      label="Email address"
+                      label="Email"
                       value={values.email}
                       name="email"
                       helperText={touched.email && errors.email}
