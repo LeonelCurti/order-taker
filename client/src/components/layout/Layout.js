@@ -4,7 +4,6 @@ import { makeStyles, useTheme } from "@material-ui/styles";
 import { useMediaQuery } from "@material-ui/core";
 import Sidebar from "../Sidebar";
 import TopBar from "../TopBar";
-
 const useStyles = makeStyles((theme) => ({
   root: {
     height: "100%",

@@ -3,6 +3,7 @@ export default function checkInputValidity(formElement) {
   let error = [true, ""];
 
   if (validation.isEmail) {
+    // const re = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/; 
     const re = /\S+@\S+\.\S+/; //really simple regex validation!
     const isValid = re.test(value);
     const msg = `${!isValid ? "Please enter a valid email." : ""}`;

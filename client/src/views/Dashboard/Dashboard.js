@@ -1,5 +1,6 @@
 import React from "react";
 import Layout from "../../components/layout/Layout";
+import CarouselWidget from '../../components/CarouselWidget'
 import DownloadFile from "./components/DownloadFile";
 import NewProducts from "./components/NewProducts";
 import LatestOrders from "./components/LatestOrders";
@@ -25,18 +26,12 @@ const Dashboard = () => {
     <Layout>
       <div className={classes.root}>
         <Grid container spacing={3}>
-          <Grid item xs={12} sm={6} lg={3} xl={3}>
+          <Grid item xs={12} sm={6} >
+            <CarouselWidget />
+          </Grid>       
+          <Grid item xs={12} sm={6} >
             <DownloadFile />
-          </Grid>
-          <Grid item xs={12} sm={6} lg={3} xl={3}>
-            <DownloadFile />
-          </Grid>
-          <Grid item xs={12} sm={6} lg={3} xl={3}>
-            <DownloadFile />
-          </Grid>
-          <Grid item xs={12} sm={6} lg={3} xl={3}>
-            <DownloadFile />
-          </Grid>
+          </Grid>         
           <Grid item xs={12} md={5} lg={5} xl={4}>
             <NewProducts />
           </Grid>

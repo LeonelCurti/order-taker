@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import TableSearch from "../../../components/Test/TableSearch";
+import TableSearch from "../../../components/TableSearch";
 import {
   Typography,
   Toolbar,
@@ -86,6 +86,8 @@ const CatalogTableToolbar = ({
   const hideSearch = () => {
     setShowSearch(false);
     setSearchText("");
+    searchTextUpdate("");
+    
   };
 
   const handleSearchIconClick = () => {
