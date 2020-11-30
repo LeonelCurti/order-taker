@@ -37,7 +37,7 @@ const Budget = (props) => {
           <DownloadItem fileName="PriceList.xlsx" updatedAt="Updated 12/8/20" />
           <DownloadItem fileName="Catalog.pdf" updatedAt="Updated 12/8/20" />
           <DownloadItem
-            fileName="Featured-Products.xlsx"
+            fileName="NewProducts.xlsx"
             updatedAt="Updated 12/8/20"
           />
         </CardContent>

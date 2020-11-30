@@ -8,7 +8,7 @@ export const getOrders = () => async (dispatch) => {
     dispatch({
       type: actionTypes.GET_ORDERS_REQUEST,
     });
-    const res = await axios.get("/api/v1/order");
+    const res = await axios.get("/api/v1/orders");
     dispatch({
       type: actionTypes.GET_ORDERS_SUCCESS,
       payload: res.data.orders,
@@ -21,7 +21,7 @@ export const getOrders = () => async (dispatch) => {
 export const createOrder = () => async (dispatch) => {
   try {
     dispatch({ type: actionTypes.CREATE_ORDER_REQUEST });
-    const res = await axios.post("/api/v1/order/createOrder");
+    const res = await axios.post("/api/v1/orders/createOrder");
     dispatch({
       type: actionTypes.CREATE_ORDER_SUCCESS,
       payload: res.data.order,
@@ -36,7 +36,7 @@ export const updateOrder = (updatedOrder) => async (dispatch) => {
   try {
     dispatch(setCurrentOrder(updatedOrder));
     dispatch({ type: actionTypes.UPDATE_ORDER_REQUEST });
-    await axios.put(`/api/v1/order/update`, { updatedOrder });
+    await axios.put(`/api/v1/orders/update`, { updatedOrder });
     dispatch({ type: actionTypes.UPDATE_ORDER_SUCCESS });
   } catch (err) {
     dispatch(alertActions.showAlert("Order could not be saved."));
@@ -47,7 +47,7 @@ export const updateOrder = (updatedOrder) => async (dispatch) => {
 export const submitOrder = (updatedOrder, history) => async (dispatch) => {
   try {
     dispatch({ type: actionTypes.SUBMIT_ORDER_REQUEST });
-    await axios.put(`/api/v1/order/update`, { updatedOrder });
+    await axios.put(`/api/v1/orders/update`, { updatedOrder });
     setTimeout(() => {
       dispatch({ type: actionTypes.SUBMIT_ORDER_SUCCESS });
       dispatch(alertActions.showAlert("Order submitted."));
@@ -61,7 +61,7 @@ export const submitOrder = (updatedOrder, history) => async (dispatch) => {
 export const deleteOrder = (order_id) => async (dispatch) => {
   try {
     dispatch({ type: actionTypes.DELETE_ORDER_REQUEST });
-    await axios.delete(`/api/v1/order/${order_id}`);
+    await axios.delete(`/api/v1/orders/${order_id}`);
     dispatch({
       type: actionTypes.DELETE_ORDER_SUCCESS,
       payload: order_id,

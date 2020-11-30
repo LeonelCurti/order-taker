@@ -103,7 +103,7 @@ exports.logout = async (req, res, next) => {
       await RefreshToken.findByIdAndRemove(decoded.tokenId);
     }
   } catch (error) {
-    console.log(`logout warning: ${error.message}`);
+    console.log(`logged out by ${error.message}`);
   } finally {
     return res
       .clearCookie("refresh_token")
@@ -144,6 +144,10 @@ exports.refreshToken = async (req, res, next) => {
       message: "Access token successfully created.",
     });
   } catch (error) {
-    next(error);
+    if (error.name === "TokenExpiredError") {
+      next(new ErrorResponse("Token expired.", 403));
+    } else {
+      next(error);
+    }
   }
 };
