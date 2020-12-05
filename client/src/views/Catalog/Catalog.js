@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getPriceList } from "../../redux/actions/products";
 import { removeErrors } from "../../redux/actions/error";
 import { generateCatalogPdf } from "../../utils/generatePdf";
@@ -12,6 +12,7 @@ import PageHeader from "../../components/PageHeader";
 import LoadingIndicator from "../../components/LoadingIndicator";
 import ImageModal from "../../components/ImageModal";
 import CatalogTableToolbar from "./components/CatalogTableToolbar";
+
 const useStyles = makeStyles((theme) => ({
   container: {
     padding: theme.spacing(4),
@@ -24,17 +25,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ProductList = (props) => {
+const ProductList = () => {
   const classes = useStyles();
-  const {
-    products,
-    getPriceList,
-    error,
-    isFetchingProducts,
-    removeErrors,
-  } = props;
   const [showPhotoModal, setShowPhotoModal] = useState(false);
   const [searchField, setSearchField] = useState("");
+  const dispatch = useDispatch();
+  const products = useSelector((state) => state.catalog.products);
+  const isFetchingProducts = useSelector((state) => state.loading["GET_PRICE_LIST"]);
+  const error = useSelector((state) => state.error["GET_PRICE_LIST"]);
 
   const onChange = (value) => {
     setSearchField(value.trim());
@@ -47,15 +45,15 @@ const ProductList = (props) => {
     );
   });
   useEffect(() => {
-    getPriceList();
-  }, [getPriceList]);
+    dispatch(getPriceList());
+  }, [dispatch]);
 
   //willUnmount
   useEffect(() => {
     return () => {
-      removeErrors(["GET_PRICE_LIST"]);
+      dispatch(removeErrors(["GET_PRICE_LIST"]));
     };
-  }, [removeErrors]);
+  }, [dispatch]);
 
   const onShowProduct = (product) => {
     setShowPhotoModal(true);
@@ -70,7 +68,7 @@ const ProductList = (props) => {
     }
   };
 
-  const onRetry = () => getPriceList();
+  const onRetry = () => dispatch(getPriceList());
 
   return (
     <Layout>
@@ -105,12 +103,4 @@ const ProductList = (props) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  products: state.catalog.products,
-  isFetchingProducts: state.loading["GET_PRICE_LIST"],
-  error: state.error["GET_PRICE_LIST"],
-});
-
-export default connect(mapStateToProps, { getPriceList, removeErrors })(
-  ProductList
-);
+export default ProductList;

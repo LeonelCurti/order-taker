@@ -100,8 +100,7 @@ const CatalogTableToolbar = ({
   const onDownloadExcel = () => {
     axios("/api/v1/pricelist/download", {
       responseType: "blob",
-    }).then((response) => {
-      console.log(response);
+    }).then((response) => { 
       FileSaver.saveAs(new Blob([response.data]), "Catalog.xlsx");
     });
   };
