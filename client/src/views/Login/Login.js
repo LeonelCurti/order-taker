@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Redirect } from "react-router-dom";
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Footer from "../../components/Footer";
 import Logo from "../../components/Logo";
 import VisibilityPasswordTextField from "../../components/VisibilityPasswordTextField";
@@ -14,8 +14,7 @@ import {
   Container,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { login } from "../../redux/actions/auth";
-import { removeErrors } from "../../redux/actions/error";
+import { login, clearAuthError } from "../../redux/actions/auth";
 import * as Yup from "yup";
 import { Formik } from "formik";
 
@@ -39,20 +38,24 @@ const useStyles = makeStyles((theme) => ({
   input: {
     //remove white background on textField when autofill
     WebkitBoxShadow: "0 0 0 1000px #f4f6f8 inset",
-    // boxShadow: '0 0 0 0',    
+    // boxShadow: '0 0 0 0',
   },
 }));
 
 const Login = (props) => {
   const classes = useStyles();
-  const { login, history, isAuthenticated, error, removeErrors } = props;
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const isLoading = useSelector((state) => state.auth.isLoading);
+  const error = useSelector((state) => state.auth.errorMessage);
+  const { history } = props;
 
   //willUnmount
   useEffect(() => {
     return () => {
-      removeErrors(["LOGIN", "AUTOLOGIN"]);
+      dispatch(clearAuthError());
     };
-  }, [removeErrors]);
+  }, [dispatch]);
 
   const handleRedirection = (e) => {
     e.preventDefault();
@@ -81,12 +84,9 @@ const Login = (props) => {
                 .max(255)
                 .required("Email is required"),
               password: Yup.string().max(255).required("Password is required"),
-            })}     
-            onSubmit={(values, { setSubmitting }) => {
-              login(values);
-              setTimeout(() => {
-                setSubmitting(false);
-              }, 400);
+            })}
+            onSubmit={(values) => {
+              dispatch(login(values));
             }}
           >
             {({
@@ -94,9 +94,9 @@ const Login = (props) => {
               handleBlur,
               handleChange,
               handleSubmit,
-              isSubmitting,
+              // isSubmitting,
               touched,
-              values,       
+              values,
             }) => (
               <form className={classes.form} onSubmit={handleSubmit}>
                 <Grid container spacing={2}>
@@ -141,7 +141,8 @@ const Login = (props) => {
                   size="large"
                   color="primary"
                   className={classes.submit}
-                  disabled={isSubmitting}
+                  disabled={isLoading}
+                  // disabled={isSubmitting}
                 >
                   Sign In
                 </Button>
@@ -173,9 +174,5 @@ const Login = (props) => {
     </div>
   );
 };
-const mapStateToProps = (state) => ({
-  isAuthenticated: state.auth.isAuthenticated,
-  error: state.error["LOGIN"],
-});
 
-export default connect(mapStateToProps, { login, removeErrors })(Login);
+export default Login;

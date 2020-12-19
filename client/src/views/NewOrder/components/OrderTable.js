@@ -1,8 +1,7 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { loadingSelector, errorMessageSelector } from "../../../redux/selector/index";
+import { makeStyles } from "@material-ui/core/styles";
 import {
   Table,
   TableBody,
@@ -20,7 +19,7 @@ import {
 } from "@material-ui/core";
 import ButtonLoader from "../../../components/ButtonLoader";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-import * as orderActions from "../../../redux/actions/orders";
+import {submitOrder, updateOrder} from "../../../redux/actions/orders";
 import { showAlert } from "../../../redux/actions/alert";
 
 const useStyles = makeStyles((theme) => ({
@@ -50,25 +49,21 @@ const useStyles = makeStyles((theme) => ({
 
 const OrderTable = (props) => {
   const classes = useStyles();
-  const {
-    currentOrder,
-    submitOrder,
-    updateOrder,
-    isUpdatigOrder,
-    isSubmitting,
-    updateError,
-    showAlert,
-  } = props;
+  const dispatch = useDispatch();
+  const currentOrder = useSelector((state) => state.orders.currentOrder);
+  const isUpdatigOrder = useSelector((state) => state.orders.isUpdating);
+  const isSubmitting = useSelector((state) => state.orders.isSubmitting);
+  const updateError = useSelector((state) => state.orders.errorMessage);
 
   const handleRemoveItem = (itemCode) => {
     const updatedOrderItems = currentOrder.items.filter(
       (item) => item.cod !== itemCode
     );
-    updateOrder({
+    dispatch(updateOrder({
       ...currentOrder,
       items: updatedOrderItems,
       total: calculateOrderTotal(updatedOrderItems),
-    });
+    }));
   };
 
   const changeItemQuantity = (e, product) => {
@@ -82,11 +77,11 @@ const OrderTable = (props) => {
         return item;
       });
 
-      updateOrder({
+      dispatch(updateOrder({
         ...currentOrder,
         items: updatedOrderItems,
         total: calculateOrderTotal(updatedOrderItems),
-      });
+      }));
     }
   };
 
@@ -98,17 +93,17 @@ const OrderTable = (props) => {
 
   const handleSubmitOrder = () => {
     if (currentOrder.items.length <= 0) {
-      showAlert("Order can not be empty.");
+      dispatch(showAlert("Order can not be empty."));
     } else if (updateError) {
-      showAlert("Order could not be submitted.");
+      dispatch(showAlert("Order could not be submitted."));
     } else {
-      submitOrder(
+      dispatch(submitOrder(
         {
           ...currentOrder,
           state: "submitted",
         },
         props.history
-      );
+      ));
     }
   };
 
@@ -217,13 +212,5 @@ const OrderTable = (props) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  currentOrder: state.orders.currentOrder,
-  isSubmitting: loadingSelector(state, ["SUBMIT_ORDER"]),
-  isUpdatigOrder: loadingSelector(state, ["UPDATE_ORDER"]),
-  updateError: errorMessageSelector(["UPDATE_ORDER"], state),
-});
+export default withRouter(OrderTable)
 
-export default connect(mapStateToProps, { ...orderActions, showAlert })(
-  withRouter(OrderTable)
-);

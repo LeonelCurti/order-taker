@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getPriceList } from "../../redux/actions/products";
-import { removeErrors } from "../../redux/actions/error";
 import { generateCatalogPdf } from "../../utils/generatePdf";
 import { Container, Hidden, Paper, Divider } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -31,8 +30,8 @@ const ProductList = () => {
   const [searchField, setSearchField] = useState("");
   const dispatch = useDispatch();
   const products = useSelector((state) => state.catalog.products);
-  const isFetchingProducts = useSelector((state) => state.loading["GET_PRICE_LIST"]);
-  const error = useSelector((state) => state.error["GET_PRICE_LIST"]);
+  const isFetchingProducts = useSelector((state) => state.catalog.isFetching);
+  const error = useSelector((state) => state.catalog.errorMessage); 
 
   const onChange = (value) => {
     setSearchField(value.trim());
@@ -46,13 +45,6 @@ const ProductList = () => {
   });
   useEffect(() => {
     dispatch(getPriceList());
-  }, [dispatch]);
-
-  //willUnmount
-  useEffect(() => {
-    return () => {
-      dispatch(removeErrors(["GET_PRICE_LIST"]));
-    };
   }, [dispatch]);
 
   const onShowProduct = (product) => {

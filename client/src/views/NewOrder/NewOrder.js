@@ -1,19 +1,17 @@
 import React, { useEffect } from "react";
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Layout from "../../components/layout/Layout";
 import ProductsTable from "./components/ProductsTable";
 import OrderTable from "./components/OrderTable";
 import { makeStyles } from "@material-ui/core/styles";
 import { createOrder, setCurrentOrder } from "../../redux/actions/orders";
 import { getPriceList } from "../../redux/actions/products";
-import { hasErrors } from "../../redux/selector/index";
-import { removeErrors } from "../../redux/actions/error";
 import PageHeader from "../../components/PageHeader";
 import ErrorBoundary from "../../components/ErrorBoundary";
 import LoadingIndicator from "../../components/LoadingIndicator";
 import { Grid, Hidden } from "@material-ui/core";
 
-const useStyles = makeStyles((theme) => ({ 
+const useStyles = makeStyles((theme) => ({
   container: {
     padding: theme.spacing(4),
     [theme.breakpoints.down("sm")]: {
@@ -26,36 +24,31 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const NewOrder = (props) => {
-  const {
-    currentOrder,
-    getPriceList,
-    createOrder,
-    setCurrentOrder,
-    error,
-    isFetchingPriceList,
-    isCreatingOrder,
-  } = props;
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const currentOrder = useSelector((state) => state.orders.currentOrder);
+  const isCreatingOrder = useSelector((state) => state.orders.isCreatingOrder);
+  const isFetchingPriceList = useSelector((state) => state.catalog.isFetching);
+  const priceListError = useSelector((state) => state.catalog.errorMessage);
 
   useEffect(() => {
-    getPriceList();
-  }, [getPriceList]);
+    dispatch(getPriceList());
+  }, [dispatch]);
 
   useEffect(() => {
     //if currentOrder is null, create new order
     //else if current comes with an order, continue editing order
     if (!currentOrder) {
-      createOrder();
+      dispatch(createOrder());
     }
-  }, [createOrder, currentOrder]);
+  }, [dispatch, currentOrder]);
 
   //willUnmount
   useEffect(() => {
     return () => {
-      setCurrentOrder(null);
-      removeErrors(["GET_PRICE_LIST", "CREATE_ORDER"]);
+      dispatch(setCurrentOrder(null)); 
     };
-  }, [setCurrentOrder]);
+  }, [dispatch]);
 
   const refreshPage = () => {
     props.history.replace("/");
@@ -65,7 +58,7 @@ const NewOrder = (props) => {
     <Layout>
       <LoadingIndicator isActive={isFetchingPriceList || isCreatingOrder}>
         <ErrorBoundary
-          error={error || !currentOrder}
+          error={priceListError || !currentOrder}      
           onRetry={refreshPage}
           message="We could not load resources."
         >
@@ -83,26 +76,12 @@ const NewOrder = (props) => {
                 <ProductsTable />
               </Grid>
             </Grid>
-          </div>        
+          </div>
         </ErrorBoundary>
       </LoadingIndicator>
     </Layout>
   );
 };
 
-const mapStateToProps = (state) => ({
-  currentOrder: state.orders.currentOrder,
-  isFetchingPriceList: state.loading["GET_PRICE_LIST"],
-  isCreatingOrder: state.loading["CREATE_ORDER"],
-  error: hasErrors(["GET_PRICE_LIST", "CREATE_ORDER"], state),
-});
+export default NewOrder;
 
-const mapDispatchToProps = {
-  setCurrentOrder,
-  createOrder,
-  getPriceList,
-  hasErrors,
-  removeErrors,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(NewOrder);

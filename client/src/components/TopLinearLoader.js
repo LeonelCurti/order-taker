@@ -1,8 +1,9 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import LinearProgress from "@material-ui/core/LinearProgress";
-import { connect } from "react-redux";
-import { loadingSelector } from "../redux/selector/index";
+// import { connect } from "react-redux";
+// import { loadingSelector } from "../redux/selector/index";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -17,7 +18,8 @@ const useStyles = makeStyles((theme) => ({
 
 const TopLinearLoader = (props) => {
   const classes = useStyles();
-  const { isLoading } = props;
+  const isLoading = useSelector((state) => state.auth.isLoading);
+
 
   return (
     isLoading && (
@@ -27,14 +29,15 @@ const TopLinearLoader = (props) => {
     )
   );
 };
-const mapStateToProps = (state) => ({
-  isLoading: loadingSelector(state, [
-    "AUTOLOGIN",
-    "LOAD_USER",
-    "LOGIN",
-    "REGISTER",
-    "LOGOUT",
-  ]),
-});
+// const mapStateToProps = (state) => ({
+//   isLoading: loadingSelector(state, [
+//     "AUTOLOGIN",
+//     "LOAD_USER",
+//     "LOGIN",
+//     "REGISTER",
+//     "LOGOUT",
+//   ]),
+// });
 
-export default connect(mapStateToProps)(TopLinearLoader);
+export default TopLinearLoader;
+// export default connect(mapStateToProps)(TopLinearLoader);
