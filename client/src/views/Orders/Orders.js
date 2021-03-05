@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Layout from "../../components/layout/Layout";
 import LoadingIndicator from "../../components/LoadingIndicator";
 import {
@@ -9,11 +9,14 @@ import {
   Toolbar,
   Typography,
   Button,
-  Divider
+  Divider,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import * as actions from "../../redux/actions/orders";
-import { removeErrors } from "../../redux/actions/error";
+import {
+  getOrders,
+  deleteOrder,
+  setCurrentOrder,
+} from "../../redux/actions/orders";
 import PageHeader from "../../components/PageHeader";
 import ErrorBoundary from "../../components/ErrorBoundary";
 import ConfirmationDialog from "../../components/ConfirmationDialog";
@@ -28,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
       paddingLeft: theme.spacing(2),
       paddingRight: theme.spacing(2),
     },
-  },   
+  },
   title: {
     flexGrow: 1,
   },
@@ -36,28 +39,16 @@ const useStyles = makeStyles((theme) => ({
 
 const Orders = (props) => {
   const classes = useStyles();
-  const {
-    myOrders,
-    isFetchingOrders,
-    errorGetOrders,
-    getOrders,
-    deleteOrder,
-    setCurrentOrder,
-    removeErrors,
-  } = props;
+  const dispatch = useDispatch();
+  const myOrders = useSelector((state) => state.orders.myOrders);
+  const isFetchingOrders = useSelector((state) => state.orders.isFetching);
+  const errorGetOrders = useSelector((state) => state.orders.errorMessage);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState(null);
 
   useEffect(() => {
-    getOrders();
-  }, [getOrders]);  
-
-  //willUnmount
-  useEffect(() => {
-    return () => {
-      removeErrors(["GET_ORDERS", "DELETE_ORDER"]);
-    };
-  }, [removeErrors]);
+    dispatch(getOrders());
+  }, [dispatch]);
 
   const handleDeleteTargetDialogClose = () => {
     setConfirmDialogOpen(false);
@@ -68,11 +59,11 @@ const Orders = (props) => {
     setDeleteTarget(order);
   };
   const handleEditOrder = (order) => {
-    setCurrentOrder(order);
+    dispatch(setCurrentOrder(order));
     props.history.push("/new_order");
   };
   const handleViewOrder = (order) => {
-    setCurrentOrder(order);
+    dispatch(setCurrentOrder(order));
     props.history.push("/orders/view_order");
   };
   const handleCreateNewOrder = () => {
@@ -81,16 +72,18 @@ const Orders = (props) => {
 
   const handleDeleteOrder = () => {
     setConfirmDialogOpen(false);
-    deleteOrder(deleteTarget._id);
+    dispatch(deleteOrder(deleteTarget._id));
     setDeleteTarget(null);
   };
+
+  const onRetry = () => dispatch(getOrders());
 
   return (
     <Layout>
       <LoadingIndicator isActive={isFetchingOrders}>
         <ErrorBoundary
           error={errorGetOrders}
-          onRetry={getOrders}
+          onRetry={onRetry}
           message="We could not load resources."
         >
           <ConfirmationDialog
@@ -140,10 +133,4 @@ const Orders = (props) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  myOrders: state.orders.myOrders,
-  isFetchingOrders: state.loading["GET_ORDERS"],
-  errorGetOrders: state.error["GET_ORDERS"],
-});
-
-export default connect(mapStateToProps, { ...actions, removeErrors })(Orders);
+export default Orders;

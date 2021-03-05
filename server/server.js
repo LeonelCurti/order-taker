@@ -34,7 +34,7 @@ app.use(cors());
 //Mount routers
 app.use("/api/v1/pricelist", require("./routes/priceList"));
 app.use("/api/v1/auth", require("./routes/auth"));
-app.use("/api/v1/order", require("./routes/order"));
+app.use("/api/v1/orders", require("./routes/orders"));
 
 // app.use(express.static(path.join(__dirname,'uploads')))
 

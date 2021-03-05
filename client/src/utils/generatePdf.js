@@ -46,11 +46,11 @@ export const generateCatalogPdf = (products) => {
   //direct download file
   const date = new Date();
   const fileName =
-    "catalog" +
+    "Catalog" +
     "-" +
-    date.getDate() +
+    date.getDate()+
     "-" +
-    date.getMonth() +
+    `${date.getMonth() + 1}` +
     "-" +
     date.getFullYear();
   doc.save(fileName);

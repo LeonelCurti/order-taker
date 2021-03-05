@@ -20,15 +20,15 @@ export const login = (dataToSubmit) => async (dispatch) => {
   try {
     dispatch({ type: actionTypes.LOGIN_REQUEST });
     const res = await axios.post("/api/v1/auth/login", dataToSubmit);
+    
+    const accessToken = res.data.accessToken;    
+    jwtAuthService.setSession(accessToken);
+    jwtAuthService.startRefreshTokenTimer(accessToken);
+    
     dispatch({
       type: actionTypes.LOGIN_SUCCESS,
       payload: res.data.user,
     });
-
-    const accessToken = res.data.accessToken;
-
-    jwtAuthService.setSession(accessToken);
-    jwtAuthService.startRefreshTokenTimer(accessToken);
   } catch (err) {
     dispatch(handleFail(actionTypes.LOGIN_FAIL, err));
   }
@@ -63,31 +63,6 @@ export const onTryAutoLogin = () => async (dispatch) => {
     }
   }
 };
-// export const onTryAutoLogin = () => async (dispatch) => {
-//   //When app load/reload
-//   const accessToken = localStorage.getItem("access_token");
-//   if (accessToken) {
-//     const tokenHasBeenRefreshed = await jwtAuthService.silentRefresh();
-//     if (tokenHasBeenRefreshed) {
-//       try {
-//         dispatch({ type: actionTypes.AUTOLOGIN_REQUEST });
-
-//         const res = await axios.get("/api/v1/auth/me", {
-//           headers: { "Cache-Control": "no-cache" },
-//         });
-//         dispatch({
-//           type: actionTypes.AUTOLOGIN_SUCCESS,
-//           payload: res.data.user,
-//         });
-//       } catch (err) {
-//         dispatch({
-//           type: actionTypes.AUTOLOGIN_FAIL,
-//           payload: null,
-//         });
-//       }
-//     }
-//   }
-// };
 
 export const logout = () => async (dispatch) => {
   try {
@@ -102,3 +77,7 @@ export const logout = () => async (dispatch) => {
     dispatch({ type: actionTypes.LOGOUT_SUCCESS });
   }
 };
+
+export const clearAuthError = () => ({
+  type: actionTypes.CLEAR_AUTH_ERROR
+})

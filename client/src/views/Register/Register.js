@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import PropTypes from "prop-types";
+import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
 import VisibilityPasswordTextField from "../../components/VisibilityPasswordTextField";
 import Footer from "../../components/Footer";
@@ -12,9 +12,7 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import { connect } from "react-redux";
-import { register } from "../../redux/actions/auth";
-import { removeErrors } from "../../redux/actions/error";
+import { register, clearAuthError } from "../../redux/actions/auth";
 import * as Yup from "yup";
 import { Formik } from "formik";
 
@@ -42,15 +40,19 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Register = (props) => {
-  const { register, history, isAuthenticated, error, removeErrors } = props;
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const isLoading = useSelector((state) => state.auth.isLoading);
+  const error = useSelector((state) => state.auth.errorMessage);
+  const { history } = props;
 
   //willUnmount
   useEffect(() => {
     return () => {
-      removeErrors(["REGISTER"]);
+      dispatch(clearAuthError());
     };
-  }, [removeErrors]); 
+  }, [dispatch]);
 
   const handleRedirection = (e) => {
     e.preventDefault();
@@ -86,14 +88,14 @@ const Register = (props) => {
                 .max(32)
                 .required("First name is required"),
               lastName: Yup.string().max(32).required("Last name is required"),
-              password: Yup.string().max(100).min(4).required("password is required"),
+              password: Yup.string()
+                .max(100)
+                .min(4)
+                .required("password is required"),
               // policy: Yup.boolean().oneOf([true], "This field must be checked"),
             })}
-            onSubmit={(values, { setSubmitting }) => {
-              register(values, history);
-              setTimeout(() => {
-                setSubmitting(false);
-              }, 400);
+            onSubmit={(values) => {
+              dispatch(register(values, history));
             }}
           >
             {({
@@ -112,14 +114,14 @@ const Register = (props) => {
                       name="firstName"
                       variant="outlined"
                       error={Boolean(touched.firstName && errors.firstName)}
-                      fullWidth                   
+                      fullWidth
                       onBlur={handleBlur}
                       onChange={handleChange}
                       inputProps={{ className: classes.input }}
                       id="firstName"
                       label="First Name"
                       value={values.firstName}
-                      helperText={touched.firstName && errors.firstName}                   
+                      helperText={touched.firstName && errors.firstName}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -175,8 +177,9 @@ const Register = (props) => {
                   variant="contained"
                   color="primary"
                   size="large"
-                  className={classes.submit}             
-                  disabled={isSubmitting}
+                  className={classes.submit}
+                  disabled={isLoading}
+                  // disabled={isSubmitting}
                 >
                   Sign Up
                 </Button>
@@ -204,13 +207,10 @@ const Register = (props) => {
   );
 };
 
-Register.protoTypes = {
-  register: PropTypes.func.isRequired,
-};
+// const mapStateToProps = (state) => ({
+//   isAuthenticated: state.auth.isAuthenticated,
+//   error: state.error["REGISTER"],
+// });
 
-const mapStateToProps = (state) => ({
-  isAuthenticated: state.auth.isAuthenticated,
-  error: state.error["REGISTER"],
-});
-
-export default connect(mapStateToProps, { register, removeErrors })(Register);
+export default Register;
+// export default connect(mapStateToProps, { register, removeErrors })(Register);

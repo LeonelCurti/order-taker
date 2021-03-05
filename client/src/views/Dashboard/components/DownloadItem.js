@@ -2,8 +2,6 @@ import React from "react";
 import { Box, IconButton, Typography, Avatar } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import GetAppIcon from "@material-ui/icons/GetApp";
-import AssignmentIcon from "@material-ui/icons/Assignment";
-
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,7 +35,7 @@ const DownloadItem = (props) => {
       flexGrow={1}
     >
       <Avatar className={classes.avatar}>
-        <AssignmentIcon color="primary" fontSize="large" />
+        {props.children}
       </Avatar>
       <div className={classes.content}>
         <Typography
