@@ -20,15 +20,15 @@ export const login = (dataToSubmit) => async (dispatch) => {
   try {
     dispatch({ type: actionTypes.LOGIN_REQUEST });
     const res = await axios.post("/api/v1/auth/login", dataToSubmit);
+    
+    const accessToken = res.data.accessToken;    
+    jwtAuthService.setSession(accessToken);
+    jwtAuthService.startRefreshTokenTimer(accessToken);
+    
     dispatch({
       type: actionTypes.LOGIN_SUCCESS,
       payload: res.data.user,
     });
-
-    const accessToken = res.data.accessToken;
-
-    jwtAuthService.setSession(accessToken);
-    jwtAuthService.startRefreshTokenTimer(accessToken);
   } catch (err) {
     dispatch(handleFail(actionTypes.LOGIN_FAIL, err));
   }

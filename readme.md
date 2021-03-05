@@ -1,6 +1,18 @@
 # Order-Taker App
 
-> Small business oriented application that allows to manage orders placed by clients. 
+> Description: Small business oriented application that allows to manage orders placed by clients. 
+
+
+### Features
+- Basic authentication: Login, logout and register.
+- Advance authentication: 
+  * Autologin when app load/reload 
+  * Refresh token rotation technique with access and refresh tokens and expiration time.
+- Redux for react state managment.
+- PDF handling.
+- Downloading and uploading files from node server and on the fly inside react.
+- Network error handling.
+- Excel files handling in node server.
 
 ### Techs:
 - mongodb
@@ -8,18 +20,4 @@
 - react
 - node
 
-### Specs
-- Users should be able to:
-   * Register, login and logout 
-   * See price list
-   * Make new order
-   * See orders made
-   * Edit order
-- Admin should be able to:
-   * Upload main price list from xlsx
-   * Manage clients orders
 
-### Installation
-* NODEJS: https://nodejs.org/
-* MONGODB SERVER: https://www.mongodb.com/download-center
-* node-gyp: https://github.com/nodejs/node-gyp

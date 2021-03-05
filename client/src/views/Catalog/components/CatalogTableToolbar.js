@@ -13,8 +13,6 @@ import SearchIcon from "@material-ui/icons/Search";
 import axios from "axios";
 import FileSaver from "file-saver";
 
-// const apiUrl = "http://localhost:5000/api/v1/pricelist/download";
-
 const useToolbarStyles = makeStyles((theme) => ({
   root: {},
   fullWidthRoot: {},
