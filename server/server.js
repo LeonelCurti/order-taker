@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const fileupload = require("express-fileupload");
-// const path = require('path')
+const path = require('path')
 const cookieParser = require("cookie-parser");
 const colors = require("colors");
 const morgan = require("morgan");
@@ -38,19 +38,26 @@ app.use("/api/v1/orders", require("./routes/orders"));
 
 // app.use(express.static(path.join(__dirname,'uploads')))
 
+if (process.env.NODE_ENV == "production") {
+  app.use(express.static(path.join(__dirname, "../client/build")));
+
+  app.get("*", (req, res) =>
+    res.sendFile(path.resolve(__dirname, "../client/build/index.html"))
+  );
+}
+
 //Custom express error handler
 app.use(errorHandler);
 
-const server = app.listen(process.env.PORT || 5000, () =>{
-  console.log(`Server running: ${process.env.NODE_ENV} mode`.yellow)
-}
-);
+const server = app.listen(process.env.PORT || 5000, () => {
+  console.log(`Server running: ${process.env.NODE_ENV} mode`.yellow);
+});
 
 process.on("unhandledRejection", (err, promise) => {
   console.log("Unhandled rejection at ", promise, `reason: ${err.message}`);
   server.close(() => {
     process.exit(0);
-  });  
+  });
 });
 
 process.on("uncaughtException", (err) => {

@@ -1,15 +1,20 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  Redirect,
+} from "react-router-dom";
 import { Provider } from "react-redux";
 import store from "./redux/store";
 import { ThemeProvider } from "@material-ui/styles";
 import theme from "./theme";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import PrivateRoute from "./components/hoc/PrivateRoute";
+import PrivateRoute from "./components/PrivateRoute";
 import AlertSnackbar from "./components/AlertSnackbar";
 import TopLinearLoader from "./components/TopLinearLoader";
 import Auth from "./components/auth/Auth";
-
+import { authRoles } from "./utils/role";
 import {
   Dashboard,
   Orders,
@@ -22,7 +27,6 @@ import {
 } from "./views";
 
 import Test from "./views/Test";
-
 
 const App = () => {
   return (
@@ -45,8 +49,16 @@ const App = () => {
               <PrivateRoute path="/dashboard" exact component={Dashboard} />
               <Route path="/register" exact component={Register} />
               <Route path="/login" exact component={Login} />
-              <Route path="/test" exact component={Test} />
-              <Route path="/" exact component={Login} />
+              <PrivateRoute
+                path="/test"
+                exact
+                roles={authRoles.guest}
+                component={Test}
+              />
+              {/* <Route path="/" exact component={Login} /> */}
+              <Route path="/" exact>
+                <Redirect to="/login" />
+              </Route>
               <Route component={NotFound} />
             </Switch>
           </ThemeProvider>

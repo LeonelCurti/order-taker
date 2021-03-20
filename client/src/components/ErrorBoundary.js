@@ -1,5 +1,5 @@
 import React from "react";
-import FetchError from "./hoc/FetchError";
+import FetchError from "./FetchError";
 
 function ErrorBoundary(props) {
   const { error, onRetry, errorMsg } = props;

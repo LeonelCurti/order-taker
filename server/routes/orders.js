@@ -7,13 +7,13 @@ const {
   updateOrder,
   deleteOrder,
 } = require("../controllers/orders");
-const { isAuth } = require("../middleware/auth");
+const { auth } = require("../middleware/auth");
 
 //@route   /api/v1/orders
-router.get("/", isAuth, getOrders);
-router.get("/:order_id", isAuth, getOrderById);
-router.post("/createOrder", isAuth, createOrder);
-router.put("/update", isAuth, updateOrder);
-router.delete("/:order_id", isAuth, deleteOrder);
+router.get("/", auth(), getOrders);
+router.get("/:order_id", auth(), getOrderById);
+router.post("/createOrder", auth(), createOrder);
+router.put("/update", auth(), updateOrder);
+router.delete("/:order_id", auth(), deleteOrder);
 
 module.exports = router;
