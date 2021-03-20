@@ -2,11 +2,11 @@ import React, { useEffect, Fragment } from "react";
 import { onTryAutoLogin, logout } from "../../redux/actions/auth";
 import { connect } from "react-redux";
 /*
-Features of this hoc:
-autologin when app load/reload (if auth token exist
-and is not expired) and 
-autologout in all other open tabs
-when user performs a logout.
+Features of this hoc component:
+-autologin when app load/reload (if auth token exist
+and is not expired)  
+-when logout, all other open tabs
+performs a logout.
 */
 const Auth = (props) => {
   const { children, onTryAutoLogin, logout } = props;
@@ -18,7 +18,7 @@ const Auth = (props) => {
     const syncLogout = (e) => {
       if (e.key === "access_token" && e.oldValue && !e.newValue) {
         // window.location.href = window.location.origin + '/login'
-        console.log("ejecuto syncLogout");
+        console.log("syncLogout");
         logout();
       }
     };

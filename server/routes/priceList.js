@@ -5,10 +5,11 @@ const {
   getPriceList,
   downloadPriceList,
 } = require("../controllers/priceList");
-const { isAuth, isAdmin } = require("../middleware/auth");
+const { auth } = require("../middleware/auth");
+const { roles } = require("../utils/roles");
 
-router.get("/", isAuth, getPriceList);
-router.get("/download",isAuth, downloadPriceList);
-router.post("/", isAdmin, uploadPriceList);
+router.get("/", auth(), getPriceList);
+router.get("/download", auth(), downloadPriceList);
+router.post("/", auth(roles.admin), uploadPriceList);
 
 module.exports = router;

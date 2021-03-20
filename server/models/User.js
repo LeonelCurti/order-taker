@@ -25,9 +25,9 @@ const UserSchema = new mongoose.Schema({
     minlength: 4,
     select: false, //need explicit order to show
   },
-  isAdmin: {
-    type: Boolean,
-    default: false,
+  role:{
+    type: String,
+    default: 'GUEST',
   },
   createdAt: {
     type: Date,
