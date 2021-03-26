@@ -17,7 +17,7 @@ dotenv.config({ path: "./server/config/config.env" });
 connectDB();
 
 //Body parser
-app.use(express.json({ extended: false }));
+app.use(express.json());
 
 // Cookie parser
 app.use(cookieParser());
