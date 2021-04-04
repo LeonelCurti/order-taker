@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const fileupload = require("express-fileupload");
-const path = require('path')
+const path = require("path");
 const cookieParser = require("cookie-parser");
 const colors = require("colors");
 const morgan = require("morgan");
@@ -17,7 +17,7 @@ dotenv.config({ path: "./server/config/config.env" });
 connectDB();
 
 //Body parser
-app.use(express.json({ extended: false }));
+app.use(express.json());
 
 // Cookie parser
 app.use(cookieParser());
@@ -39,17 +39,22 @@ app.use("/api/v1/orders", require("./routes/orders"));
 // app.use(express.static(path.join(__dirname,'uploads')))
 
 if (process.env.NODE_ENV == "production") {
+  // Serve any static files
   app.use(express.static(path.join(__dirname, "../client/build")));
 
   app.get("*", (req, res) =>
     res.sendFile(path.resolve(__dirname, "../client/build/index.html"))
   );
+} else {
+  app.get("/", (req, res) => {
+    res.send("Api is running...");
+  });
 }
 
 //Custom express error handler
 app.use(errorHandler);
 
-const server = app.listen(process.env.PORT || 5000, () => {
+const server = app.listen(process.env.PORT, () => {
   console.log(`Server running: ${process.env.NODE_ENV} mode`.yellow);
 });
 

@@ -6,6 +6,7 @@ const schema = new Schema({
   expireAt: Date,
   createdAt: { type: Date, default: Date.now },
   createdByIp: String,
+  platform: { type: String, default: 'Unknown' },
 });
 
 // schema.set("toJSON", {

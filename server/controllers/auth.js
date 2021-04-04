@@ -17,7 +17,7 @@ exports.login = async (req, res, next) => {
     if (!errors.isEmpty()) {
       return next(new ErrorResponse(errors.array()[0].msg, 422));
     }
-    const { email, password } = req.body;
+    const { email, password, browserInfo } = req.body;
 
     //Get request ip
     let ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
@@ -41,6 +41,7 @@ exports.login = async (req, res, next) => {
     const refreshToken = await RefreshToken.create({
       user: user._id,
       createdByIp: ip,
+      platform: browserInfo.platform,
       expireAt: new Date(Date.now() + 15 * 60000), //for testing
       //8 min after created mongodb will clean this token from db
       // expireAt: new Date(Date.now() + process.env.REFRESH_COOKIE_EXPIRE_DAYS * 24 * 60 * 60 * 1000),
@@ -103,7 +104,7 @@ exports.logout = async (req, res, next) => {
       await RefreshToken.findByIdAndRemove(decoded.tokenId);
     }
   } catch (error) {
-    console.log(`logged out by ${error.message}`);
+    console.log(`logout: ${error.message}`);
   } finally {
     return res
       .clearCookie("refresh_token")

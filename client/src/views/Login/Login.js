@@ -17,6 +17,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { login, clearAuthError } from "../../redux/actions/auth";
 import * as Yup from "yup";
 import { Formik } from "formik";
+import getOS from '../../utils/getOS'
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -86,6 +87,7 @@ const Login = (props) => {
               password: Yup.string().max(255).required("Password is required"),
             })}
             onSubmit={(values) => {
+              values.browserInfo = { platform: getOS() };
               dispatch(login(values));
             }}
           >
