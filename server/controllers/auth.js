@@ -104,7 +104,7 @@ exports.logout = async (req, res, next) => {
       await RefreshToken.findByIdAndRemove(decoded.tokenId);
     }
   } catch (error) {
-    console.log(`logged out by ${error.message}`);
+    console.log(`logout: ${error.message}`);
   } finally {
     return res
       .clearCookie("refresh_token")
