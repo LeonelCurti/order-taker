@@ -7,7 +7,7 @@ client/coverage
 
 # server
 /node_modules
-/server/uploads
+#/server/uploads
 /sampleData
 server/config/config.env
 
