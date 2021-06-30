@@ -18,7 +18,12 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(morgan("dev"));
 app.use(fileupload());
-app.use(helmet());
+app.use(
+  helmet({
+    // contentSecurityPolicy: { reportOnly: true },
+    contentSecurityPolicy: false,
+  })
+);
 app.use(cors());
 
 //Mount routers
