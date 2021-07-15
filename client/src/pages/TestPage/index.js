@@ -1,5 +1,5 @@
 import React from "react";
-import Layout from "../components/layout/Layout";
+import Layout from "../../components/layout/Layout";
 // import { makeStyles } from "@material-ui/core/styles";
 // import CarouselWidget from '../components/CarouselWidget'
 import { Grid } from "@material-ui/core";
@@ -15,10 +15,10 @@ const Test = () => {
     <Layout>
       <Grid container>
         <Grid item >
-          <div style={{height:'100px', backgroundColor:'red'}}></div>
+          <div style={{height:'100px', backgroundColor:'red'}}>Test Page</div>
         </Grid>
         <Grid item xs>
-          <div style={{height:'100px', backgroundColor:'green'}}></div>
+          <div style={{height:'100px', backgroundColor:'green'}}>Test Page</div>
         </Grid>
       </Grid>
     </Layout>
