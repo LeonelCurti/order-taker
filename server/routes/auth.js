@@ -1,5 +1,5 @@
 const express = require("express");
-const router = express.Router();
+const authRouter = express.Router();
 const { validate } = require("../middleware/validate");
 const {
   login,
@@ -11,10 +11,10 @@ const {
 const { auth } = require("../middleware/auth");
 
 //@route   /api/v1/auth
-router.post("/register", validate("register"), register);
-router.post("/login", validate("login"), login);
-router.get("/logout", logout);
-router.get("/me", auth(), me);
-router.get("/refresh-token", refreshToken);
+authRouter.post("/register", validate("register"), register);
+authRouter.post("/login", validate("login"), login);
+authRouter.get("/logout", logout);
+authRouter.get("/me", auth(), me);
+authRouter.get("/refresh-token", refreshToken);
 
-module.exports = router;
+module.exports = authRouter;

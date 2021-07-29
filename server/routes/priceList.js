@@ -1,5 +1,5 @@
 const express = require("express");
-const router = express.Router();
+const priceListRouter = express.Router();
 const {
   uploadPriceList,
   getPriceList,
@@ -8,8 +8,8 @@ const {
 const { auth } = require("../middleware/auth");
 const { roles } = require("../utils/roles");
 
-router.get("/", auth(), getPriceList);
-router.get("/download", auth(), downloadPriceList);
-router.post("/", auth(roles.admin), uploadPriceList);
+priceListRouter.get("/", auth(), getPriceList);
+priceListRouter.get("/download", auth(), downloadPriceList);
+priceListRouter.post("/", auth(roles.admin), uploadPriceList);
 
-module.exports = router;
+module.exports = priceListRouter;

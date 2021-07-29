@@ -5,17 +5,24 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const colors = require("colors");
 const morgan = require("morgan");
-const errorHandler = require("./middleware/errorHandler");
 const dotenv = require("dotenv");
 const helmet = require("helmet");
 const cors = require("cors");
 const mongoose = require("mongoose");
-dotenv.config({ path: "./server/config/config.env" });
+const orderRouter = require("./routes/orders");
+const authRouter = require("./routes/auth");
+const priceListRouter = require("./routes/priceList");
+const errorHandler = require("./middleware/errorHandler");
+
+dotenv.config({
+  path: path.join(".", "server", "config", "config.env"),
+});
 let server;
 
-//Middleware
+//Middlewares
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors({ origin: "http://localhost:3000" }));
 app.use(morgan("dev"));
 app.use(fileupload());
 app.use(
@@ -24,25 +31,15 @@ app.use(
     contentSecurityPolicy: false,
   })
 );
-app.use(cors());
+app.use(express.static(path.join(__dirname, "..", "client", "build")));
 
 //Mount routers
-app.use("/api/v1/pricelist", require("./routes/priceList"));
-app.use("/api/v1/auth", require("./routes/auth"));
-app.use("/api/v1/orders", require("./routes/orders"));
-
-if (process.env.NODE_ENV == "production") {
-  // Serve any static files
-  app.use(express.static(path.join(__dirname, "../client/build")));
-
-  app.get("*", (req, res) =>
-    res.sendFile(path.resolve(__dirname, "../client/build/index.html"))
-  );
-} else {
-  app.get("/", (req, res) => {
-    res.send("Api is running...");
-  });
-}
+app.use("/api/v1/pricelist", priceListRouter);
+app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/orders", orderRouter);
+app.get("/*", (req, res) =>
+  res.sendFile(path.join(__dirname, "..", "client", "build", "index.html"))
+);
 
 //Custom express error handler
 app.use(errorHandler);

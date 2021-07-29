@@ -41,7 +41,7 @@ exports.login = async (req, res, next) => {
     const refreshToken = await RefreshToken.create({
       user: user._id,
       createdByIp: ip,
-      platform: browserInfo.platform,
+      platform: browserInfo ? browserInfo.platform : "Not Provided",
       expireAt: new Date(Date.now() + 15 * 60000), //for testing
       //8 min after created mongodb will clean this token from db
       // expireAt: new Date(Date.now() + process.env.REFRESH_COOKIE_EXPIRE_DAYS * 24 * 60 * 60 * 1000),
