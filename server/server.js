@@ -13,9 +13,8 @@ const orderRouter = require("./routes/orders");
 const authRouter = require("./routes/auth");
 const priceListRouter = require("./routes/priceList");
 const errorHandler = require("./middleware/errorHandler");
-
 dotenv.config({
-  path: path.join(".", "server", "config", "config.env"),
+  path: path.join(__dirname, "config", "config.env"),
 });
 let server;
 
