@@ -7,7 +7,7 @@
 - Basic authentication: Login, logout and register.
 - Advance authentication: 
   * Autologin when app load/reload.
-  * Public, private and role-based routes. 
+  * Public and private role-based routes. 
   * Refresh token rotation technique with access and refresh tokens and expiration time.
 - Redux for react state managment.
 - PDF reports.

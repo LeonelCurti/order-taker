@@ -1,5 +1,5 @@
-const Order = require("../models/Orders");
-const Counter = require("../models/Counters");
+const Order = require("../models/order.model");
+const Counter = require("../models/counter.model");
 
 exports.createOrder = async (req, res, next) => {
   try {

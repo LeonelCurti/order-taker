@@ -4,7 +4,7 @@ const {
   uploadPriceList,
   getPriceList,
   downloadPriceList,
-} = require("../controllers/priceList");
+} = require("./priceList.controller");
 const { auth } = require("../middleware/auth");
 const { roles } = require("../utils/roles");
 

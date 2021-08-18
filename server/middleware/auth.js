@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const User = require("../models/User");
+const User = require("../models/user.model");
 const ErrorResponse = require("../utils/errorResponse");
 
 exports.auth = (roles = []) => {
@@ -15,7 +15,7 @@ exports.auth = (roles = []) => {
       return next(new ErrorResponse("No access token provided.", 401));
     }
 
-    jwt.verify(token, process.env.ACCESS_JWT_SECRET, (err, decoded) => {
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
       if (err) {
         return next(new ErrorResponse("Invalid access token.", 401));
       }

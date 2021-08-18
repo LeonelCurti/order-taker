@@ -7,7 +7,7 @@ const {
   logout,
   me,
   refreshToken,
-} = require("../controllers/auth");
+} = require("./auth.controller");
 const { auth } = require("../middleware/auth");
 
 //@route   /api/v1/auth

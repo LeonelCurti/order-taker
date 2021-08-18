@@ -1,5 +1,5 @@
-const User = require("../models/User");
-const RefreshToken = require("../models/RefreshTokens");
+const User = require("../models/user.model");
+const RefreshToken = require("../models/refreshToken.model");
 const { validationResult } = require("express-validator");
 const ErrorResponse = require("../utils/errorResponse");
 const jwt = require("jsonwebtoken");
@@ -97,7 +97,7 @@ exports.logout = async (req, res, next) => {
   try {
     const refreshToken = req.cookies.refresh_token;
     if (refreshToken) {
-      const decoded = jwt.verify(refreshToken, process.env.REFRESH_JWT_SECRET);
+      const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
 
       // pending: users can revoke their own tokens and admins can delete any tokens
 
@@ -130,11 +130,11 @@ exports.refreshToken = async (req, res, next) => {
       return next(new ErrorResponse("No refresh token provided.", 403));
     }
 
-    const decoded = jwt.verify(refreshToken, process.env.REFRESH_JWT_SECRET);
+    const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
 
     const token = await RefreshToken.findById(decoded.tokenId).populate("user");
     if (!token) {
-      return next(new ErrorResponse("No token found.", 403));
+      return next(new ErrorResponse("No token session found in db.", 403));
     }
 
     const accessToken = signAccessToken({ id: token.user._id });

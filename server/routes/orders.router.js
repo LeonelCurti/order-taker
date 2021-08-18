@@ -6,7 +6,7 @@ const {
   getOrderById,
   updateOrder,
   deleteOrder,
-} = require("../controllers/orders");
+} = require("./orders.controller");
 const { auth } = require("../middleware/auth");
 
 //@route   /api/v1/orders
