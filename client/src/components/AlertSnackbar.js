@@ -7,6 +7,7 @@ import { clearAlert } from "../redux/actions/alert";
 
 const AlertSnackbar = (props) => {
   const { alertMessage, isOpen, clearAlert } = props;
+ 
 
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {

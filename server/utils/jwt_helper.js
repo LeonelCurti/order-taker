@@ -7,14 +7,14 @@ module.exports = {
 };
 
 function signAccessToken(payload) {
-  return jwt.sign(payload, process.env.ACCESS_JWT_SECRET, {
-    expiresIn: process.env.ACCESS_JWT_EXPIRE,
+  return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
+    expiresIn: process.env.ACCESS_TOKEN_EXPIRE,
   });
 }
 
 function signRefreshToken(payload) {
-  return jwt.sign(payload, process.env.REFRESH_JWT_SECRET, {
-    expiresIn: process.env.REFRESH_JWT_EXPIRE,
+  return jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, {
+    expiresIn: process.env.REFRESH_TOKEN_EXPIRE,
   });
 }
 
