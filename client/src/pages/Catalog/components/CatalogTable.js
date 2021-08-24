@@ -10,7 +10,8 @@ import {
   Tooltip,
 } from "@material-ui/core";
 import PhotoCameraOutlinedIcon from "@material-ui/icons/PhotoCameraOutlined";
-
+import ImageModal from "../../../components/ImageModal";
+import { useModal } from "../../../utils/useModal";
 const useStyles = makeStyles((theme) => ({
   root: {
     // height: "100%",
@@ -31,10 +32,22 @@ const useStyles = makeStyles((theme) => ({
 
 const CatalogTable = (props) => {
   const classes = useStyles();
-  const { products, onShowProduct } = props;
+  const { products } = props;
+  const [setIsModalOpened, isModalOpened, modalData, setModalData] = useModal();
+
+  const onShowProduct = (product) => {
+    setModalData(product.cod);
+    setIsModalOpened(true);
+  };
 
   return (
     <div className={classes.root}>
+      <ImageModal
+        title={"Product Image"}
+        open={isModalOpened}
+        url={`https://res.cloudinary.com/dte10bevv/image/upload/v1629671758/orderTaker/${modalData}.jpg`}
+        onClose={() => setIsModalOpened(false)}
+      />
       <Table size="small" stickyHeader className={classes.table}>
         <TableHead>
           <TableRow>

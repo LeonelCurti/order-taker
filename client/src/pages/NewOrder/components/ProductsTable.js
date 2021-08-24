@@ -17,7 +17,7 @@ import SearchInput from "./SearchInput";
 import PhotoCameraOutlinedIcon from "@material-ui/icons/PhotoCameraOutlined";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import ImageModal from "../../../components/ImageModal";
-
+import { useModal } from "../../../utils/useModal";
 const useStyles = makeStyles((theme) => ({
   root: {},
   tableContainer: {
@@ -37,17 +37,14 @@ const ProductsTable = (props) => {
   const classes = useStyles();
   const { products, updateOrder, currentOrder } = props;
   const [searchField, setSearchField] = useState("");
-  const [showPhoto, setShowPhoto] = useState(false);
-
+  const [setIsModalOpened, isModalOpened, modalData, setModalData] = useModal();
   const onChange = (e) => {
     setSearchField(e.target.value.trim());
   };
-  const handleModalOpen = () => {
-    setShowPhoto(true);
-  };
 
-  const handleModalClose = () => {
-    setShowPhoto(false);
+  const onShowProduct = (product) => {
+    setModalData(product.cod);
+    setIsModalOpened(true);
   };
 
   const filteredProducts = products.filter((product) => {
@@ -87,7 +84,12 @@ const ProductsTable = (props) => {
 
   return (
     <div className={classes.root}>
-      <ImageModal open={showPhoto} onClose={handleModalClose} />
+      <ImageModal
+        title={"Product Image"}
+        open={isModalOpened}
+        url={`https://res.cloudinary.com/dte10bevv/image/upload/v1629671758/orderTaker/${modalData}.jpg`}
+        onClose={() => setIsModalOpened(false)}
+      />
       <Paper>
         <SearchInput onChange={onChange} placeholder="Search products" />
         <Divider />
@@ -113,7 +115,7 @@ const ProductsTable = (props) => {
                         <IconButton
                           color="default"
                           size="small"
-                          onClick={handleModalOpen}
+                          onClick={() => onShowProduct(product)}
                         >
                           <PhotoCameraOutlinedIcon />
                         </IconButton>
