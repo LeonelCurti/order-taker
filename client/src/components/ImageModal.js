@@ -8,7 +8,6 @@ import {
   Box,
   Dialog,
 } from "@material-ui/core";
-import image from "../assets/image_not_available.png";
 import CloseIcon from "@material-ui/icons/Close";
 
 const useStyles = makeStyles((theme) => ({
@@ -35,13 +34,12 @@ const useStyles = makeStyles((theme) => ({
   },
   image: {
     // height: "auto",
-    width: "100%",    
+    width: "100%",
   },
 }));
 
-function ImageModal(props) {
-  const classes = useStyles();
-  const { onClose, open } = props;
+function ImageModal({ title, url, onClose, open }) {
+  const classes = useStyles(); 
 
   return (
     <Dialog
@@ -54,22 +52,17 @@ function ImageModal(props) {
     >
       <DialogTitle className={classes.dialogTitle} disableTypography>
         <Box display="flex" justifyContent="space-between">
-          <Typography variant="h5">Product Image</Typography>
+          <Typography variant="h5">{title}</Typography>
           <IconButton
             onClick={onClose}
             style={{ marginRight: -12, marginTop: -10 }}
-            // disabled={disabled}
           >
             <CloseIcon />
           </IconButton>
         </Box>
       </DialogTitle>
       <DialogContent className={classes.dialogContent}>
-        <img 
-          className={classes.image}
-          src={image}
-          alt=""
-        />
+        <img className={classes.image} src={url} alt="img" />
       </DialogContent>
     </Dialog>
   );

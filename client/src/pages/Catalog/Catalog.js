@@ -9,7 +9,6 @@ import CatalogTable from "./components/CatalogTable";
 import ErrorBoundary from "../../components/ErrorBoundary";
 import PageHeader from "../../components/PageHeader";
 import LoadingIndicator from "../../components/LoadingIndicator";
-import ImageModal from "../../components/ImageModal";
 import CatalogTableToolbar from "./components/CatalogTableToolbar";
 
 const useStyles = makeStyles((theme) => ({
@@ -26,12 +25,11 @@ const useStyles = makeStyles((theme) => ({
 
 const ProductList = () => {
   const classes = useStyles();
-  const [showPhotoModal, setShowPhotoModal] = useState(false);
   const [searchField, setSearchField] = useState("");
   const dispatch = useDispatch();
   const products = useSelector((state) => state.catalog.products);
   const isFetchingProducts = useSelector((state) => state.catalog.isFetching);
-  const error = useSelector((state) => state.catalog.errorMessage); 
+  const error = useSelector((state) => state.catalog.errorMessage);
 
   const onChange = (value) => {
     setSearchField(value.trim());
@@ -47,13 +45,6 @@ const ProductList = () => {
     dispatch(getPriceList());
   }, [dispatch]);
 
-  const onShowProduct = (product) => {
-    setShowPhotoModal(true);
-  };
-
-  const handleModalClose = () => {
-    setShowPhotoModal(false);
-  };
   const onDownloadCatalogPdf = () => {
     if (products) {
       generateCatalogPdf(products);
@@ -70,7 +61,6 @@ const ProductList = () => {
           onRetry={onRetry}
           message="We could not load resources."
         >
-          <ImageModal open={showPhotoModal} onClose={handleModalClose} />
           <Container maxWidth="lg" className={classes.container}>
             <Hidden lgUp>
               <PageHeader title="Catalog" />
@@ -84,8 +74,7 @@ const ProductList = () => {
               />
               <Divider />
               <CatalogTable
-                products={filteredProducts}
-                onShowProduct={onShowProduct}
+                products={filteredProducts}         
               />
             </Paper>
           </Container>
