@@ -1,6 +1,7 @@
 import axios from "axios";
 import store from "../redux/store";
 import { logout } from "../redux/actions/auth";
+import { showAlert } from "../redux/actions/alert";
 
 let refreshTokenTimeout;
 
@@ -22,16 +23,14 @@ const isExpired = (token) => {
 };
 
 const startRefreshTokenTimer = (token) => {
-  // console.log("starting refreshToken timer");
+  //starting refreshToken timer
   const expirationDate = getExpirationDate(token);
   const delay = expirationDate - new Date().getTime();
   refreshTokenTimeout = setTimeout(silentRefresh, delay - 7000);
-  // console.log(`timeoutIdcreated:${refreshTokenTimeout}`);
 };
 
 const stopRefreshTokenTimer = () => {
   if (refreshTokenTimeout) {
-    // console.log(`timeoutIdDeleted:${refreshTokenTimeout}`);
     clearTimeout(refreshTokenTimeout);
   }
 };
@@ -39,14 +38,15 @@ const stopRefreshTokenTimer = () => {
 
 const silentRefresh = async () => {
   try {
-    // console.log("executing silentRefresh");
+    //executing silentRefresh
     const res = await axios.get("/api/v1/auth/refresh-token");
     const newAccessToken = res.data.accessToken;
     setSession(newAccessToken);
     startRefreshTokenTimer(newAccessToken);
   } catch (error) {
-    // console.log("SilentRefresh failed, proceed to logout");
+    //SilentRefresh failed, proceed to logout
     store.dispatch(logout()); 
+    store.dispatch(showAlert('Your session has timed out. Please login again')); 
   }
 };
 

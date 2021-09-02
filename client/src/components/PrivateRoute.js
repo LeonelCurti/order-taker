@@ -8,17 +8,17 @@ function PrivateRoute({ component: Component, roles, auth, ...rest }) {
       {...rest}
       render={(props) => {
         if (!auth.isAuthenticated) {
-          console.log("not logged in so redirect to login page");
+          //not logged in so redirect to login page
           return <Redirect to="/login" />;
         }
 
         // check if route is restricted by role
         if (roles && !roles.includes(auth.user.role)) {
-          console.log("role not authorized so redirect to home page");
+          //role not authorized so redirect to home page
           return <Redirect to="/" />;
         }
 
-        // authorized so return component
+        // authenticated and authorized so return component
         return <Component {...props} />;
       }}
     />

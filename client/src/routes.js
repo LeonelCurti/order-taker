@@ -8,10 +8,11 @@ import {
   Login,
   Register,
   NewOrder,
-  TestPage,
+  NewReleases,
 } from "./pages";
 import PrivateRoute from "./components/PrivateRoute";
-import { authRoles } from "./utils/userRoles";
+// import { authRoles } from "./utils/userRoles";
+
 
 const Routes = () => {
   return (
@@ -24,13 +25,13 @@ const Routes = () => {
         <PrivateRoute path="/dashboard" exact component={Dashboard} />
         <Route path="/register" exact component={Register} />
         <Route path="/login" exact component={Login} />
-        <PrivateRoute
+        <Route path="/newReleases" exact component={NewReleases} />
+        {/* <PrivateRoute
           path="/test"
           exact
           roles={authRoles.guest}
           component={TestPage}
-        />
-        {/* <Route path="/" exact component={Login} /> */}
+        />      */}
         <Route path="/" exact>
           <Redirect to="/login" />
         </Route>

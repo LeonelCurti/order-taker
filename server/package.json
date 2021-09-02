@@ -30,8 +30,8 @@
     "express-validator": "^6.12.1",
     "helmet": "^4.6.0",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.13.7",
-    "xlsx": "^0.17.0"
+    "mongoose": "^5.13.8",
+    "xlsx": "^0.17.1"
   },
   "devDependencies": {
     "colors": "^1.4.0",
