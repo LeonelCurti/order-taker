@@ -10,9 +10,7 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import PictureAsPdfIcon from "@material-ui/icons/PictureAsPdf";
 import SearchIcon from "@material-ui/icons/Search";
-import axios from "axios";
-import FileSaver from "file-saver";
-
+import { downloadCatalogExcel } from "../../../utils/downloadCatalogExcel";
 const useToolbarStyles = makeStyles((theme) => ({
   root: {},
   fullWidthRoot: {},
@@ -96,11 +94,7 @@ const CatalogTableToolbar = ({
     }
   };
   const onDownloadExcel = () => {
-    axios("/api/v1/pricelist/download", {
-      responseType: "blob",
-    }).then((response) => { 
-      FileSaver.saveAs(new Blob([response.data]), "Catalog.xlsx");
-    });
+    downloadCatalogExcel()
   };
 
   return (

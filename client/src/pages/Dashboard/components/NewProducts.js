@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import clsx from "clsx";
 import PropTypes from "prop-types";
+import { withRouter } from "react-router-dom"
 import { makeStyles } from "@material-ui/styles";
 import {
   Card,
@@ -16,42 +17,34 @@ import {
 } from "@material-ui/core";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import moment from "moment";
-import Product1 from "../../../assets/product_1.png";
-import Product2 from "../../../assets/product_2.png";
-import Product3 from "../../../assets/product_3.png";
-import Product4 from "../../../assets/product_4.png";
 
 const mockData = [
   {
-    cod: "038162",
-    descrip: "BOTON DELTA CHICO CAPEA",
-    name: "Dropbox",
+    cod: "270021",
+    descrip: "MEDIA UNION REDUC",
     price: 179.1,
-    imageUrl: Product1,
+    imageUrl:`https://res.cloudinary.com/dte10bevv/image/upload/v1629671758/orderTaker/270021.jpg`,
     updatedAt: moment().subtract(2, "hours"),
   },
   {
-    cod: "038163",
-    descrip: "BOTON FERRUM REDONDO BLANCO",
+    cod: "192044",
+    descrip: "VALVULA EVOLUTION 3/4",
     price: 306.06,
-    name: "Medium Corporation",
-    imageUrl: Product2,
+    imageUrl: `https://res.cloudinary.com/dte10bevv/image/upload/v1629671758/orderTaker/192044.jpg`,
     updatedAt: moment().subtract(2, "hours"),
   },
   {
-    cod: "038164",
-    descrip: "BOTON LATERAL CAPEA CROMO",
-    price: 110.51,
-    name: "Slack",
-    imageUrl: Product3,
+    cod: "274011",
+    descrip: "MONTURA 1 x 1 EPOXI",
+    price: 110.51,  
+    imageUrl: `https://res.cloudinary.com/dte10bevv/image/upload/v1629671758/orderTaker/274011.jpg`,
     updatedAt: moment().subtract(3, "hours"),
   },
   {
-    cod: "038164",
-    descrip: "ABRAZADERA A CREMALLERA Nº3",
-    price: 110.51,
-    name: "Slack",
-    imageUrl: Product4,
+    cod: "246019",
+    descrip: "LLAVE GAS 2 ALARSA",
+    price: 110.51,   
+    imageUrl: `https://res.cloudinary.com/dte10bevv/image/upload/v1629671758/orderTaker/246019.jpg`,
     updatedAt: moment().subtract(5, "hours"),
   },
 ];
@@ -88,6 +81,10 @@ const NewProducts = (props) => {
 
   const [products] = useState(mockData);
 
+  const handleViewNewReleases = () => {
+    props.history.push("/newReleases");
+  };
+
   return (
     <Card {...rest} className={clsx(classes.root, className)} elevation={4}>
       <CardHeader title="New products" className={classes.cardHeader} />
@@ -113,7 +110,7 @@ const NewProducts = (props) => {
       </CardContent>
       <Divider />
       <CardActions className={classes.actions}>
-        <Button color="primary" size="small" variant="text">
+        <Button color="primary" size="small" variant="text" onClick={handleViewNewReleases}>
           View all <ArrowRightIcon />
         </Button>
       </CardActions>
@@ -125,4 +122,4 @@ NewProducts.propTypes = {
   className: PropTypes.string,
 };
 
-export default NewProducts;
+export default withRouter(NewProducts);

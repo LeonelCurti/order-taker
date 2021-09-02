@@ -6,6 +6,7 @@ import DashboardIcon from "@material-ui/icons/Dashboard";
 import ShoppingBasketIcon from "@material-ui/icons/ShoppingBasket";
 import ListIcon from "@material-ui/icons/ListAltSharp";
 import QueuqueIcon from "@material-ui/icons/QueueSharp";
+import NewReleasesIcon from '@material-ui/icons/NewReleases';
 import SidebarNav from "./SidebarNav";
 
 const useStyles = makeStyles((theme) => ({
@@ -45,9 +46,9 @@ const Sidebar = (props) => {
       icon: <QueuqueIcon fontSize="small" />,
     },
     {
-      title: "Test",
-      href: "/test",
-      icon: <QueuqueIcon fontSize="small" />,
+      title: "New releases",
+      href: "/newReleases",
+      icon: <NewReleasesIcon fontSize="small" />,
     },
   ];
 
