@@ -17,7 +17,11 @@ app.use(cookieParser());
 app.use(cors({ origin: "http://localhost:3000" }));
 app.use(morgan("dev"));
 app.use(fileupload());
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+  })
+);
 app.use(express.static(path.join(__dirname, "..", "client", "build")));
 
 //Mount routers
