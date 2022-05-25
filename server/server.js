@@ -1,6 +1,6 @@
 const http = require("http");
 const path = require("path");
-const colors = require("colors");
+//const colors = require("colors");
 require("dotenv").config();
 const { db, connectDB } = require("./config/dbConnection");
 const app = require("./app");

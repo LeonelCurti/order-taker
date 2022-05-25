@@ -22,7 +22,6 @@
   "homepage": "https://github.com/LeonelCurti/order-taker#readme",
   "dependencies": {
     "bcrypt": "^5.0.0",
-    "colors": "^1.4.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^8.6.0",
