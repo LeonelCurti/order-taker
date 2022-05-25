@@ -62,6 +62,9 @@ exports.login = async (req, res, next) => {
 };
 
 exports.register = async (req, res, next) => {
+  return next(
+    new ErrorResponse("New users registration temporarily disabled", 503)
+  );
   try {
     //check for errors
     const errors = validationResult(req);
@@ -97,7 +100,10 @@ exports.logout = async (req, res, next) => {
   try {
     const refreshToken = req.cookies.refresh_token;
     if (refreshToken) {
-      const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+      const decoded = jwt.verify(
+        refreshToken,
+        process.env.REFRESH_TOKEN_SECRET
+      );
 
       // pending: users can revoke their own tokens and admins can delete any tokens
 
