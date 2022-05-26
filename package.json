@@ -2,7 +2,7 @@
   "name": "order-taker",
   "version": "1.0.0",
   "description": "> Description: Small business oriented application that allows to manage orders placed by clients.",
-  "main": "index.js",
+  "main": "server/server.js",
   "scripts": {
     "start": "npm run start --prefix server",
     "server": "npm run server --prefix server",
