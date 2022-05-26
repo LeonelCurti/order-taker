@@ -2,10 +2,10 @@
   "name": "order-taker",
   "version": "1.0.0",
   "description": "Small business oriented application that allows to manage orders placed by clients.",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node server/server.js",
-    "server": "nodemon server/server.js",
+    "start": "node server.js",
+    "server": "nodemon server.js",
     "client": "npm run start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
