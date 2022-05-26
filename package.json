@@ -2,7 +2,7 @@
   "name": "order-taker",
   "version": "1.0.0",
   "description": "Small business oriented application that allows to manage orders placed by clients.",
-  "main": "server/server.js",
+  "main": "index.js",
   "scripts": {
     "start": "node server/server.js",
     "server": "nodemon server/server.js",
